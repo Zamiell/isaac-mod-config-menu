@@ -1,41 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>!!Mod Config Menu</name>
-    <directory>!!mod config menu</directory>
-    <id>1603631350</id>
-    <description>The Mod Config Menu is a mod that adds a new menu to the game that enables other mods to provide a simple and easy way for the player to configure them.
-
-This mod does not do much on its own, to get into the real action you should download a mod which supports this menu.
-
-
-[h1]Mods that support Mod Config Menu[/h1]
-Check out this collection:
-https://steamcommunity.com/workshop/filedetails/?id=1659279635
-
-
-[h1]Documentation[/h1]
-Read this discussion:
-https://steamcommunity.com/workshop/filedetails/discussion/1603631350/1741103267296589223/
-
-
-[h1]Navigation[/h1]
-
-Keyboard:
-Use the arrow keys or WASD keys to move around, backspace or Q to go back, E space or enter to select an item.
-
-By default you can open the menu by pressing L.
-
-F10 will also always open the menu, this cannot be changed.
-
-Controller:
-Both control sticks and the dpad can be used to move around, press B to go back, A to select an item.
-
-By default you can open the menu by pressing down the right control stick.
-
-
-[h1]Mirror[/h1]
-https://piber20.com/d/bap/Mod%20Config%20Menu.zip</description>
+	<name>!!Mod Config Menu Dev</name>
+	<directory>!!mod config menu dev</directory>
+	<description>In-Dev version of Mod Config Menu</description>
     <version>1.14</version>
-    <visibility>Public</visibility>
-    <tag id="Lua"/>
+	<visibility/>
 </metadata>
