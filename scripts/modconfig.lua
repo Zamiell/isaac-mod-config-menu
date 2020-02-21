@@ -329,28 +329,43 @@ function MCM.GetScreenTopLeft(offset)
 end
 
 --display info on new run, based on stageapi code
+
+local versionPrintFont = Font()
+versionPrintFont:Load("font/pftempestasevencondensed.fnt")
+
 local versionPrintTimer = 0
+
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+
 	if MCM.Config.ShowControls then
+	
 		versionPrintTimer = 120
 	else
+	
 		versionPrintTimer = 60
+		
 	end
+	
 end)
+
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+
 	if versionPrintTimer > 0 then
+	
 		versionPrintTimer = versionPrintTimer - 1
+		
 	end
+	
 end)
+
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+
 	if versionPrintTimer > 0 then
+	
 		local bottomRight = MCM.GetScreenBottomRight(0)
-		local center = MCM.GetScreenCenter()
-		local renderY = bottomRight.Y - 28
-		local renderX = center.X
 
 		local openMenuButton = Keyboard.KEY_F10
-		if MCM.Config.OpenMenuKeyboard and MCM.Config.OpenMenuKeyboard > -1 then
+		if type(MCM.Config.OpenMenuKeyboard) == "number" and MCM.Config.OpenMenuKeyboard > -1 then
 			openMenuButton = MCM.Config.OpenMenuKeyboard
 		end
 
@@ -360,8 +375,11 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		end
 		
 		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
-		Isaac.RenderScaledText(text, renderX - Isaac.GetTextWidth(text) * 0.25, renderY, 0.5, 0.5, 1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
+		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
+		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
+		
 	end
+	
 end)
 
 --based on some revelations menu code, handles some dumb controller input nonsense
