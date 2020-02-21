@@ -4,38 +4,17 @@ MCM.Version = 14
 
 Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
 
-MCM.VECTOR_ZERO = Vector(0,0)
-MCM.VECTOR_ONE = Vector(1,1)
+local vectorZero = Vector(0,0)
 
-MCM.VECTOR_LEFT = Vector(-1,0)
-MCM.VECTOR_UP = Vector(0,-1)
-MCM.VECTOR_RIGHT = Vector(1,0)
-MCM.VECTOR_DOWN = Vector(0,1)
-MCM.VECTOR_UP_LEFT = Vector(-1,-1)
-MCM.VECTOR_UP_RIGHT = Vector(1,-1)
-MCM.VECTOR_DOWN_LEFT = Vector(-1,1)
-MCM.VECTOR_DOWN_RIGHT = MCM.VECTOR_ONE
+local colorDefault = Color(1,1,1,1,0,0,0)
+local colorHalf = Color(1,1,1,0.5,0,0,0)
+local colorInvisible = Color(1,1,1,0,0,0,0)
 
-MCM.COLOR_DEFAULT = Color(1,1,1,1,0,0,0)
-MCM.COLOR_HALF = Color(1,1,1,0.5,0,0,0)
-MCM.COLOR_INVISIBLE = Color(1,1,1,0,0,0,0)
-MCM.KCOLOR_DEFAULT = KColor(1,1,1,1)
-MCM.KCOLOR_HALF = KColor(1,1,1,0.5)
-MCM.KCOLOR_INVISIBLE = KColor(1,1,1,0)
-
-MCM.Game = Game()
-MCM.Seeds = MCM.Game:GetSeeds()
-MCM.Level = MCM.Game:GetLevel()
-MCM.Room = MCM.Game:GetRoom()
-MCM.SFX = SFXManager()
-
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
-	MCM.Game = Game()
-	MCM.Seeds = MCM.Game:GetSeeds()
-	MCM.Level = MCM.Game:GetLevel()
-	MCM.Room = MCM.Game:GetRoom()
-	MCM.SFX = SFXManager()
-end)
+local game = Game()
+local seeds = game:GetSeeds()
+local level = game:GetLevel()
+local room = game:GetRoom()
+local sfx = SFXManager()
 
 MCM.ControlsEnabled = true
 
@@ -212,13 +191,13 @@ MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
 local json = require("json")
 
 function MCM.ClearSave(bypassGameStart)
-	if MCM.GameStarted or bypassGameStart then
+	if GameStarted or bypassGameStart then
 		MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
 	end
 end
 
 function MCM.Save(bypassGameStart)
-	if MCM.GameStarted or bypassGameStart then
+	if GameStarted or bypassGameStart then
 		local saveData = MCM.CopyTable(MCM.ConfigDefault)
 		saveData = MCM.FillTable(saveData, MCM.Config)
 		
@@ -238,9 +217,9 @@ function MCM.Load(fromSave)
 	MCM.Save(true)
 end
 
-MCM.GameStarted = false
+GameStarted = false
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
-	MCM.GameStarted = true
+	GameStarted = true
 	
 	MCM.Load(isSaveGame)
 end)
@@ -249,14 +228,14 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
 	MCM.Save()
 	MCM.ClearSave(true)
 	
-	MCM.GameStarted = false
+	GameStarted = false
 end)
 
 MCM.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
 	MCM.Save()
 	MCM.ClearSave(true)
 	
-	MCM.GameStarted = false
+	GameStarted = false
 end)
 
 -----------------------------
@@ -264,8 +243,7 @@ end)
 -----------------------------
 function MCM.GetScreenSize() --based off of code from kilburn
 
-    local room = Game():GetRoom()
-    local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - Game().ScreenShakeOffset
+    local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
     
     local rx = pos.X + 60 * 26 / 40
     local ry = pos.Y + 140 * (26 / 40)
@@ -320,7 +298,7 @@ function MCM.GetScreenTopLeft(offset)
 
 	offset = offset or MCM.Config.HudOffset
 	
-	local pos = MCM.VECTOR_ZERO
+	local pos = vectorZero
 	local hudOffset = Vector(offset * 2, offset * 1.2)
 	pos = pos + hudOffset
 	
@@ -519,27 +497,27 @@ configMenuCursorDown:SetFrame("Cursor", 4)
 local configMenuOptionsCursorUp = Sprite()
 configMenuOptionsCursorUp:Load("gfx/ui/modconfig/menu.anm2", true)
 configMenuOptionsCursorUp:SetFrame("Cursor", 3)
-configMenuOptionsCursorUp.Color = MCM.COLOR_HALF
+configMenuOptionsCursorUp.Color = colorHalf
 
 local configMenuOptionsCursorDown = Sprite()
 configMenuOptionsCursorDown:Load("gfx/ui/modconfig/menu.anm2", true)
 configMenuOptionsCursorDown:SetFrame("Cursor", 4)
-configMenuOptionsCursorDown.Color = MCM.COLOR_HALF
+configMenuOptionsCursorDown.Color = colorHalf
 
 local configMenuSubcategoryCursorLeft = Sprite()
 configMenuSubcategoryCursorLeft:Load("gfx/ui/modconfig/menu.anm2", true)
 configMenuSubcategoryCursorLeft:SetFrame("Cursor", 5)
-configMenuSubcategoryCursorLeft.Color = MCM.COLOR_HALF
+configMenuSubcategoryCursorLeft.Color = colorHalf
 
 local configMenuSubcategoryCursorRight = Sprite()
 configMenuSubcategoryCursorRight:Load("gfx/ui/modconfig/menu.anm2", true)
 configMenuSubcategoryCursorRight:SetFrame("Cursor", 0)
-configMenuSubcategoryCursorRight.Color = MCM.COLOR_HALF
+configMenuSubcategoryCursorRight.Color = colorHalf
 
 local configMenuSubcategoryDivider = Sprite()
 configMenuSubcategoryDivider:Load("gfx/ui/modconfig/menu.anm2", true)
 configMenuSubcategoryDivider:SetFrame("Cursor", 6)
-configMenuSubcategoryDivider.Color = MCM.COLOR_HALF
+configMenuSubcategoryDivider.Color = colorHalf
 
 local configMenuCrosshairRed = Sprite()
 configMenuCrosshairRed:Load("gfx/ui/modconfig/menu.anm2", true)
@@ -698,16 +676,16 @@ MCM.AddSetting("General", { --HUD OFFSET
 	Display = function(cursorIsHere)
 		if cursorIsHere then
 			configMenuOptionsCorner:SetFrame("Corner", 2)
-			configMenuOptionsCorner:Render(MCM.GetScreenBottomRight(), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+			configMenuOptionsCorner:Render(MCM.GetScreenBottomRight(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 3)
-			configMenuOptionsCorner:Render(MCM.GetScreenBottomLeft(), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+			configMenuOptionsCorner:Render(MCM.GetScreenBottomLeft(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 1)
-			configMenuOptionsCorner:Render(MCM.GetScreenTopRight(), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+			configMenuOptionsCorner:Render(MCM.GetScreenTopRight(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 0)
-			configMenuOptionsCorner:Render(MCM.GetScreenTopLeft(), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+			configMenuOptionsCorner:Render(MCM.GetScreenTopLeft(), vectorZero, vectorZero)
 		end
 		return "Hud Offset: $scroll" .. tostring(math.floor(MCM.Config.HudOffset))
 	end,
@@ -945,12 +923,12 @@ MCM.AddSetting("Mod Config Menu", { --HIDE HUD
 		MCM.Config.HideHudInMenu = currentBool
 		
 		if currentBool then
-			if not MCM.Seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-				MCM.Seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+			if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+				seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
 			end
 		else
-			if MCM.Seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-				MCM.Seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+			if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+				seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
 			end
 		end
 	end,
@@ -1119,8 +1097,8 @@ function MCM.EnterOptions()
 				
 					configMenuPositionCursorOption = optionIndex
 					configMenuInOptions = true
-					configMenuOptionsCursorUp.Color = MCM.COLOR_DEFAULT
-					configMenuOptionsCursorDown.Color = MCM.COLOR_DEFAULT
+					configMenuOptionsCursorUp.Color = colorDefault
+					configMenuOptionsCursorDown.Color = colorDefault
 					
 					break
 				end
@@ -1132,9 +1110,9 @@ end
 function MCM.EnterSubcategory()
 	if not configMenuInSubcategory then
 		configMenuInSubcategory = true
-		configMenuSubcategoryCursorLeft.Color = MCM.COLOR_DEFAULT
-		configMenuSubcategoryCursorRight.Color = MCM.COLOR_DEFAULT
-		configMenuSubcategoryDivider.Color = MCM.COLOR_DEFAULT
+		configMenuSubcategoryCursorLeft.Color = colorDefault
+		configMenuSubcategoryCursorRight.Color = colorDefault
+		configMenuSubcategoryDivider.Color = colorDefault
 		
 		local hasUsableCategories = false
 		if currentMenuCategory.Subcategories then
@@ -1160,8 +1138,8 @@ end
 function MCM.LeaveOptions()
 	if configMenuInSubcategory and configMenuInOptions then
 		configMenuInOptions = false
-		configMenuOptionsCursorUp.Color = MCM.COLOR_HALF
-		configMenuOptionsCursorDown.Color = MCM.COLOR_HALF
+		configMenuOptionsCursorUp.Color = colorHalf
+		configMenuOptionsCursorDown.Color = colorHalf
 		
 		local hasUsableCategories = false
 		if currentMenuCategory.Subcategories then
@@ -1181,15 +1159,15 @@ end
 function MCM.LeaveSubcategory()
 	if configMenuInSubcategory then
 		configMenuInSubcategory = false
-		configMenuSubcategoryCursorLeft.Color = MCM.COLOR_HALF
-		configMenuSubcategoryCursorRight.Color = MCM.COLOR_HALF
-		configMenuSubcategoryDivider.Color = MCM.COLOR_HALF
+		configMenuSubcategoryCursorLeft.Color = colorHalf
+		configMenuSubcategoryCursorRight.Color = colorHalf
+		configMenuSubcategoryDivider.Color = colorHalf
 	end
 end
 
-local mainSpriteColor = MCM.COLOR_DEFAULT
-local optionsSpriteColor = MCM.COLOR_DEFAULT
-local optionsSpriteColorAlpha = MCM.COLOR_HALF
+local mainSpriteColor = colorDefault
+local optionsSpriteColor = colorDefault
+local optionsSpriteColorAlpha = colorHalf
 local mainFontColor = KColor(34/255,32/255,30/255,1)
 local leftFontColor = KColor(35/255,31/255,30/255,1)
 local leftFontColorSelected = KColor(35/255,50/255,70/255,1)
@@ -1204,7 +1182,7 @@ local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
-	local isPaused = MCM.Game:IsPaused()
+	local isPaused = game:IsPaused()
 
 	local pressingButton = ""
 
@@ -1236,9 +1214,9 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			MCM.CloseConfigMenu()
 		end
 		
-		if not MCM.RoomIsSafe() then
+		if not RoomIsSafe() then
 			MCM.CloseConfigMenu()
-			MCM.SFX:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+			sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 		end
 		
 	end
@@ -1253,12 +1231,12 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	
 	if renderingConfigMenu then
 		if MCM.ControlsEnabled and not isPaused then
-			for i=1, MCM.Game:GetNumPlayers() do
+			for i=1, game:GetNumPlayers() do
 				local player = Isaac.GetPlayer(i-1)
 				local data = player:GetData()
 				
 				--freeze players and disable their controls
-				player.Velocity = MCM.VECTOR_ZERO
+				player.Velocity = vectorZero
 				
 				if not data.ConfigMenuPlayerPosition then
 					data.ConfigMenuPlayerPosition = player.Position
@@ -1392,7 +1370,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						or (currentMenuOption.OnSelect and (pressingButton == "SELECT" or pressingButton == "RIGHT"))
 						or (currentMenuOption.IsResetKeybind and pressingButton == "RESET")
 						or (currentMenuOption.IsOpenMenuKeybind and pressedToggleMenu)) then
-							MCM.SFX:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+							sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 						else
 							local numberToChange = nil
 							local recievedInput = false
@@ -1457,7 +1435,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 									sound = SoundEffect.SOUND_PLOP
 								end
 								if sound >= 0 then
-									MCM.SFX:Play(sound, 1, 0, false, 1)
+									sfx:Play(sound, 1, 0, false, 1)
 								end
 							end
 						end
@@ -1559,7 +1537,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							sound = SoundEffect.SOUND_PLOP
 						end
 						if sound >= 0 then
-							MCM.SFX:Play(sound, 1, 0, false, 1)
+							sfx:Play(sound, 1, 0, false, 1)
 						end
 					elseif optionType == ModConfigMenuOptionType.BOOLEAN then
 						leaveOptions = false
@@ -1592,7 +1570,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							sound = SoundEffect.SOUND_PLOP
 						end
 						if sound >= 0 then
-							MCM.SFX:Play(sound, 1, 0, false, 1)
+							sfx:Play(sound, 1, 0, false, 1)
 						end
 					elseif (optionType == ModConfigMenuOptionType.KEYBIND_KEYBOARD or optionType == ModConfigMenuOptionType.KEYBIND_CONTROLLER) and pressingButton == "RESET" and currentMenuOption.Default ~= nil then
 						local numberToChange = optionCurrent
@@ -1619,7 +1597,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							sound = SoundEffect.SOUND_PLOP
 						end
 						if sound >= 0 then
-							MCM.SFX:Play(sound, 1, 0, false, 1)
+							sfx:Play(sound, 1, 0, false, 1)
 						end
 					elseif optionType ~= ModConfigMenuOptionType.SPACE and pressingButton == "RIGHT" then
 						if currentMenuOption.Popup then
@@ -1866,7 +1844,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local infoPos = centerPos + Vector(-4,106)
 		local optionPos = centerPos + Vector(68,-88)
 		
-		configMenuMain:Render(centerPos, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+		configMenuMain:Render(centerPos, vectorZero, vectorZero)
 		
 		--category
 		local lastLeftPos = leftPos
@@ -1888,7 +1866,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				--cursor
 				if configMenuPositionCursorCategory == categoryIndex then
-					configMenuCursor:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+					configMenuCursor:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 				end
 				
 				--increase counter
@@ -1896,10 +1874,10 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if renderedLeft >= configMenuCategoryCanShow then --if this is the last one we should render
 					--render scroll arrows
 					if configMenuPositionFirstCategory > 1 then --if the first one we rendered wasnt the first in the list
-						configMenuCursorUp:Render(leftPos + Vector(45,-4), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+						configMenuCursorUp:Render(leftPos + Vector(45,-4), vectorZero, vectorZero)
 					end
 					if categoryIndex < #ModConfigMenuData then --if this isnt the last category
-						configMenuCursorDown:Render(lastLeftPos + Vector(45,4), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+						configMenuCursorDown:Render(lastLeftPos + Vector(45,4), vectorZero, vectorZero)
 					end
 					break
 				end
@@ -1979,7 +1957,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						
 						--cursor
 						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							configMenuCursor:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+							configMenuCursor:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 						end
 						
 						--increase counter
@@ -1987,10 +1965,10 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
 							--render scroll arrows
 							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
-								configMenuSubcategoryCursorLeft:Render(lastOptionPos + Vector(-125,0), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+								configMenuSubcategoryCursorLeft:Render(lastOptionPos + Vector(-125,0), vectorZero, vectorZero)
 							end
 							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
-								configMenuSubcategoryCursorRight:Render(lastOptionPos + Vector(125,0), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+								configMenuSubcategoryCursorRight:Render(lastOptionPos + Vector(125,0), vectorZero, vectorZero)
 							end
 							break
 						end
@@ -2003,7 +1981,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
-				configMenuSubcategoryDivider:Render(lastOptionPos, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+				configMenuSubcategoryDivider:Render(lastOptionPos, vectorZero, vectorZero)
 				
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
@@ -2127,24 +2105,24 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							end
 							configMenuSlider1.Color = scrollColor
 							configMenuSlider1:SetFrame("Slider1", numberToShow)
-							configMenuSlider1:Render(lastOptionPos - Vector(scrollOffset, -2), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+							configMenuSlider1:Render(lastOptionPos - Vector(scrollOffset, -2), vectorZero, vectorZero)
 						end
 						
 						local showStrikeout = thisOption.ShowStrikeout
 						if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
 							if configMenuInOptions then
-								strikeOut.Color = MCM.COLOR_DEFAULT
+								strikeOut.Color = colorDefault
 							else
-								strikeOut.Color = MCM.COLOR_HALF
+								strikeOut.Color = colorHalf
 							end
 							strikeOut:SetFrame("Strikeout", math.floor(posOffset))
-							strikeOut:Render(lastOptionPos, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+							strikeOut:Render(lastOptionPos, vectorZero, vectorZero)
 						end
 					end
 					
 					--cursor
 					if cursorIsAtThisOption then
-						configMenuCursor:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+						configMenuCursor:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 					end
 					
 					--increase counter
@@ -2152,10 +2130,10 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					if renderedOptions >= configMenuOptionsCanShow then --if this is the last one we should render
 						--render scroll arrows
 						if configMenuPositionFirstOption > 1 then --if the first one we rendered wasnt the first in the list
-							configMenuOptionsCursorUp:Render(firstOptionPos + Vector(125,-4), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+							configMenuOptionsCursorUp:Render(firstOptionPos + Vector(125,-4), vectorZero, vectorZero)
 						end
 						if optionIndex < #currentMenuSubcategory.Options then --if this isnt the last thing
-							configMenuOptionsCursorDown:Render(lastOptionPos + Vector(125,4), MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+							configMenuOptionsCursorDown:Render(lastOptionPos + Vector(125,4), vectorZero, vectorZero)
 						end
 						break
 					end
@@ -2194,7 +2172,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInPopup
 		and currentMenuOption
 		and currentMenuOption.Popup then
-			configMenuPopup:Render(centerPos, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+			configMenuPopup:Render(centerPos, vectorZero, vectorZero)
 			
 			local popupTable = currentMenuOption.Popup
 			if type(popupTable) == "function" then
@@ -2229,9 +2207,9 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			--back
 			local bottomLeft = MCM.GetScreenBottomLeft(0)
 			if not configMenuInSubcategory then
-				CornerExit:Render(bottomLeft, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+				CornerExit:Render(bottomLeft, vectorZero, vectorZero)
 			else
-				CornerBack:Render(bottomLeft, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+				CornerBack:Render(bottomLeft, vectorZero, vectorZero)
 			end
 
 			local goBackString = ""
@@ -2261,9 +2239,9 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				]]
 				
 				if foundValidPopup then
-					CornerOpen:Render(bottomRight, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+					CornerOpen:Render(bottomRight, vectorZero, vectorZero)
 				else
-					CornerSelect:Render(bottomRight, MCM.VECTOR_ZERO, MCM.VECTOR_ZERO)
+					CornerSelect:Render(bottomRight, vectorZero, vectorZero)
 				end
 				
 				local selectString = ""
@@ -2280,7 +2258,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			
 		end
 	else
-		for i=1, MCM.Game:GetNumPlayers() do
+		for i=1, game:GetNumPlayers() do
 			local player = Isaac.GetPlayer(i-1)
 			local data = player:GetData()
 			
@@ -2317,13 +2295,13 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
 end)
 
 function MCM.OpenConfigMenu()
-	if MCM.RoomIsSafe() then
+	if RoomIsSafe() then
 		if MCM.Config.HideHudInMenu then
-			MCM.Seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
 		end
 		renderingConfigMenu = true
 	else
-		MCM.SFX:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+		sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 	end
 end
 
@@ -2331,7 +2309,7 @@ function MCM.CloseConfigMenu()
 	MCM.LeavePopup()
 	MCM.LeaveOptions()
 	MCM.LeaveSubcategory()
-	MCM.Seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+	seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
 	renderingConfigMenu = false
 end
 
@@ -2356,7 +2334,7 @@ end)
 
 --returns true if the room is clear and there are no active enemies and there are no projectiles
 MCM.IgnoreActiveEnemies = {}
-function MCM.RoomIsSafe()
+function RoomIsSafe()
 
 	local roomHasDanger = false
 	
@@ -2371,7 +2349,7 @@ function MCM.RoomIsSafe()
 		end
 	end
 	
-	if MCM.Room:IsClear() and not roomHasDanger then
+	if room:IsClear() and not roomHasDanger then
 		return true
 	end
 	
