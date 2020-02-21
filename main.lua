@@ -1,7 +1,7 @@
-modconfighousingmod = RegisterMod("mod config menu standalone", 1)
+local mod = RegisterMod("mod config menu standalone", 1)
 ModConfigMenuIsStandalone = true
 
-local _, err = pcall(require, "scripts.modconfig.modconfig")
+local _, err = pcall(require, "scripts.modconfig")
 err = tostring(err)
 if not string.match(err, "attempt to call a nil value %(field 'ForceError'%)") then
 	if string.match(err, "true") then

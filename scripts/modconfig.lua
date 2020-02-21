@@ -1,5 +1,8 @@
---the version of this script
-local currentVersion = 13
+local MCM = {}
+MCM.Mod = RegisterMod("Mod Config Menu", 1)
+MCM.Version = 14
+
+currentVersion = 14
 
 --remove any previous versions that may exist
 if ModConfigMenu then
@@ -14,7 +17,7 @@ if ModConfigMenu then
 end
 
 if not ModConfigMenu then
-	ModConfigMenu = RegisterMod("Mod Config Menu", 1)
+	ModConfigMenu = RegisterMod("Mod Config Menuu", 1)
 	ModConfigMenu.Version = currentVersion
 	Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 	
@@ -690,7 +693,14 @@ if not ModConfigMenu then
 		return ModConfigMenu.AddSetting(category, subcategory, settingTable)
 	end
 	
-	--add the default settings
+	--------------------
+	--GENERAL SETTINGS--
+	--------------------
+	
+	ModConfigMenu.AddSpace("General") --SPACE
+	
+	ModConfigMenu.AddSpace("General") --SPACE
+	
 	ModConfigMenu.AddSetting("General", { --HUD OFFSET
 		Type = ModConfigMenuOptionType.SCROLL,
 		CurrentSetting = function()
@@ -805,8 +815,23 @@ if not ModConfigMenu then
 			"that support this setting."
 		}
 	})
+	
 	ModConfigMenu.AddSpace("General") --SPACE
-	ModConfigMenu.AddSetting("General", { --KEYBOARD KEYBIND
+	
+	ModConfigMenu.AddText("General", "These settings apply to")
+	ModConfigMenu.AddText("General", "all mods which support them")
+	
+	----------------------------
+	--MOD CONFIG MENU SETTINGS--
+	----------------------------
+	
+	ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
+	
+	ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.Version) .. " !") --VERSION INDICATOR
+	
+	ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
+	
+	ModConfigMenu.AddSetting("Mod Config Menu", { --KEYBOARD KEYBIND
 		Type = ModConfigMenuOptionType.KEYBIND_KEYBOARD,
 		IsOpenMenuKeybind = true,
 		CurrentSetting = function()
@@ -829,11 +854,7 @@ if not ModConfigMenu then
 			end
 			ModConfigMenu.Config.OpenMenuKeyboard = currentNum
 		end,
-		Info = {
-			"Keyboard button that opens this menu.",
-			"",
-			"F10 will always open this menu."
-		},
+		Info = "Keyboard button that opens this menu.",
 		PopupGfx = ModConfigMenuPopupGfx.WIDE_SMALL,
 		Popup = function()
 			local goBackString = "back"
@@ -862,7 +883,7 @@ if not ModConfigMenu then
 			}
 		end
 	})
-	ModConfigMenu.AddSetting("General", { --CONTROLLER KEYBIND
+	ModConfigMenu.AddSetting("Mod Config Menu", { --CONTROLLER KEYBIND
 		Type = ModConfigMenuOptionType.KEYBIND_CONTROLLER,
 		IsOpenMenuKeybind = true,
 		CurrentSetting = function()
@@ -885,11 +906,7 @@ if not ModConfigMenu then
 			end
 			ModConfigMenu.Config.OpenMenuController = currentNum
 		end,
-		Info = {
-			"Controller button that opens this menu.",
-			"",
-			"F10 will always open this menu."
-		},
+		Info = "Controller button that opens this menu.",
 		PopupGfx = ModConfigMenuPopupGfx.WIDE_SMALL,
 		Popup = function()
 			local goBackString = "back"
@@ -918,11 +935,11 @@ if not ModConfigMenu then
 			}
 		end
 	})
-	-- ModConfigMenu.AddText("General", "F10 will always open this menu.")
+	ModConfigMenu.AddText("Mod Config Menu", "F10 will always open this menu.")
 	
-	ModConfigMenu.AddSpace("General") --SPACE
+	ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 	
-	ModConfigMenu.AddSetting("General", { --HIDE HUD
+	ModConfigMenu.AddSetting("Mod Config Menu", { --HIDE HUD
 		Type = ModConfigMenuOptionType.BOOLEAN,
 		CurrentSetting = function()
 			return ModConfigMenu.Config.HideHudInMenu
@@ -950,7 +967,7 @@ if not ModConfigMenu then
 		end,
 		Info = "Enable or disable the hud when this menu is open."
 	})
-	ModConfigMenu.AddSetting("General", { --RESET TO DEFAULT BUTTON
+	ModConfigMenu.AddSetting("Mod Config Menu", { --RESET TO DEFAULT BUTTON
 		Type = ModConfigMenuOptionType.KEYBIND_KEYBOARD,
 		IsResetKeybind = true,
 		CurrentSetting = function()
@@ -1005,7 +1022,7 @@ if not ModConfigMenu then
 			}
 		end
 	})
-	ModConfigMenu.AddSetting("General", { --SHOW CONTROLS
+	ModConfigMenu.AddSetting("Mod Config Menu", { --SHOW CONTROLS
 		Type = ModConfigMenuOptionType.BOOLEAN,
 		CurrentSetting = function()
 			return ModConfigMenu.Config.ShowControls
@@ -1022,9 +1039,9 @@ if not ModConfigMenu then
 			ModConfigMenu.Config.ShowControls = currentBool
 		end,
 		Info = {
-			"Disable this to remove the start-up message",
-			"and the back and select widgets",
-			"at the lower corners of the screen."
+			"Disable this to make the start-up message go",
+			"away faster and to remove the back and select",
+			"widgets at the lower corners of the screen."
 		}
 	})
 	
@@ -1904,12 +1921,12 @@ if not ModConfigMenu then
 			end
 			
 			--title
-			local titleText = "Mod Config"
+			local titleText = "Mod Config Menu"
 			if configMenuInSubcategory then
 				titleText = tostring(currentMenuCategory.Name)
 			end
 			local titleTextOffset = configMenuFont16Bold:GetStringWidthUTF8(titleText)/2
-			configMenuFont16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 10, mainFontColor, 0, true)
+			configMenuFont16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
 			
 			--subcategory
 			
