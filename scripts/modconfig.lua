@@ -188,7 +188,9 @@ ModConfigMenuOptionType = {
 	TITLE = 8
 }
 
---saving
+----------
+--saving--
+----------
 MCM.ConfigDefault = {
 	HudOffset = 0,
 	Overlays = true,
@@ -257,84 +259,73 @@ MCM.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
 	MCM.GameStarted = false
 end)
 
---screen position functions
-function MCM.GetScreenCenterPosition()
-	local shape = MCM.Room:GetRoomShape()
-	local centerOffset = (MCM.Room:GetCenterPos()) - MCM.Room:GetTopLeftPos()
-	local pos = MCM.Room:GetCenterPos()
-	if centerOffset.X > 260 then
-		pos.X = pos.X - 260
-	end
-	if shape == RoomShape.ROOMSHAPE_LBL or shape == RoomShape.ROOMSHAPE_LTL then
-		pos.X = pos.X - 260
-	end
-	if centerOffset.Y > 140 then
-		pos.Y = pos.Y - 140
-	end
-	if shape == RoomShape.ROOMSHAPE_LTR or shape == RoomShape.ROOMSHAPE_LTL then
-		pos.Y = pos.Y - 140
-	end
-	return Isaac.WorldToRenderPosition(pos, false)
+-----------------------------
+--screen position functions--
+-----------------------------
+function MCM.GetScreenSize() --based off of code from kilburn
+
+    local room = Game():GetRoom()
+    local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - Game().ScreenShakeOffset
+    
+    local rx = pos.X + 60 * 26 / 40
+    local ry = pos.Y + 140 * (26 / 40)
+    
+    return Vector(rx*2 + 13*26, ry*2 + 7*26)
+	
 end
 
-function MCM.GetScreenBottomRight(offset, doHealthOffset, doCardOffset)
-	local pos = MCM.GetScreenCenterPosition() * 2
+function MCM.GetScreenCenter()
+
+	return MCM.GetScreenSize() / 2
 	
-	if not offset then
-		offset = MCM.Config.HudOffset
-	end
+end
+
+function MCM.GetScreenBottomRight(offset)
+
+	offset = offset or MCM.Config.HudOffset
 	
+	local pos = MCM.GetScreenSize()
 	local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
-	if doHealthOffset then
-		hudOffset = Vector((-offset * 1.6) - ((offset - 10) * 0.2), -offset * 0.6)
-	elseif doCardOffset then
-		hudOffset = Vector(-offset * 1.6, -offset * 0.6)
-	end
 	pos = pos + hudOffset
 
 	return pos
+	
 end
 
 function MCM.GetScreenBottomLeft(offset)
+
+	offset = offset or MCM.Config.HudOffset
+	
 	local pos = Vector(0, MCM.GetScreenBottomRight(0).Y)
-	
-	if not offset then
-		offset = MCM.Config.HudOffset
-	end
-	
 	local hudOffset = Vector(offset * 2.2, -offset * 1.6)
 	pos = pos + hudOffset
 	
 	return pos
+	
 end
 
-function MCM.GetScreenTopRight(offset, doHealthOffset)
+function MCM.GetScreenTopRight(offset)
+
+	offset = offset or MCM.Config.HudOffset
+	
 	local pos = Vector(MCM.GetScreenBottomRight(0).X, 0)
-	
-	if not offset then
-		offset = MCM.Config.HudOffset
-	end
-	
 	local hudOffset = Vector(-offset * 2.2, offset * 1.2)
-	if doHealthOffset then
-		hudOffset = Vector((-offset * 2.2) - ((offset - 10) * 0.2), offset * 1.2)
-	end
 	pos = pos + hudOffset
 
 	return pos
+	
 end
 
 function MCM.GetScreenTopLeft(offset)
+
+	offset = offset or MCM.Config.HudOffset
+	
 	local pos = MCM.VECTOR_ZERO
-	
-	if not offset then
-		offset = MCM.Config.HudOffset
-	end
-	
 	local hudOffset = Vector(offset * 2, offset * 1.2)
 	pos = pos + hudOffset
 	
 	return pos
+	
 end
 
 --display info on new run, based on stageapi code
@@ -354,7 +345,7 @@ end)
 MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	if versionPrintTimer > 0 then
 		local bottomRight = MCM.GetScreenBottomRight(0)
-		local center = MCM.GetScreenCenterPosition()
+		local center = MCM.GetScreenCenter()
 		local renderY = bottomRight.Y - 28
 		local renderX = center.X
 
@@ -1851,7 +1842,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			end
 		end
 		
-		local centerPos = MCM.GetScreenCenterPosition()
+		local centerPos = MCM.GetScreenCenter()
 		local leftPos = centerPos + Vector(-142,-102)
 		local titlePos = centerPos + Vector(68,-118)
 		local infoPos = centerPos + Vector(-4,106)
