@@ -1171,10 +1171,14 @@ local optionsSpriteColorAlpha = colorHalf
 local mainFontColor = KColor(34/255,32/255,30/255,1)
 local leftFontColor = KColor(35/255,31/255,30/255,1)
 local leftFontColorSelected = KColor(35/255,50/255,70/255,1)
+
 local optionsFontColor = KColor(34/255,32/255,30/255,1)
-local optionsFontColorTitle = KColor(50/255,0,0,1)
 local optionsFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
+local optionsFontColorNoCursor = KColor(34/255,32/255,30/255,0.8)
+local optionsFontColorNoCursorAlpha = KColor(34/255,32/255,30/255,0.4)
+local optionsFontColorTitle = KColor(50/255,0,0,1)
 local optionsFontColorTitleAlpha = KColor(50/255,0,0,0.5)
+
 local subcategoryFontColor = KColor(34/255,32/255,30/255,1)
 local subcategoryFontColorSelected = KColor(34/255,50/255,70/255,1)
 local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
@@ -2032,7 +2036,13 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							local font = configMenuFont10
 							local color = optionsFontColor
 							if not configMenuInOptions then
-								color = optionsFontColorAlpha
+								if thisOption.NoCursorHere then
+									color = optionsFontColorNoCursorAlpha
+								else
+									color = optionsFontColorAlpha
+								end
+							elseif thisOption.NoCursorHere then
+								color = optionsFontColorNoCursor
 							end
 							if optionType == ModConfigMenuOptionType.TITLE then
 								heightOffset = 8
