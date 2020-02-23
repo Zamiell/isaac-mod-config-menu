@@ -1,8 +1,9 @@
 local MCM = {}
-MCM.Mod = RegisterMod("Mod Config Menu", 1)
 MCM.Version = 14
 
 Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
+
+local mod = RegisterMod("Mod Config Menu", 1)
 
 local vectorZero = Vector(0,0)
 
@@ -20,34 +21,49 @@ MCM.ControlsEnabled = true
 
 --table handlers
 function MCM.CopyTable(tableToCopy)
+
 	local table2 = {}
+	
 	for i, value in pairs(tableToCopy) do
+	
 		if type(value) == "table" then
 			table2[i] = MCM.CopyTable(value)
 		else
 			table2[i] = value
 		end
+		
 	end
+	
 	return table2
+	
 end
 
 function MCM.FillTable(tableToFill, tableToFillFrom)
+
 	for i, value in pairs(tableToFillFrom) do
+	
 		if tableToFill[i] ~= nil then
+		
 			if type(value) == "table" then
 				tableToFill[i] = MCM.FillTable(tableToFill[i], value)
 			else
 				tableToFill[i] = value
 			end
+			
 		else
+		
 			if type(value) == "table" then
 				tableToFill[i] = MCM.FillTable({}, value)
 			else
 				tableToFill[i] = value
 			end
+			
 		end
+		
 	end
+	
 	return tableToFill
+	
 end
 
 --custom callbacks
@@ -190,53 +206,40 @@ MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
 
 local json = require("json")
 
-function MCM.ClearSave(bypassGameStart)
-	if GameStarted or bypassGameStart then
-		MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
-	end
-end
-
-function MCM.Save(bypassGameStart)
-	if GameStarted or bypassGameStart then
-		local saveData = MCM.CopyTable(MCM.ConfigDefault)
-		saveData = MCM.FillTable(saveData, MCM.Config)
-		
-		MCM.Mod:SaveData(json.encode(saveData))
-	end
-end
-
-function MCM.Load(fromSave)
+function MCM.GetSave()
+	
 	local saveData = MCM.CopyTable(MCM.ConfigDefault)
+	saveData = MCM.FillTable(saveData, MCM.Config)
 	
-	if MCM.Mod:HasData() then
-		local loadData = json.decode(MCM.Mod:LoadData())
-		saveData = MCM.FillTable(saveData, loadData)
-	end
+	saveData = json.encode(saveData)
 	
-	MCM.Config = MCM.CopyTable(saveData)
-	MCM.Save(true)
+	return saveData
+	
 end
 
-GameStarted = false
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
-	GameStarted = true
-	
-	MCM.Load(isSaveGame)
-end)
+function MCM.LoadSave(fromData)
 
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
-	MCM.Save()
-	MCM.ClearSave(true)
+	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
 	
-	GameStarted = false
-end)
-
-MCM.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
-	MCM.Save()
-	MCM.ClearSave(true)
+		local saveData = MCM.CopyTable(MCM.ConfigDefault)
+		
+		if type(fromData) == "string" then
+			fromData = json.decode(fromData)
+		end
+		saveData = MCM.FillTable(saveData, fromData)
+		
+		local currentData = MCM.CopyTable(MCM.Config)
+		saveData = MCM.FillTable(currentData, saveData)
+		
+		MCM.Config = MCM.CopyTable(saveData)
+		
+		return saveData
+		
+	else
+		error("MCM.LoadSave - arg 1 (fromData) couldnt be decoded or used directly as mcm data")
+	end
 	
-	GameStarted = false
-end)
+end
 
 -----------------------------
 --screen position functions--
@@ -313,7 +316,7 @@ versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
 
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 
 	if MCM.Config.ShowControls then
 	
@@ -326,7 +329,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
 	
 end)
 
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 
 	if versionPrintTimer > 0 then
 	
@@ -336,7 +339,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 	
 end)
 
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 	if versionPrintTimer > 0 then
 	
@@ -1185,7 +1188,7 @@ local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
 local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	local isPaused = game:IsPaused()
 
 	local pressingButton = ""
@@ -2300,7 +2303,7 @@ MCM.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 end)
 
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
 	renderingConfigMenu = false
 end)
 
@@ -2332,7 +2335,7 @@ function MCM.ToggleConfigMenu()
 end
 
 --prevents the pause menu from opening when in the mod config menu
-MCM.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
+mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
 	if renderingConfigMenu and buttonAction ~= ButtonAction.ACTION_FULLSCREEN and buttonAction ~= ButtonAction.ACTION_CONSOLE then
 		if inputHook == InputHook.IS_ACTION_PRESSED or inputHook == InputHook.IS_ACTION_TRIGGERED then 
 			return false
@@ -2368,7 +2371,7 @@ function RoomIsSafe()
 end
 
 local checkedForPotato = false
-MCM.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
 	if not checkedForPotato then
 	
 		local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
@@ -2391,7 +2394,7 @@ local toggleCommands = {
 	["mcm"] = true,
 	["mc"] = true
 }
-MCM.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
+mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
 	command = command:lower()
 	if toggleCommands[command] then
 		MCM.ToggleConfigMenu()
