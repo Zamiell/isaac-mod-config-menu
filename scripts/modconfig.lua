@@ -3,8 +3,14 @@ MCM.Version = 14
 
 Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
 
+--require some lua libraries
+local json = require("json")
+local ScreenHelper = require("scripts.screenhelper")
+
+--create the mod
 local mod = RegisterMod("Mod Config Menu", 1)
 
+--cache some values
 local vectorZero = Vector(0,0)
 
 local colorDefault = Color(1,1,1,1,0,0,0)
@@ -16,8 +22,6 @@ local seeds = game:GetSeeds()
 local level = game:GetLevel()
 local room = game:GetRoom()
 local sfx = SFXManager()
-
-MCM.ControlsEnabled = true
 
 --table handlers
 function MCM.CopyTable(tableToCopy)
@@ -204,8 +208,6 @@ MCM.ConfigDefault = {
 }
 MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
 
-local json = require("json")
-
 function MCM.GetSave()
 	
 	local saveData = MCM.CopyTable(MCM.ConfigDefault)
@@ -233,79 +235,13 @@ function MCM.LoadSave(fromData)
 		
 		MCM.Config = MCM.CopyTable(saveData)
 		
+		ScreenHelper.SetOffset(MCM.Config.HudOffset)
+		
 		return saveData
 		
 	else
 		error("MCM.LoadSave - arg 1 (fromData) couldnt be decoded or used directly as mcm data")
 	end
-	
-end
-
------------------------------
---screen position functions--
------------------------------
-function MCM.GetScreenSize() --based off of code from kilburn
-
-    local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
-    
-    local rx = pos.X + 60 * 26 / 40
-    local ry = pos.Y + 140 * (26 / 40)
-    
-    return Vector(rx*2 + 13*26, ry*2 + 7*26)
-	
-end
-
-function MCM.GetScreenCenter()
-
-	return MCM.GetScreenSize() / 2
-	
-end
-
-function MCM.GetScreenBottomRight(offset)
-
-	offset = offset or MCM.Config.HudOffset
-	
-	local pos = MCM.GetScreenSize()
-	local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
-	pos = pos + hudOffset
-
-	return pos
-	
-end
-
-function MCM.GetScreenBottomLeft(offset)
-
-	offset = offset or MCM.Config.HudOffset
-	
-	local pos = Vector(0, MCM.GetScreenBottomRight(0).Y)
-	local hudOffset = Vector(offset * 2.2, -offset * 1.6)
-	pos = pos + hudOffset
-	
-	return pos
-	
-end
-
-function MCM.GetScreenTopRight(offset)
-
-	offset = offset or MCM.Config.HudOffset
-	
-	local pos = Vector(MCM.GetScreenBottomRight(0).X, 0)
-	local hudOffset = Vector(-offset * 2.2, offset * 1.2)
-	pos = pos + hudOffset
-
-	return pos
-	
-end
-
-function MCM.GetScreenTopLeft(offset)
-
-	offset = offset or MCM.Config.HudOffset
-	
-	local pos = vectorZero
-	local hudOffset = Vector(offset * 2, offset * 1.2)
-	pos = pos + hudOffset
-	
-	return pos
 	
 end
 
@@ -343,7 +279,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 	if versionPrintTimer > 0 then
 	
-		local bottomRight = MCM.GetScreenBottomRight(0)
+		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
 
 		local openMenuButton = Keyboard.KEY_F10
 		if type(MCM.Config.OpenMenuKeyboard) == "number" and MCM.Config.OpenMenuKeyboard > -1 then
@@ -679,26 +615,31 @@ MCM.AddSetting("General", { --HUD OFFSET
 	Display = function(cursorIsHere)
 		if cursorIsHere then
 			configMenuOptionsCorner:SetFrame("Corner", 2)
-			configMenuOptionsCorner:Render(MCM.GetScreenBottomRight(), vectorZero, vectorZero)
+			configMenuOptionsCorner:Render(ScreenHelper.GetScreenBottomRight(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 3)
-			configMenuOptionsCorner:Render(MCM.GetScreenBottomLeft(), vectorZero, vectorZero)
+			configMenuOptionsCorner:Render(ScreenHelper.GetScreenBottomLeft(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 1)
-			configMenuOptionsCorner:Render(MCM.GetScreenTopRight(), vectorZero, vectorZero)
+			configMenuOptionsCorner:Render(ScreenHelper.GetScreenTopRight(), vectorZero, vectorZero)
 			
 			configMenuOptionsCorner:SetFrame("Corner", 0)
-			configMenuOptionsCorner:Render(MCM.GetScreenTopLeft(), vectorZero, vectorZero)
+			configMenuOptionsCorner:Render(ScreenHelper.GetScreenTopLeft(), vectorZero, vectorZero)
 		end
 		return "Hud Offset: $scroll" .. tostring(math.floor(MCM.Config.HudOffset))
 	end,
 	OnChange = function(currentNum)
+	
 		MCM.Config.HudOffset = currentNum
+		
+		ScreenHelper.SetOffset(MCM.Config.HudOffset)
+		
 		if #MCM.HudOffsetCallbacks > 0 then
 			for _, callbackFunction in ipairs(MCM.HudOffsetCallbacks) do
 				callbackFunction(currentNum)
 			end
 		end
+		
 	end,
 	Info = {
 		"How far from the corners of the screen",
@@ -1188,6 +1129,7 @@ local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
 local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
+MCM.ControlsEnabled = true
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	local isPaused = game:IsPaused()
 
@@ -1845,7 +1787,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			end
 		end
 		
-		local centerPos = MCM.GetScreenCenter()
+		local centerPos = ScreenHelper.GetScreenCenter()
 		local leftPos = centerPos + Vector(-142,-102)
 		local titlePos = centerPos + Vector(68,-118)
 		local infoPos = centerPos + Vector(-4,106)
@@ -2218,7 +2160,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if shouldShowControls then
 
 			--back
-			local bottomLeft = MCM.GetScreenBottomLeft(0)
+			local bottomLeft = ScreenHelper.GetScreenBottomLeft(0)
 			if not configMenuInSubcategory then
 				CornerExit:Render(bottomLeft, vectorZero, vectorZero)
 			else
@@ -2236,7 +2178,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			configMenuFont10:DrawString(goBackString, (bottomLeft.X - configMenuFont10:GetStringWidthUTF8(goBackString)/2) + 36, bottomLeft.Y - 24, mainFontColor, 0, true)
 
 			--select
-			local bottomRight = MCM.GetScreenBottomRight(0)
+			local bottomRight = ScreenHelper.GetScreenBottomRight(0)
 			if not configMenuInPopup then
 			
 				local foundValidPopup = false
