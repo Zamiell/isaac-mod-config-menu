@@ -29,6 +29,7 @@ local json = require("json")
 local ScreenHelper = require("scripts.screenhelper")
 local CallbackHelper = require("scripts.callbackhelper")
 local TableHelper = require("scripts.tablehelper")
+local InputHelper = require("scripts.inputhelper")
 
 --create the mod
 local mod = RegisterMod("Mod Config Menu", 1)
@@ -80,82 +81,6 @@ CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS = 202
 --function(chargeBarsEnabled)
 CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS = 203
 
---enums
-ModConfigMenuController = {
-	DPAD_LEFT = 0,
-	DPAD_RIGHT = 1,
-	DPAD_UP = 2,
-	DPAD_DOWN = 3,
-	BUTTON_A = 4,
-	BUTTON_B = 5,
-	BUTTON_X = 6,
-	BUTTON_Y = 7,
-	BUMPER_LEFT = 8,
-	TRIGGER_LEFT = 9,
-	STICK_LEFT = 10,
-	BUMPER_RIGHT = 11,
-	TRIGGER_RIGHT = 12,
-	STICK_RIGHT = 13,
-	BUTTON_BACK = 14,
-	BUTTON_START = 15
-}
-
-ModConfigMenuKeyboardToString = {}
-do
-	for key,num in pairs(Keyboard) do
-		local keyString = key
-		
-		local keyStart, keyEnd = string.find(keyString, "KEY_")
-		keyString = string.sub(keyString, keyEnd+1, string.len(keyString))
-		
-		keyString = string.gsub(keyString, "_", " ")
-		
-		ModConfigMenuKeyboardToString[num] = keyString
-	end
-end
-
-ModConfigMenuControllerToString = {}
-do
-	for button,num in pairs(ModConfigMenuController) do
-		local buttonString = button
-		
-		if string.match(buttonString, "BUTTON_") then
-			local buttonStart, buttonEnd = string.find(buttonString, "BUTTON_")
-			buttonString = string.sub(buttonString, buttonEnd+1, string.len(buttonString))
-		end
-		
-		if string.match(buttonString, "BUMPER_") then
-			local bumperStart, bumperEnd = string.find(buttonString, "BUMPER_")
-			buttonString = string.sub(buttonString, bumperEnd+1, string.len(buttonString)) .. "_BUMPER"
-		end
-		
-		if string.match(buttonString, "TRIGGER_") then
-			local triggerStart, triggerEnd = string.find(buttonString, "TRIGGER_")
-			buttonString = string.sub(buttonString, triggerEnd+1, string.len(buttonString)) .. "_TRIGGER"
-		end
-		
-		if string.match(buttonString, "STICK_") then
-			local stickStart, stickEnd = string.find(buttonString, "STICK_")
-			buttonString = string.sub(buttonString, stickEnd+1, string.len(buttonString)) .. "_STICK"
-		end
-		
-		buttonString = string.gsub(buttonString, "_", " ")
-		
-		ModConfigMenuControllerToString[num] = buttonString
-	end
-end
-
-ModConfigMenuOptionType = {
-	TEXT = 1,
-	SPACE = 2,
-	SCROLL = 3,
-	BOOLEAN = 4,
-	NUMBER = 5,
-	KEYBIND_KEYBOARD = 6,
-	KEYBIND_CONTROLLER = 7,
-	TITLE = 8
-}
-
 
 ----------
 --saving--
@@ -167,7 +92,7 @@ MCM.ConfigDefault = {
 	BigBooks = true,
 	
 	OpenMenuKeyboard = Keyboard.KEY_L,
-	OpenMenuController = ModConfigMenuController.STICK_RIGHT,
+	OpenMenuController = InputHelper.Controller.STICK_RIGHT,
 	
 	HideHudInMenu = true,
 	ResetToDefault = Keyboard.KEY_R,
@@ -258,8 +183,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		end
 
 		local openMenuButtonString = "Unknown Key"
-		if ModConfigMenuKeyboardToString[openMenuButton] then
-			openMenuButtonString = ModConfigMenuKeyboardToString[openMenuButton]
+		if InputHelper.KeyboardToString[openMenuButton] then
+			openMenuButtonString = InputHelper.KeyboardToString[openMenuButton]
 		end
 		
 		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
@@ -270,119 +195,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	
 end)
 
---based on some revelations menu code, handles some dumb controller input nonsense
-function MCM.SafeKeyboardTriggered(key, controllerIndex)
-	return Input.IsButtonTriggered(key, controllerIndex) and not Input.IsButtonTriggered(key % 32, controllerIndex)
-end
-function MCM.SafeKeyboardPressed(key, controllerIndex)
-	return Input.IsButtonPressed(key, controllerIndex) and not Input.IsButtonPressed(key % 32, controllerIndex)
-end
-
---multiple button checks
-function MCM.MultipleActionTriggered(actions, controllerIndex)
-	for i,action in pairs(actions) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if Input.IsActionTriggered(action, index) then
-				return action
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
-function MCM.MultipleActionPressed(actions, controllerIndex)
-	for i,action in pairs(actions) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if Input.IsActionPressed(action, index) then
-				return action
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
-function MCM.MultipleButtonTriggered(buttons, controllerIndex)
-	for i,button in pairs(buttons) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if Input.IsButtonTriggered(button, index) then
-				return button
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
-function MCM.MultipleButtonPressed(buttons, controllerIndex)
-	for i,button in pairs(buttons) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if Input.IsButtonPressed(button, index) then
-				return button
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
-function MCM.MultipleKeyboardTriggered(keys, controllerIndex)
-	for i,key in pairs(keys) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if MCM.SafeKeyboardTriggered(key, index) then
-				return key
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
-function MCM.MultipleKeyboardPressed(keys, controllerIndex)
-	for i,key in pairs(keys) do
-		for index=0, 4 do
-			if controllerIndex ~= nil then
-				index = controllerIndex
-			end
-			if MCM.SafeKeyboardPressed(key, index) then
-				return key
-			end
-			if controllerIndex ~= nil then
-				break
-			end
-		end
-	end
-	return nil
-end
-
---set up the menu sprites and font
-local renderingConfigMenu = false
+------------------------------------
+--set up the menu sprites and font--
+------------------------------------
+MCM.IsVisible = false
 
 local configMenuMain = Sprite()
 configMenuMain:Load("gfx/ui/modconfig/menu.anm2", true)
@@ -485,7 +301,21 @@ ModConfigMenuPopupGfx = {
 	WIDE_LARGE = "gfx/ui/modconfig/popup_wide_large.png"
 }
 
---config menu data tables and functions
+
+-------------------------
+--add setting functions--
+-------------------------
+ModConfigMenuOptionType = {
+	TEXT = 1,
+	SPACE = 2,
+	SCROLL = 3,
+	BOOLEAN = 4,
+	NUMBER = 5,
+	KEYBIND_KEYBOARD = 6,
+	KEYBIND_CONTROLLER = 7,
+	TITLE = 8
+}
+
 ModConfigMenuData = {}
 function MCM.AddSetting(category, subcategory, settingTable)
 	if settingTable == nil then
@@ -755,8 +585,8 @@ MCM.AddSetting("Mod Config Menu", { --KEYBOARD KEYBIND
 		local key = "None"
 		if MCM.Config.OpenMenuKeyboard > -1 then
 			key = "Unknown Key"
-			if ModConfigMenuKeyboardToString[MCM.Config.OpenMenuKeyboard] then
-				key = ModConfigMenuKeyboardToString[MCM.Config.OpenMenuKeyboard]
+			if InputHelper.KeyboardToString[MCM.Config.OpenMenuKeyboard] then
+				key = InputHelper.KeyboardToString[MCM.Config.OpenMenuKeyboard]
 			end
 		end
 		return "Open Menu: " .. key .. " (keyboard)"
@@ -772,17 +602,17 @@ MCM.AddSetting("Mod Config Menu", { --KEYBOARD KEYBIND
 	Popup = function()
 		local goBackString = "back"
 		if MCM.Config.LastBackPressed then
-			if ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed]
-			elseif ModConfigMenuControllerToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuControllerToString[MCM.Config.LastBackPressed]
+			if InputHelper.KeyboardToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.KeyboardToString[MCM.Config.LastBackPressed]
+			elseif InputHelper.ControllerToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.ControllerToString[MCM.Config.LastBackPressed]
 			end
 		end
 		
 		local keepSettingString1 = ""
 		local keepSettingString2 = ""
-		if MCM.Config.OpenMenuKeyboard > -1 and ModConfigMenuKeyboardToString[MCM.Config.OpenMenuKeyboard] then
-			keepSettingString1 = "This setting is currently set to \"" .. ModConfigMenuKeyboardToString[MCM.Config.OpenMenuKeyboard] .. "\"."
+		if MCM.Config.OpenMenuKeyboard > -1 and InputHelper.KeyboardToString[MCM.Config.OpenMenuKeyboard] then
+			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.KeyboardToString[MCM.Config.OpenMenuKeyboard] .. "\"."
 			keepSettingString2 = "Press this button to keep it unchanged."
 		end
 		
@@ -807,8 +637,8 @@ MCM.AddSetting("Mod Config Menu", { --CONTROLLER KEYBIND
 		local key = "None"
 		if MCM.Config.OpenMenuController > -1 then
 			key = "Unknown Button"
-			if ModConfigMenuControllerToString[MCM.Config.OpenMenuController] then
-				key = ModConfigMenuControllerToString[MCM.Config.OpenMenuController]
+			if InputHelper.ControllerToString[MCM.Config.OpenMenuController] then
+				key = InputHelper.ControllerToString[MCM.Config.OpenMenuController]
 			end
 		end
 		return "Open Menu: " .. key .. " (controller)"
@@ -824,17 +654,17 @@ MCM.AddSetting("Mod Config Menu", { --CONTROLLER KEYBIND
 	Popup = function()
 		local goBackString = "back"
 		if MCM.Config.LastBackPressed then
-			if ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed]
-			elseif ModConfigMenuControllerToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuControllerToString[MCM.Config.LastBackPressed]
+			if InputHelper.KeyboardToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.KeyboardToString[MCM.Config.LastBackPressed]
+			elseif InputHelper.ControllerToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.ControllerToString[MCM.Config.LastBackPressed]
 			end
 		end
 		
 		local keepSettingString1 = ""
 		local keepSettingString2 = ""
-		if MCM.Config.OpenMenuController > -1 and ModConfigMenuControllerToString[MCM.Config.OpenMenuController] then
-			keepSettingString1 = "This setting is currently set to \"" .. ModConfigMenuControllerToString[MCM.Config.OpenMenuController] .. "\"."
+		if MCM.Config.OpenMenuController > -1 and InputHelper.ControllerToString[MCM.Config.OpenMenuController] then
+			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.ControllerToString[MCM.Config.OpenMenuController] .. "\"."
 			keepSettingString2 = "Press this button to keep it unchanged."
 		end
 		
@@ -891,8 +721,8 @@ MCM.AddSetting("Mod Config Menu", { --RESET TO DEFAULT BUTTON
 		local key = "None"
 		if MCM.Config.ResetToDefault > -1 then
 			key = "Unknown Key"
-			if ModConfigMenuKeyboardToString[MCM.Config.ResetToDefault] then
-				key = ModConfigMenuKeyboardToString[MCM.Config.ResetToDefault]
+			if InputHelper.KeyboardToString[MCM.Config.ResetToDefault] then
+				key = InputHelper.KeyboardToString[MCM.Config.ResetToDefault]
 			end
 		end
 		return "Reset To Default Keybind: " .. key
@@ -911,17 +741,17 @@ MCM.AddSetting("Mod Config Menu", { --RESET TO DEFAULT BUTTON
 	Popup = function()
 		local goBackString = "back"
 		if MCM.Config.LastBackPressed then
-			if ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed]
-			elseif ModConfigMenuControllerToString[MCM.Config.LastBackPressed] then
-				goBackString = ModConfigMenuControllerToString[MCM.Config.LastBackPressed]
+			if InputHelper.KeyboardToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.KeyboardToString[MCM.Config.LastBackPressed]
+			elseif InputHelper.ControllerToString[MCM.Config.LastBackPressed] then
+				goBackString = InputHelper.ControllerToString[MCM.Config.LastBackPressed]
 			end
 		end
 		
 		local keepSettingString1 = ""
 		local keepSettingString2 = ""
-		if MCM.Config.ResetToDefault > -1 and ModConfigMenuKeyboardToString[MCM.Config.ResetToDefault] then
-			keepSettingString1 = "This setting is currently set to \"" .. ModConfigMenuKeyboardToString[MCM.Config.ResetToDefault] .. "\"."
+		if MCM.Config.ResetToDefault > -1 and InputHelper.KeyboardToString[MCM.Config.ResetToDefault] then
+			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.KeyboardToString[MCM.Config.ResetToDefault] .. "\"."
 			keepSettingString2 = "Press this button to keep it unchanged."
 		end
 		
@@ -987,7 +817,7 @@ local actionsBack = {ButtonAction.ACTION_PILLCARD, ButtonAction.ACTION_MAP, Butt
 local actionsSelect = {ButtonAction.ACTION_ITEM, ButtonAction.ACTION_PAUSE, ButtonAction.ACTION_MENUCONFIRM, ButtonAction.ACTION_BOMB}
 
 --ignore these buttons for the above actions
-local ignoreActionButtons = {ModConfigMenuController.BUTTON_A, ModConfigMenuController.BUTTON_B, ModConfigMenuController.BUTTON_X, ModConfigMenuController.BUTTON_Y}
+local ignoreActionButtons = {InputHelper.Controller.BUTTON_A, InputHelper.Controller.BUTTON_B, InputHelper.Controller.BUTTON_X, InputHelper.Controller.BUTTON_Y}
 
 local currentMenuCategory = nil
 local currentMenuSubcategory = nil
@@ -1146,8 +976,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 	if MCM.ControlsEnabled and not isPaused then
 		for i=0, 4 do
-			if MCM.SafeKeyboardTriggered(openMenuGlobal, i)
-			or (openMenuKeyboard > -1 and MCM.SafeKeyboardTriggered(openMenuKeyboard, i))
+			if InputHelper.KeyboardTriggered(openMenuGlobal, i)
+			or (openMenuKeyboard > -1 and InputHelper.KeyboardTriggered(openMenuKeyboard, i))
 			or (openMenuController > -1 and Input.IsButtonTriggered(openMenuController, i)) then
 				pressingNonRebindableKey = true
 				pressedToggleMenu = true
@@ -1159,7 +989,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 	
 	--force close the menu in some situations
-	if renderingConfigMenu then
+	if MCM.IsVisible then
 	
 		if isPaused then
 			MCM.CloseConfigMenu()
@@ -1173,14 +1003,14 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 
 	if revel and revel.data and revel.data.controllerToggle then
-		if openMenuController == ModConfigMenuController.STICK_RIGHT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 3 or revel.data.controllerToggle == 4) then
+		if openMenuController == InputHelper.Controller.STICK_RIGHT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 3 or revel.data.controllerToggle == 4) then
 			revel.data.controllerToggle = 2 --force revelations' menu to only use the left stick
-		elseif openMenuController == ModConfigMenuController.STICK_LEFT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 2 or revel.data.controllerToggle == 4) then
+		elseif openMenuController == InputHelper.Controller.STICK_LEFT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 2 or revel.data.controllerToggle == 4) then
 			revel.data.controllerToggle = 3 --force revelations' menu to only use the right stick
 		end
 	end
 	
-	if renderingConfigMenu then
+	if MCM.IsVisible then
 		if MCM.ControlsEnabled and not isPaused then
 			for i=1, game:GetNumPlayers() do
 				local player = Isaac.GetPlayer(i-1)
@@ -1204,46 +1034,46 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				end
 			end
 			
-			if not MCM.MultipleButtonTriggered(ignoreActionButtons) then
+			if not InputHelper.MultipleButtonTriggered(ignoreActionButtons) then
 				--pressing buttons
-				local downButtonPressed = MCM.MultipleActionTriggered(actionsDown)
+				local downButtonPressed = InputHelper.MultipleActionTriggered(actionsDown)
 				if downButtonPressed then
 					pressingButton = "DOWN"
 				end
-				local upButtonPressed = MCM.MultipleActionTriggered(actionsUp)
+				local upButtonPressed = InputHelper.MultipleActionTriggered(actionsUp)
 				if upButtonPressed then
 					pressingButton = "UP"
 				end
-				local rightButtonPressed = MCM.MultipleActionTriggered(actionsRight)
+				local rightButtonPressed = InputHelper.MultipleActionTriggered(actionsRight)
 				if rightButtonPressed then
 					pressingButton = "RIGHT"
 				end
-				local leftButtonPressed = MCM.MultipleActionTriggered(actionsLeft)
+				local leftButtonPressed = InputHelper.MultipleActionTriggered(actionsLeft)
 				if leftButtonPressed then
 					pressingButton = "LEFT"
 				end
-				local backButtonPressed = MCM.MultipleActionTriggered(actionsBack) or MCM.MultipleKeyboardTriggered({Keyboard.KEY_BACKSPACE})
+				local backButtonPressed = InputHelper.MultipleActionTriggered(actionsBack) or InputHelper.MultipleKeyboardTriggered({Keyboard.KEY_BACKSPACE})
 				if backButtonPressed then
 					pressingButton = "BACK"
-					local possiblyPressedButton = MCM.MultipleKeyboardTriggered(Keyboard)
+					local possiblyPressedButton = InputHelper.MultipleKeyboardTriggered(Keyboard)
 					if possiblyPressedButton then
 						MCM.Config.LastBackPressed = possiblyPressedButton
 					end
 				end
-				local selectButtonPressed = MCM.MultipleActionTriggered(actionsSelect)
+				local selectButtonPressed = InputHelper.MultipleActionTriggered(actionsSelect)
 				if selectButtonPressed then
 					pressingButton = "SELECT"
-					local possiblyPressedButton = MCM.MultipleKeyboardTriggered(Keyboard)
+					local possiblyPressedButton = InputHelper.MultipleKeyboardTriggered(Keyboard)
 					if possiblyPressedButton then
 						MCM.Config.LastSelectPressed = possiblyPressedButton
 					end
 				end
-				if MCM.Config.ResetToDefault > -1 and MCM.MultipleKeyboardTriggered({MCM.Config.ResetToDefault}) then
+				if MCM.Config.ResetToDefault > -1 and InputHelper.MultipleKeyboardTriggered({MCM.Config.ResetToDefault}) then
 					pressingButton = "RESET"
 				end
 				
 				--holding buttons
-				if MCM.MultipleActionPressed(actionsDown) then
+				if InputHelper.MultipleActionPressed(actionsDown) then
 					holdingCounterDown = holdingCounterDown + 1
 				else
 					holdingCounterDown = 0
@@ -1251,7 +1081,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if holdingCounterDown > 20 and holdingCounterDown%5 == 0 then
 					pressingButton = "DOWN"
 				end
-				if MCM.MultipleActionPressed(actionsUp) then
+				if InputHelper.MultipleActionPressed(actionsUp) then
 					holdingCounterUp = holdingCounterUp + 1
 				else
 					holdingCounterUp = 0
@@ -1259,7 +1089,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if holdingCounterUp > 20 and holdingCounterUp%5 == 0 then
 					pressingButton = "UP"
 				end
-				if MCM.MultipleActionPressed(actionsRight) then
+				if InputHelper.MultipleActionPressed(actionsRight) then
 					holdingCounterRight = holdingCounterRight + 1
 				else
 					holdingCounterRight = 0
@@ -1267,7 +1097,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if holdingCounterRight > 20 and holdingCounterRight%5 == 0 then
 					pressingButton = "RIGHT"
 				end
-				if MCM.MultipleActionPressed(actionsLeft) then
+				if InputHelper.MultipleActionPressed(actionsLeft) then
 					holdingCounterLeft = holdingCounterLeft + 1
 				else
 					holdingCounterLeft = 0
@@ -1276,10 +1106,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					pressingButton = "LEFT"
 				end
 			else
-				if MCM.MultipleButtonTriggered({ModConfigMenuController.BUTTON_B}) then
+				if InputHelper.MultipleButtonTriggered({InputHelper.Controller.BUTTON_B}) then
 					pressingButton = "BACK"
 				end
-				if MCM.MultipleButtonTriggered({ModConfigMenuController.BUTTON_A}) then
+				if InputHelper.MultipleButtonTriggered({InputHelper.Controller.BUTTON_A}) then
 					pressingButton = "SELECT"
 				end
 				pressingNonRebindableKey = true
@@ -1339,7 +1169,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 									for i=0, 4 do
 										if optionType == ModConfigMenuOptionType.KEYBIND_KEYBOARD then
 											for j=32, 400 do
-												if MCM.SafeKeyboardTriggered(j, i) then
+												if InputHelper.KeyboardTriggered(j, i) then
 													numberToChange = j
 													recievedInput = true
 													break
@@ -2171,10 +2001,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 			local goBackString = ""
 			if MCM.Config.LastBackPressed then
-				if ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed] then
-					goBackString = ModConfigMenuKeyboardToString[MCM.Config.LastBackPressed]
-				elseif ModConfigMenuControllerToString[MCM.Config.LastBackPressed] then
-					goBackString = ModConfigMenuControllerToString[MCM.Config.LastBackPressed]
+				if InputHelper.KeyboardToString[MCM.Config.LastBackPressed] then
+					goBackString = InputHelper.KeyboardToString[MCM.Config.LastBackPressed]
+				elseif InputHelper.ControllerToString[MCM.Config.LastBackPressed] then
+					goBackString = InputHelper.ControllerToString[MCM.Config.LastBackPressed]
 				end
 			end
 			configMenuFont10:DrawString(goBackString, (bottomLeft.X - configMenuFont10:GetStringWidthUTF8(goBackString)/2) + 36, bottomLeft.Y - 24, mainFontColor, 0, true)
@@ -2203,10 +2033,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				local selectString = ""
 				if MCM.Config.LastSelectPressed then
-					if ModConfigMenuKeyboardToString[MCM.Config.LastSelectPressed] then
-						selectString = ModConfigMenuKeyboardToString[MCM.Config.LastSelectPressed]
-					elseif ModConfigMenuControllerToString[MCM.Config.LastSelectPressed] then
-						selectString = ModConfigMenuControllerToString[MCM.Config.LastSelectPressed]
+					if InputHelper.KeyboardToString[MCM.Config.LastSelectPressed] then
+						selectString = InputHelper.KeyboardToString[MCM.Config.LastSelectPressed]
+					elseif InputHelper.ControllerToString[MCM.Config.LastSelectPressed] then
+						selectString = InputHelper.ControllerToString[MCM.Config.LastSelectPressed]
 					end
 				end
 				configMenuFont10:DrawString(selectString, (bottomRight.X - configMenuFont10:GetStringWidthUTF8(selectString)/2) - 36, bottomRight.Y - 24, mainFontColor, 0, true)
@@ -2248,7 +2078,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 end)
 
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
-	renderingConfigMenu = false
+	MCM.IsVisible = false
 end)
 
 function MCM.OpenConfigMenu()
@@ -2256,7 +2086,7 @@ function MCM.OpenConfigMenu()
 		if MCM.Config.HideHudInMenu then
 			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
 		end
-		renderingConfigMenu = true
+		MCM.IsVisible = true
 	else
 		sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 	end
@@ -2267,11 +2097,11 @@ function MCM.CloseConfigMenu()
 	MCM.LeaveOptions()
 	MCM.LeaveSubcategory()
 	seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
-	renderingConfigMenu = false
+	MCM.IsVisible = false
 end
 
 function MCM.ToggleConfigMenu()
-	if renderingConfigMenu then
+	if MCM.IsVisible then
 		MCM.CloseConfigMenu()
 	else
 		MCM.OpenConfigMenu()
@@ -2280,7 +2110,7 @@ end
 
 --prevents the pause menu from opening when in the mod config menu
 mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
-	if renderingConfigMenu and buttonAction ~= ButtonAction.ACTION_FULLSCREEN and buttonAction ~= ButtonAction.ACTION_CONSOLE then
+	if MCM.IsVisible and buttonAction ~= ButtonAction.ACTION_FULLSCREEN and buttonAction ~= ButtonAction.ACTION_CONSOLE then
 		if inputHook == InputHook.IS_ACTION_PRESSED or inputHook == InputHook.IS_ACTION_TRIGGERED then 
 			return false
 		else
