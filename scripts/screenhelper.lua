@@ -1,6 +1,7 @@
 local ScreenHelper = {}
 ScreenHelper.Version = 1
 
+
 ---------------------
 --hud offset helper--
 ---------------------
@@ -21,6 +22,7 @@ function ScreenHelper.GetOffset()
 	return ScreenOffset
 
 end
+
 
 ------------------------------------
 --screen size and corner functions--
@@ -92,5 +94,6 @@ function ScreenHelper.GetScreenTopLeft(offset)
 	return pos
 	
 end
+
 
 return ScreenHelper

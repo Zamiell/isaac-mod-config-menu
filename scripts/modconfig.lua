@@ -6,6 +6,7 @@ Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
 --require some lua libraries
 local json = require("json")
 local ScreenHelper = require("scripts.screenhelper")
+local CallbackHelper = require("scripts.callbackhelper")
 
 --create the mod
 local mod = RegisterMod("Mod Config Menu", 1)
@@ -23,7 +24,10 @@ local level = game:GetLevel()
 local room = game:GetRoom()
 local sfx = SFXManager()
 
---table handlers
+
+-------------------
+--table functions--
+-------------------
 function MCM.CopyTable(tableToCopy)
 
 	local table2 = {}
@@ -70,46 +74,39 @@ function MCM.FillTable(tableToFill, tableToFillFrom)
 	
 end
 
---custom callbacks
-MCM.HudOffsetCallbacks = {}
-function MCM.AddHudOffsetChangeCallback(callbackFunction)
-	if not callbackFunction then
-		error("AddHudOffsetChangeCallback Error: No valid callback function provided")
-		return
-	end
-	MCM.HudOffsetCallbacks = MCM.HudOffsetCallbacks or {}
-	MCM.HudOffsetCallbacks[#MCM.HudOffsetCallbacks+1] = callbackFunction
-end
 
-MCM.OverlayCallbacks = {}
-function MCM.AddOverlayChangeCallback(callbackFunction)
-	if not callbackFunction then
-		error("AddOverlayChangeCallback Error: No valid callback function provided")
-		return
-	end
-	MCM.OverlayCallbacks = MCM.OverlayCallbacks or {}
-	MCM.OverlayCallbacks[#MCM.OverlayCallbacks+1] = callbackFunction
-end
+--------------------
+--custom callbacks--
+--------------------
 
-MCM.ChargeBarCallbacks = {}
-function MCM.AddChargeBarChangeCallback(callbackFunction)
-	if not callbackFunction then
-		error("AddChargeBarChangeCallback Error: No valid callback function provided")
-		return
-	end
-	MCM.ChargeBarCallbacks = MCM.ChargeBarCallbacks or {}
-	MCM.ChargeBarCallbacks[#MCM.ChargeBarCallbacks+1] = callbackFunction
-end
+--POST MODIFY HUD OFFSET
+--gets called when the hud offset setting is changed in the general mod config menu section
+--use this if you need to change anything in your mod when hud offset is changed
+--function(hudOffset)
+CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 200
 
-MCM.BigBookCallbacks = {}
-function MCM.AddBigBookChangeCallback(callbackFunction)
-	if not callbackFunction then
-		error("AddBigBookChangeCallback Error: No valid callback function provided")
-		return
-	end
-	MCM.BigBookCallbacks = MCM.BigBookCallbacks or {}
-	MCM.BigBookCallbacks[#MCM.BigBookCallbacks+1] = callbackFunction
-end
+--this will make ScreenHelper's offset match MCM's offset when it is changed
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, function(_, hudOffset)
+	ScreenHelper.SetOffset(hudOffset)
+end)
+
+--POST MODIFY OVERLAYS
+--gets called when the overlays setting is changed in the general mod config menu section
+--use this if you need to change anything in your mod when overlays are enabled or disabled
+--function(overlaysEnabled)
+CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 201
+
+--POST MODIFY CHARGE BARS
+--gets called when the charge bars setting is changed in the general mod config menu section
+--use this if you need to change anything in your mod when charge bars are enabled or disabled
+--function(chargeBarsEnabled)
+CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS = 202
+
+--POST MODIFY BIG BOOKS
+--gets called when the big books setting is changed in the general mod config menu section
+--use this if you need to change anything in your mod when big books are enabled or disabled
+--function(chargeBarsEnabled)
+CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS = 203
 
 --enums
 ModConfigMenuController = {
@@ -187,6 +184,7 @@ ModConfigMenuOptionType = {
 	TITLE = 8
 }
 
+
 ----------
 --saving--
 ----------
@@ -235,6 +233,7 @@ function MCM.LoadSave(fromData)
 		
 		MCM.Config = MCM.CopyTable(saveData)
 		
+		--make sure ScreenHelper's offset matches MCM's offset
 		ScreenHelper.SetOffset(MCM.Config.HudOffset)
 		
 		return saveData
@@ -598,6 +597,7 @@ function MCM.AddSpace(category, subcategory)
 	return MCM.AddSetting(category, subcategory, settingTable)
 end
 
+
 --------------------
 --GENERAL SETTINGS--
 --------------------
@@ -613,7 +613,9 @@ MCM.AddSetting("General", { --HUD OFFSET
 	end,
 	Default = MCM.ConfigDefault.HudOffset,
 	Display = function(cursorIsHere)
+	
 		if cursorIsHere then
+		
 			configMenuOptionsCorner:SetFrame("Corner", 2)
 			configMenuOptionsCorner:Render(ScreenHelper.GetScreenBottomRight(), vectorZero, vectorZero)
 			
@@ -625,20 +627,23 @@ MCM.AddSetting("General", { --HUD OFFSET
 			
 			configMenuOptionsCorner:SetFrame("Corner", 0)
 			configMenuOptionsCorner:Render(ScreenHelper.GetScreenTopLeft(), vectorZero, vectorZero)
+			
 		end
+		
 		return "Hud Offset: $scroll" .. tostring(math.floor(MCM.Config.HudOffset))
+		
 	end,
 	OnChange = function(currentNum)
 	
 		MCM.Config.HudOffset = currentNum
 		
-		ScreenHelper.SetOffset(MCM.Config.HudOffset)
-		
-		if #MCM.HudOffsetCallbacks > 0 then
-			for _, callbackFunction in ipairs(MCM.HudOffsetCallbacks) do
-				callbackFunction(currentNum)
-			end
-		end
+		--MCM_POST_MODIFY_HUD_OFFSET
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, --callback id
+			nil, --function to handle it
+			{currentNum} --args to send
+		)
 		
 	end,
 	Info = {
@@ -655,19 +660,27 @@ MCM.AddSetting("General", { --OVERLAYS
 	end,
 	Default = MCM.ConfigDefault.Overlays,
 	Display = function()
+	
 		local onOff = "Off"
 		if MCM.Config.Overlays then
 			onOff = "On"
 		end
+		
 		return "Overlays: " .. onOff
+		
 	end,
 	OnChange = function(currentBool)
+	
 		MCM.Config.Overlays = currentBool
-		if #MCM.OverlayCallbacks > 0 then
-			for _, callbackFunction in ipairs(MCM.OverlayCallbacks) do
-				callbackFunction(currentBool)
-			end
-		end
+		
+		--MCM_POST_MODIFY_OVERLAYS
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, --callback id
+			nil, --function to handle it
+			{currentBool} --args to send
+		)
+		
 	end,
 	Info = {
 		"Enable or disable custom visual overlays,",
@@ -681,19 +694,27 @@ MCM.AddSetting("General", { --CHARGE BARS
 	end,
 	Default = MCM.ConfigDefault.ChargeBars,
 	Display = function()
+	
 		local onOff = "Off"
 		if MCM.Config.ChargeBars then
 			onOff = "On"
 		end
+		
 		return "Charge Bars: " .. onOff
+		
 	end,
 	OnChange = function(currentBool)
+	
 		MCM.Config.ChargeBars = currentBool
-		if #MCM.ChargeBarCallbacks > 0 then
-			for _, callbackFunction in ipairs(MCM.ChargeBarCallbacks) do
-				callbackFunction(currentBool)
-			end
-		end
+		
+		--MCM_POST_CHARGE_BARS
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS, --callback id
+			nil, --function to handle it
+			{currentBool} --args to send
+		)
+		
 	end,
 	Info = {
 		"Enable or disable custom charge bar visuals",
@@ -707,19 +728,27 @@ MCM.AddSetting("General", { --BIGBOOKS
 	end,
 	Default = MCM.ConfigDefault.BigBooks,
 	Display = function()
+	
 		local onOff = "Off"
 		if MCM.Config.BigBooks then
 			onOff = "On"
 		end
+		
 		return "Bigbooks: " .. onOff
+		
 	end,
 	OnChange = function(currentBool)
+	
 		MCM.Config.BigBooks = currentBool
-		if #MCM.BigBookCallbacks > 0 then
-			for _, callbackFunction in ipairs(MCM.BigBookCallbacks) do
-				callbackFunction(currentBool)
-			end
-		end
+		
+		--MCM_POST_BIG_BOOKS
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS, --callback id
+			nil, --function to handle it
+			{currentBool} --args to send
+		)
+		
 	end,
 	Info = {
 		"Enable or disable custom bigbook overlays,",
@@ -731,6 +760,7 @@ MCM.AddSpace("General") --SPACE
 
 MCM.AddText("General", "These settings apply to")
 MCM.AddText("General", "all mods which support them")
+
 
 ----------------------------
 --MOD CONFIG MENU SETTINGS--
@@ -1163,7 +1193,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			MCM.CloseConfigMenu()
 		end
 		
-		if not RoomIsSafe() then
+		if not MCM.RoomIsSafe() then
 			MCM.CloseConfigMenu()
 			sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 		end
@@ -2250,7 +2280,7 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
 end)
 
 function MCM.OpenConfigMenu()
-	if RoomIsSafe() then
+	if MCM.RoomIsSafe() then
 		if MCM.Config.HideHudInMenu then
 			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
 		end
@@ -2289,7 +2319,7 @@ end)
 
 --returns true if the room is clear and there are no active enemies and there are no projectiles
 MCM.IgnoreActiveEnemies = {}
-function RoomIsSafe()
+function MCM.RoomIsSafe()
 
 	local roomHasDanger = false
 	
@@ -2343,10 +2373,12 @@ mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
 	end
 end)
 
+
 ------------
 --FINISHED--
 ------------
 Isaac.DebugString("Mod Config Menu v" .. MCM.Version .. " loaded!")
 print("Mod Config Menu v" .. MCM.Version .. " loaded!")
+
 
 return MCM
