@@ -1,6 +1,26 @@
 local CallbackHelper = {}
 CallbackHelper.Version = 1
 
+--[[
+
+CALLBACK HELPER v1
+by piber
+
+Make sure this is located in MOD/scripts/callbackhelper.lua otherwise it wont load properly!
+
+Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.
+
+-------
+
+Callback Helper's goals:
+- Make it easier to combine all callbacks of the same type to a single one, for use in bugged callbacks where only one will work.
+- Make creation of custom callbacks easier.
+- Contain some general-usage custom callbacks to make it easier for modders to run code when they want.
+
+Callback Helper has a custom add callback function which, if you use it with a vanilla callback id, it combines it into a single callback for your mod. Callback Helper also has some functionality to assist in the process of creating new custom callbacks.
+
+]]
+
 --create the mod
 local mod = RegisterMod("Callback Helper", 1)
 

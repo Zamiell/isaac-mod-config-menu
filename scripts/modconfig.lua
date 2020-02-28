@@ -1,12 +1,34 @@
 local MCM = {}
 MCM.Version = 14
 
+--[[
+
+MOD CONFIG MENU v14
+by piber
+
+Make sure this is located in MOD/scripts/modconfig.lua otherwise it wont load properly!
+
+Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.
+
+Make sure you also have Mod Config Menu's assets as well, these should be contained in MOD/resources/gfx/ui/modconfig.
+
+-------
+
+Mod Config Menu's goals:
+- Provide a common use platform for mod makers to let players configure their mod at will
+- Contain a selection of common settings that most mods would use, and have them affect all of them
+
+Mod Config Menu has a general section containing settings for Hud Offset, Overlays, Big Books, and Charge Bars, meant for use in all mods, each with their own custom callback. There is also functionality to enable mods to create new custom sections in the config menu, complete with calling a custom function the modder would create when adding the setting, effectively allowing it to change anything the modder wishes.
+
+]]
+
 Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
 
 --require some lua libraries
 local json = require("json")
 local ScreenHelper = require("scripts.screenhelper")
 local CallbackHelper = require("scripts.callbackhelper")
+local TableHelper = require("scripts.tablehelper")
 
 --create the mod
 local mod = RegisterMod("Mod Config Menu", 1)
@@ -23,56 +45,6 @@ local seeds = game:GetSeeds()
 local level = game:GetLevel()
 local room = game:GetRoom()
 local sfx = SFXManager()
-
-
--------------------
---table functions--
--------------------
-function MCM.CopyTable(tableToCopy)
-
-	local table2 = {}
-	
-	for i, value in pairs(tableToCopy) do
-	
-		if type(value) == "table" then
-			table2[i] = MCM.CopyTable(value)
-		else
-			table2[i] = value
-		end
-		
-	end
-	
-	return table2
-	
-end
-
-function MCM.FillTable(tableToFill, tableToFillFrom)
-
-	for i, value in pairs(tableToFillFrom) do
-	
-		if tableToFill[i] ~= nil then
-		
-			if type(value) == "table" then
-				tableToFill[i] = MCM.FillTable(tableToFill[i], value)
-			else
-				tableToFill[i] = value
-			end
-			
-		else
-		
-			if type(value) == "table" then
-				tableToFill[i] = MCM.FillTable({}, value)
-			else
-				tableToFill[i] = value
-			end
-			
-		end
-		
-	end
-	
-	return tableToFill
-	
-end
 
 
 --------------------
@@ -204,12 +176,12 @@ MCM.ConfigDefault = {
 	LastBackPressed = Keyboard.KEY_BACKSPACE,
 	LastSelectPressed = Keyboard.KEY_ENTER
 }
-MCM.Config = MCM.CopyTable(MCM.ConfigDefault)
+MCM.Config = TableHelper.CopyTable(MCM.ConfigDefault)
 
 function MCM.GetSave()
 	
-	local saveData = MCM.CopyTable(MCM.ConfigDefault)
-	saveData = MCM.FillTable(saveData, MCM.Config)
+	local saveData = TableHelper.CopyTable(MCM.ConfigDefault)
+	saveData = TableHelper.FillTable(saveData, MCM.Config)
 	
 	saveData = json.encode(saveData)
 	
@@ -221,17 +193,17 @@ function MCM.LoadSave(fromData)
 
 	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
 	
-		local saveData = MCM.CopyTable(MCM.ConfigDefault)
+		local saveData = TableHelper.CopyTable(MCM.ConfigDefault)
 		
 		if type(fromData) == "string" then
 			fromData = json.decode(fromData)
 		end
-		saveData = MCM.FillTable(saveData, fromData)
+		saveData = TableHelper.FillTable(saveData, fromData)
 		
-		local currentData = MCM.CopyTable(MCM.Config)
-		saveData = MCM.FillTable(currentData, saveData)
+		local currentData = TableHelper.CopyTable(MCM.Config)
+		saveData = TableHelper.FillTable(currentData, saveData)
 		
-		MCM.Config = MCM.CopyTable(saveData)
+		MCM.Config = TableHelper.CopyTable(saveData)
 		
 		--make sure ScreenHelper's offset matches MCM's offset
 		ScreenHelper.SetOffset(MCM.Config.HudOffset)
