@@ -87,15 +87,15 @@ CallbackHelper.AddedCallbacks = {}
 function CallbackHelper.AddCallback(modRef, callbackID, callbackFunction, extraVar)
 
 	if type(modRef) ~= "table" then
-		error("AddCustomCallback Error: No valid mod reference provided")
+		error("CallbackHelper.AddCallback Error: No valid mod reference provided")
 		return
 	end
 	if type(callbackID) ~= "number" then
-		error("AddCustomCallback Error: No valid callback ID provided")
+		error("CallbackHelper.AddCallback Error: No valid callback ID provided")
 		return
 	end
 	if type(callbackFunction) ~= "function" then
-		error("AddCustomCallback Error: No valid callback function provided")
+		error("CallbackHelper.AddCallback Error: No valid callback function provided")
 		return
 	end
 	
