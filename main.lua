@@ -51,3 +51,6 @@ mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
 	mod:SaveData(saveData)
 	
 end)
+
+--some handling to let old mods work
+require("scripts.modconfigoldcompat")
