@@ -39,7 +39,15 @@ CallbackHelper.Callbacks = {
 	--in PRE you can return false to prevent the callback from being added
 	--function(modRef, callbackID, callbackFunction, extraVar)
 	CH_PRE_ADD_CUSTOM_CALLBACK = 100,
-	CH_POST_ADD_CUSTOM_CALLBACK = 101
+	CH_POST_ADD_CUSTOM_CALLBACK = 101,
+	
+	--GAME START
+	--meant to be used in favor of MC_POST_GAME_STARTED, because that callback isnt the first callback to be triggered
+	--triggers on the first instance of MC_POST_PLAYER_INIT, the first callback to be called when a game starts
+	--makes sure to not trigger on further instances of MC_POST_PLAYER_INIT
+	--checks the run counter for if the game a continued game, if it is a continued game then isSaveGame will be true
+	--function(player, isSaveGame)
+	CH_GAME_START = 102
 
 	--new callback ids should be able to be safely added to this enum
 
@@ -250,6 +258,41 @@ CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_POST_ADD_CUSTOM_CALL
 		
 	end
 	
+end)
+
+
+--------------
+--game start--
+--------------
+local game = Game()
+local firstPlayerInited = false
+mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player init is the first callback to trigger, before game started, new level, new room, etc
+
+	if not firstPlayerInited then
+	
+		firstPlayerInited = true
+		
+		local isSaveGame = false
+		if game.TimeCounter > 0 then
+			isSaveGame = true
+		end
+		
+		--CH_GAME_START
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.CH_GAME_START, --callback id
+			nil, --function to handle it
+			{player, isSaveGame} --args to send
+		)
+		
+	end
+	
+end)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
+	firstPlayerInited = false
+end)
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
+	firstPlayerInited = false
 end)
 
 

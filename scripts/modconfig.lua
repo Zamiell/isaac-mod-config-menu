@@ -148,11 +148,12 @@ versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
 
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
 	if MCM.Config.ShowControls then
 	
 		versionPrintTimer = 120
+		
 	else
 	
 		versionPrintTimer = 60
@@ -2193,7 +2194,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 	MCM.IsVisible = false
 end)
 
@@ -2261,7 +2262,7 @@ function MCM.RoomIsSafe()
 end
 
 local checkedForPotato = false
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, isSaveGame)
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 	if not checkedForPotato then
 	
 		local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")

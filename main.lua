@@ -5,23 +5,18 @@ local MCM = require("scripts.modconfig")
 ----------
 --SAVING--
 ----------
+local CallbackHelper = require("scripts.callbackhelper")
 
 local game = Game()
 local level = game:GetLevel()
 
 local skipNextLevelSave = false
-local firstPlayerInited = false
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player init is the first callback to trigger, before game started, new level, new room, etc
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
-	if not firstPlayerInited then
-	
-		skipNextLevelSave = true
-		firstPlayerInited = true
-	
-		if mod:HasData() then
-			MCM.LoadSave(mod:LoadData())
-		end
-		
+	skipNextLevelSave = true
+
+	if mod:HasData() then
+		MCM.LoadSave(mod:LoadData())
 	end
 	
 end)
@@ -40,8 +35,6 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
 end)
 
 mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
-
-	firstPlayerInited = false
 	
 	local saveData = MCM.GetSave()
 	mod:SaveData(saveData)
@@ -49,8 +42,6 @@ mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
 end)
 
 mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
-
-	firstPlayerInited = false
 	
 	local saveData = MCM.GetSave()
 	mod:SaveData(saveData)
