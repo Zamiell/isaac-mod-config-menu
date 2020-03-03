@@ -87,3 +87,16 @@ ModConfigMenu.AddSpace = function(category, subcategory)
 	ModConfigMenu.SetOldCategoryInfo(category)
 	return MCM.AddSpace(category, subcategory)
 end
+
+ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
+end
+ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
+end
+ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS, functionToAdd)
+end
+ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS, functionToAdd)
+end
