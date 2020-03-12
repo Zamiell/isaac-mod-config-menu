@@ -201,98 +201,62 @@ end)
 ------------------------------------
 MCM.IsVisible = false
 
-local configMenuMain = Sprite()
-configMenuMain:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuMain:SetFrame("Idle", 0)
+function MCM.GetMenuAnm2Sprite(animation, frame, color)
 
-local configMenuPopup = Sprite()
-configMenuPopup:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuPopup:SetFrame("Popup", 0)
+	local sprite = Sprite()
+	
+	sprite:Load("gfx/ui/modconfig/menu.anm2", true)
+	sprite:SetFrame(animation or "Idle", frame or 0)
+	
+	if color then
+		sprite.Color = color
+	end
+	
+	return sprite
+	
+end
 
-local configMenuCursor = Sprite()
-configMenuCursor:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuCursor:SetFrame("Cursor", 0)
+--main menu sprites
+local MenuSprite = MCM.GetMenuAnm2Sprite("Idle", 0)
+local PopupSprite = MCM.GetMenuAnm2Sprite("Popup", 0)
 
-local configMenuCursorUp = Sprite()
-configMenuCursorUp:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuCursorUp:SetFrame("Cursor", 3)
+--main cursors
+local CursorSpriteRight = MCM.GetMenuAnm2Sprite("Cursor", 0)
+local CursorSpriteUp = MCM.GetMenuAnm2Sprite("Cursor", 1)
+local CursorSpriteDown = MCM.GetMenuAnm2Sprite("Cursor", 2)
 
-local configMenuCursorDown = Sprite()
-configMenuCursorDown:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuCursorDown:SetFrame("Cursor", 4)
+--subcategory pane cursors
+local SubcategoryCursorSpriteLeft = MCM.GetMenuAnm2Sprite("Cursor", 3, colorHalf)
+local SubcategoryCursorSpriteRight = MCM.GetMenuAnm2Sprite("Cursor", 0, colorHalf)
 
-local configMenuOptionsCursorUp = Sprite()
-configMenuOptionsCursorUp:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuOptionsCursorUp:SetFrame("Cursor", 3)
-configMenuOptionsCursorUp.Color = colorHalf
+--options pane cursors
+local OptionsCursorSpriteUp = MCM.GetMenuAnm2Sprite("Cursor", 1, colorHalf)
+local OptionsCursorSpriteDown = MCM.GetMenuAnm2Sprite("Cursor", 2, colorHalf)
 
-local configMenuOptionsCursorDown = Sprite()
-configMenuOptionsCursorDown:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuOptionsCursorDown:SetFrame("Cursor", 4)
-configMenuOptionsCursorDown.Color = colorHalf
+--other options pane objects
+local SubcategoryDividerSprite = MCM.GetMenuAnm2Sprite("Divider", 0, colorHalf)
+local SliderSprite = MCM.GetMenuAnm2Sprite("Slider1", 0)
 
-local configMenuSubcategoryCursorLeft = Sprite()
-configMenuSubcategoryCursorLeft:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuSubcategoryCursorLeft:SetFrame("Cursor", 5)
-configMenuSubcategoryCursorLeft.Color = colorHalf
+--strikeout
+local StrikeOutSprite = MCM.GetMenuAnm2Sprite("Strikeout", 0)
 
-local configMenuSubcategoryCursorRight = Sprite()
-configMenuSubcategoryCursorRight:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuSubcategoryCursorRight:SetFrame("Cursor", 0)
-configMenuSubcategoryCursorRight.Color = colorHalf
+--back/select corner papers
+local CornerSelect = MCM.GetMenuAnm2Sprite("BackSelect", 0)
+local CornerBack = MCM.GetMenuAnm2Sprite("BackSelect", 1)
+local CornerOpen = MCM.GetMenuAnm2Sprite("BackSelect", 2)
+local CornerExit = MCM.GetMenuAnm2Sprite("BackSelect", 3)
 
-local configMenuSubcategoryDivider = Sprite()
-configMenuSubcategoryDivider:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuSubcategoryDivider:SetFrame("Cursor", 6)
-configMenuSubcategoryDivider.Color = colorHalf
+--fonts
+local Font10 = Font()
+Font10:Load("font/teammeatfont10.fnt")
 
-local configMenuCrosshairRed = Sprite()
-configMenuCrosshairRed:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuCrosshairRed:SetFrame("Cursor", 2)
+local Font12 = Font()
+Font12:Load("font/teammeatfont12.fnt")
 
-local configMenuSlider1 = Sprite()
-configMenuSlider1:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuSlider1:SetFrame("Slider1", 0)
+local Font16Bold = Font()
+Font16Bold:Load("font/teammeatfont16bold.fnt")
 
-local configMenuSlider2 = Sprite()
-configMenuSlider2:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuSlider2:SetFrame("Slider2", 0)
-
-local configMenuOptionsCorner = Sprite()
-configMenuOptionsCorner:Load("gfx/ui/modconfig/menu.anm2", true)
-configMenuOptionsCorner:SetFrame("Corner", 0)
-
-local strikeOut = Sprite()
-strikeOut:Load("gfx/ui/modconfig/menu.anm2", true)
-strikeOut:SetFrame("Strikeout", 0)
-
-local CornerSelect = Sprite()
-CornerSelect:Load("gfx/ui/modconfig/menu.anm2", true)
-CornerSelect:SetFrame("BackSelect", 0)
-
-local CornerBack = Sprite()
-CornerBack:Load("gfx/ui/modconfig/menu.anm2", true)
-CornerBack:SetFrame("BackSelect", 1)
-
-local CornerOpen = Sprite()
-CornerOpen:Load("gfx/ui/modconfig/menu.anm2", true)
-CornerOpen:SetFrame("BackSelect", 2)
-
-local CornerExit = Sprite()
-CornerExit:Load("gfx/ui/modconfig/menu.anm2", true)
-CornerExit:SetFrame("BackSelect", 3)
-
-local configMenuFont10 = Font()
-configMenuFont10:Load("font/teammeatfont10.fnt")
-local configMenuFont12 = Font()
-configMenuFont12:Load("font/teammeatfont12.fnt")
-local configMenuFont16 = Font()
-configMenuFont16:Load("font/teammeatfont16.fnt")
-local configMenuFont16Bold = Font()
-configMenuFont16Bold:Load("font/teammeatfont16bold.fnt")
-local configMenuFont20Bold = Font()
-configMenuFont20Bold:Load("font/teammeatfont20bold.fnt")
-
+--popups
 MCM.PopupGfx = {
 	THIN_SMALL = "gfx/ui/modconfig/popup_thin_small.png",
 	THIN_MEDIUM = "gfx/ui/modconfig/popup_thin_medium.png",
@@ -489,6 +453,12 @@ MCM.AddSpace("General") --SPACE
 
 MCM.AddSpace("General") --SPACE
 
+--hud offset visual
+local HudOffsetVisualTopLeft = MCM.GetMenuAnm2Sprite("Corner", 0)
+local HudOffsetVisualTopRight = MCM.GetMenuAnm2Sprite("Corner", 1)
+local HudOffsetVisualBottomRight = MCM.GetMenuAnm2Sprite("Corner", 2)
+local HudOffsetVisualBottomLeft = MCM.GetMenuAnm2Sprite("Corner", 3)
+
 MCM.AddSetting("General", { --HUD OFFSET
 	Type = MCM.OptionType.SCROLL,
 	CurrentSetting = function()
@@ -499,17 +469,11 @@ MCM.AddSetting("General", { --HUD OFFSET
 	
 		if cursorIsHere then
 		
-			configMenuOptionsCorner:SetFrame("Corner", 2)
-			configMenuOptionsCorner:Render(ScreenHelper.GetScreenBottomRight(), vectorZero, vectorZero)
-			
-			configMenuOptionsCorner:SetFrame("Corner", 3)
-			configMenuOptionsCorner:Render(ScreenHelper.GetScreenBottomLeft(), vectorZero, vectorZero)
-			
-			configMenuOptionsCorner:SetFrame("Corner", 1)
-			configMenuOptionsCorner:Render(ScreenHelper.GetScreenTopRight(), vectorZero, vectorZero)
-			
-			configMenuOptionsCorner:SetFrame("Corner", 0)
-			configMenuOptionsCorner:Render(ScreenHelper.GetScreenTopLeft(), vectorZero, vectorZero)
+			--render the visual
+			HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vectorZero, vectorZero)
+			HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vectorZero, vectorZero)
+			HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vectorZero, vectorZero)
+			HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vectorZero, vectorZero)
 			
 		end
 		
@@ -937,8 +901,8 @@ function MCM.EnterPopup()
 			if currentMenuOption.PopupGfx and type(currentMenuOption.PopupGfx) == "string" then
 				popupSpritesheet = currentMenuOption.PopupGfx
 			end
-			configMenuPopup:ReplaceSpritesheet(8, popupSpritesheet)
-			configMenuPopup:LoadGraphics()
+			PopupSprite:ReplaceSpritesheet(8, popupSpritesheet)
+			PopupSprite:LoadGraphics()
 			configMenuInPopup = true
 		end
 	end
@@ -961,8 +925,8 @@ function MCM.EnterOptions()
 				
 					configMenuPositionCursorOption = optionIndex
 					configMenuInOptions = true
-					configMenuOptionsCursorUp.Color = colorDefault
-					configMenuOptionsCursorDown.Color = colorDefault
+					OptionsCursorSpriteUp.Color = colorDefault
+					OptionsCursorSpriteDown.Color = colorDefault
 					
 					break
 				end
@@ -974,9 +938,9 @@ end
 function MCM.EnterSubcategory()
 	if not configMenuInSubcategory then
 		configMenuInSubcategory = true
-		configMenuSubcategoryCursorLeft.Color = colorDefault
-		configMenuSubcategoryCursorRight.Color = colorDefault
-		configMenuSubcategoryDivider.Color = colorDefault
+		SubcategoryCursorSpriteLeft.Color = colorDefault
+		SubcategoryCursorSpriteRight.Color = colorDefault
+		SubcategoryDividerSprite.Color = colorDefault
 		
 		local hasUsableCategories = false
 		if currentMenuCategory.Subcategories then
@@ -1002,8 +966,8 @@ end
 function MCM.LeaveOptions()
 	if configMenuInSubcategory and configMenuInOptions then
 		configMenuInOptions = false
-		configMenuOptionsCursorUp.Color = colorHalf
-		configMenuOptionsCursorDown.Color = colorHalf
+		OptionsCursorSpriteUp.Color = colorHalf
+		OptionsCursorSpriteDown.Color = colorHalf
 		
 		local hasUsableCategories = false
 		if currentMenuCategory.Subcategories then
@@ -1023,9 +987,9 @@ end
 function MCM.LeaveSubcategory()
 	if configMenuInSubcategory then
 		configMenuInSubcategory = false
-		configMenuSubcategoryCursorLeft.Color = colorHalf
-		configMenuSubcategoryCursorRight.Color = colorHalf
-		configMenuSubcategoryDivider.Color = colorHalf
+		SubcategoryCursorSpriteLeft.Color = colorHalf
+		SubcategoryCursorSpriteRight.Color = colorHalf
+		SubcategoryDividerSprite.Color = colorHalf
 	end
 end
 
@@ -1713,7 +1677,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local infoPos = centerPos + Vector(-4,106)
 		local optionPos = centerPos + Vector(68,-88)
 		
-		configMenuMain:Render(centerPos, vectorZero, vectorZero)
+		MenuSprite:Render(centerPos, vectorZero, vectorZero)
 		
 		--category
 		local lastLeftPos = leftPos
@@ -1730,12 +1694,12 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				end
 				]]
 				
-				local posOffset = configMenuFont12:GetStringWidthUTF8(textToDraw)/2
-				configMenuFont12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
+				local posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+				Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
 				
 				--cursor
 				if configMenuPositionCursorCategory == categoryIndex then
-					configMenuCursor:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+					CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 				end
 				
 				--increase counter
@@ -1743,10 +1707,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if renderedLeft >= configMenuCategoryCanShow then --if this is the last one we should render
 					--render scroll arrows
 					if configMenuPositionFirstCategory > 1 then --if the first one we rendered wasnt the first in the list
-						configMenuCursorUp:Render(leftPos + Vector(45,-4), vectorZero, vectorZero)
+						CursorSpriteUp:Render(leftPos + Vector(45,-4), vectorZero, vectorZero)
 					end
 					if categoryIndex < #MCM.MenuData then --if this isnt the last category
-						configMenuCursorDown:Render(lastLeftPos + Vector(45,4), vectorZero, vectorZero)
+						CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vectorZero, vectorZero)
 					end
 					break
 				end
@@ -1761,8 +1725,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInSubcategory then
 			titleText = tostring(currentMenuCategory.Name)
 		end
-		local titleTextOffset = configMenuFont16Bold:GetStringWidthUTF8(titleText)/2
-		configMenuFont16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
+		local titleTextOffset = Font16Bold:GetStringWidthUTF8(titleText)/2
+		Font16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
 		
 		--subcategory
 		
@@ -1820,13 +1784,13 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							]]
 							end
 							
-							posOffset = configMenuFont12:GetStringWidthUTF8(textToDraw)/2
-							configMenuFont12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
+							posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+							Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
 						end
 						
 						--cursor
 						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							configMenuCursor:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 						end
 						
 						--increase counter
@@ -1834,10 +1798,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
 							--render scroll arrows
 							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
-								configMenuSubcategoryCursorLeft:Render(lastOptionPos + Vector(-125,0), vectorZero, vectorZero)
+								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vectorZero, vectorZero)
 							end
 							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
-								configMenuSubcategoryCursorRight:Render(lastOptionPos + Vector(125,0), vectorZero, vectorZero)
+								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vectorZero, vectorZero)
 							end
 							break
 						end
@@ -1850,7 +1814,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
-				configMenuSubcategoryDivider:Render(lastOptionPos, vectorZero, vectorZero)
+				SubcategoryDividerSprite:Render(lastOptionPos, vectorZero, vectorZero)
 				
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
@@ -1864,6 +1828,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if currentMenuSubcategory
 		and currentMenuSubcategory.Options
 		and #currentMenuSubcategory.Options > 0 then
+		
+			local useAltSlider = false
 		
 			for optionIndex=1, #currentMenuSubcategory.Options do
 			
@@ -1898,7 +1864,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							textToDraw = tostring(textToDraw)
 							
 							local heightOffset = 6
-							local font = configMenuFont10
+							local font = Font10
 							local color = optionsFontColor
 							if not configMenuInOptions then
 								if thisOption.NoCursorHere then
@@ -1911,7 +1877,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							end
 							if optionType == MCM.OptionType.TITLE then
 								heightOffset = 8
-								font = configMenuFont12
+								font = Font12
 								color = optionsFontColorTitle
 								if not configMenuInOptions then
 									color = optionsFontColorTitleAlpha
@@ -1962,10 +1928,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 										end
 										
 										scrollOffset = posOffset
-										posOffset = configMenuFont10:GetStringWidthUTF8(textToDraw)/2
-										configMenuFont10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
+										posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
+										Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
 										
-										scrollOffset = posOffset - (configMenuFont10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
+										scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
 										numberToShow = numberString
 									end
 								end
@@ -1978,26 +1944,35 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							if optionColor then
 								scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO, scrollColor.GO, scrollColor.BO)
 							end
-							configMenuSlider1.Color = scrollColor
-							configMenuSlider1:SetFrame("Slider1", numberToShow)
-							configMenuSlider1:Render(lastOptionPos - Vector(scrollOffset, -2), vectorZero, vectorZero)
+							
+							local sliderString = "Slider1"
+							if useAltSlider then
+								sliderString = "Slider2"
+							end
+							
+							SliderSprite.Color = scrollColor
+							SliderSprite:SetFrame(sliderString, numberToShow)
+							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vectorZero, vectorZero)
+							
+							useAltSlider = not useAltSlider
+							
 						end
 						
 						local showStrikeout = thisOption.ShowStrikeout
 						if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
 							if configMenuInOptions then
-								strikeOut.Color = colorDefault
+								StrikeOutSprite.Color = colorDefault
 							else
-								strikeOut.Color = colorHalf
+								StrikeOutSprite.Color = colorHalf
 							end
-							strikeOut:SetFrame("Strikeout", math.floor(posOffset))
-							strikeOut:Render(lastOptionPos, vectorZero, vectorZero)
+							StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
+							StrikeOutSprite:Render(lastOptionPos, vectorZero, vectorZero)
 						end
 					end
 					
 					--cursor
 					if cursorIsAtThisOption then
-						configMenuCursor:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+						CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
 					end
 					
 					--increase counter
@@ -2005,10 +1980,10 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					if renderedOptions >= configMenuOptionsCanShow then --if this is the last one we should render
 						--render scroll arrows
 						if configMenuPositionFirstOption > 1 then --if the first one we rendered wasnt the first in the list
-							configMenuOptionsCursorUp:Render(firstOptionPos + Vector(125,-4), vectorZero, vectorZero)
+							OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vectorZero, vectorZero)
 						end
 						if optionIndex < #currentMenuSubcategory.Options then --if this isnt the last thing
-							configMenuOptionsCursorDown:Render(lastOptionPos + Vector(125,4), vectorZero, vectorZero)
+							OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vectorZero, vectorZero)
 						end
 						break
 					end
@@ -2058,12 +2033,12 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			
 				--text
 				local textToDraw = tostring(infoTable[line])
-				local posOffset = configMenuFont10:GetStringWidthUTF8(textToDraw)/2
+				local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
 				local color = mainFontColor
 				if isOldInfo then
 					color = optionsFontColorTitle
 				end
-				configMenuFont10:DrawString(textToDraw, lastInfoPos.X - posOffset, lastInfoPos.Y - 6, color, 0, true)
+				Font10:DrawString(textToDraw, lastInfoPos.X - posOffset, lastInfoPos.Y - 6, color, 0, true)
 				
 				--pos mod
 				lastInfoPos = lastInfoPos + Vector(0,10)
@@ -2076,7 +2051,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInPopup
 		and currentMenuOption
 		and currentMenuOption.Popup then
-			configMenuPopup:Render(centerPos, vectorZero, vectorZero)
+			PopupSprite:Render(centerPos, vectorZero, vectorZero)
 			
 			local popupTable = currentMenuOption.Popup
 			if type(popupTable) == "function" then
@@ -2090,8 +2065,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			for line=1, #popupTable do
 				--text
 				local textToDraw = tostring(popupTable[line])
-				local posOffset = configMenuFont10:GetStringWidthUTF8(textToDraw)/2
-				configMenuFont10:DrawString(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
+				local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
+				Font10:DrawString(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
 				
 				--pos mod
 				lastPopupPos = lastPopupPos + Vector(0,10)
@@ -2124,7 +2099,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					goBackString = InputHelper.ControllerToString[MCM.Config.LastBackPressed]
 				end
 			end
-			configMenuFont10:DrawString(goBackString, (bottomLeft.X - configMenuFont10:GetStringWidthUTF8(goBackString)/2) + 36, bottomLeft.Y - 24, mainFontColor, 0, true)
+			Font10:DrawString(goBackString, (bottomLeft.X - Font10:GetStringWidthUTF8(goBackString)/2) + 36, bottomLeft.Y - 24, mainFontColor, 0, true)
 
 			--select
 			local bottomRight = ScreenHelper.GetScreenBottomRight(0)
@@ -2156,7 +2131,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						selectString = InputHelper.ControllerToString[MCM.Config.LastSelectPressed]
 					end
 				end
-				configMenuFont10:DrawString(selectString, (bottomRight.X - configMenuFont10:GetStringWidthUTF8(selectString)/2) - 36, bottomRight.Y - 24, mainFontColor, 0, true)
+				Font10:DrawString(selectString, (bottomRight.X - Font10:GetStringWidthUTF8(selectString)/2) - 36, bottomRight.Y - 24, mainFontColor, 0, true)
 				
 			end
 			
