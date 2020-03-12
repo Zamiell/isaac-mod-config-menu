@@ -454,10 +454,10 @@ MCM.AddSpace("General") --SPACE
 MCM.AddSpace("General") --SPACE
 
 --hud offset visual
-local HudOffsetVisualTopLeft = MCM.GetMenuAnm2Sprite("Corner", 0)
-local HudOffsetVisualTopRight = MCM.GetMenuAnm2Sprite("Corner", 1)
-local HudOffsetVisualBottomRight = MCM.GetMenuAnm2Sprite("Corner", 2)
-local HudOffsetVisualBottomLeft = MCM.GetMenuAnm2Sprite("Corner", 3)
+local HudOffsetVisualTopLeft = MCM.GetMenuAnm2Sprite("Offset", 0)
+local HudOffsetVisualTopRight = MCM.GetMenuAnm2Sprite("Offset", 1)
+local HudOffsetVisualBottomRight = MCM.GetMenuAnm2Sprite("Offset", 2)
+local HudOffsetVisualBottomLeft = MCM.GetMenuAnm2Sprite("Offset", 3)
 
 MCM.AddSetting("General", { --HUD OFFSET
 	Type = MCM.OptionType.SCROLL,
