@@ -1,52 +1,35 @@
+--this script handles saving for the standalone version of mod config menu, and adds globals to the global table that redirect into mod config menu functions, to add support for older mods that made use of these
+
+--create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
+
+--require some lua libraries
 local MCM = require("scripts.modconfig")
+local CallbackHelper = require("scripts.callbackhelper")
+local SaveHelper = require("scripts.savehelper")
 
 
 ----------
 --SAVING--
 ----------
-local CallbackHelper = require("scripts.callbackhelper")
 
-local game = Game()
-local level = game:GetLevel()
+SaveHelper.AddMod(mod)
+SaveHelper.DefaultGameSave(mod, {
+	ModConfigMenu = {}
+})
 
-local skipNextLevelSave = false
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_PRE_MOD_SAVE, function(_, modRef, saveData)
 
-	skipNextLevelSave = true
+	local mcmSave = MCM.GetSave()
+	saveData.ModConfigMenu = mcmSave
+	
+end, mod)
 
-	if mod:HasData() then
-		MCM.LoadSave(mod:LoadData())
-	end
-	
-end)
+CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_POST_MOD_LOAD, function(_, modRef, saveData)
 
-mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
+	MCM.LoadSave(saveData.ModConfigMenu)
 	
-	if not skipNextLevelSave then
-	
-		local saveData = MCM.GetSave()
-		mod:SaveData(saveData)
-		
-	end
-	
-	skipNextLevelSave = false
-	
-end)
-
-mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
-	
-	local saveData = MCM.GetSave()
-	mod:SaveData(saveData)
-	
-end)
-
-mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
-	
-	local saveData = MCM.GetSave()
-	mod:SaveData(saveData)
-	
-end)
+end, mod)
 
 
 -------------------------

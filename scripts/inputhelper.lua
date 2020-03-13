@@ -13,7 +13,7 @@ Do not edit this script file as it could conflict with the release version of th
 ]]
 
 --create the mod
-local mod = RegisterMod("Input Helper", 1)
+local InputHelperMod = RegisterMod("Input Helper", 1)
 
 
 ---------
@@ -284,7 +284,7 @@ function InputHelper.ForceActionPressed(controllerIndex, buttonAction, value, ti
 	
 end
 
-mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
+InputHelperMod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
 
 	if entity and entity:ToPlayer() then
 	

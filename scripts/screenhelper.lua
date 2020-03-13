@@ -13,6 +13,11 @@ Do not edit this script file as it could conflict with the release version of th
 
 -------
 
+REQUIREMENTS:
+- CacheHelper
+
+-------
+
 Screen Helper's goals:
 - Make custom hud offset easier to support.
 - Be a collection of screen-related functions to make it easier to pick positions of the screen to render stuff on to.
@@ -36,6 +41,13 @@ ScreenHelper.GetScreenTopRight(offset) -- Returns a vector positioned at the top
 ScreenHelper.GetScreenTopLeft(offset) -- Returns a vector positioned at the top left corner of the screen, using the offset to push it from the corner a bit.
 
 ]]
+
+--require some lua libraries
+local CacheHelper = require("scripts.cachehelper")
+
+--cached values
+local game = CacheHelper.Game
+local room = CacheHelper.Room
 
 
 ---------------------
@@ -63,8 +75,6 @@ end
 ------------------------------------
 --screen size and corner functions--
 ------------------------------------
-local game = Game()
-local room = game:GetRoom()
 function ScreenHelper.GetScreenSize() --based off of code from kilburn
 
     local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - game.ScreenShakeOffset

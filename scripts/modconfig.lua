@@ -14,6 +14,15 @@ Make sure you also have Mod Config Menu's assets as well, these should be contai
 
 -------
 
+REQUIREMENTS:
+- ScreenHelper
+- CallbackHelper
+- TableHelper
+- InputHelper
+- CacheHelper
+
+-------
+
 Mod Config Menu's goals:
 - Provide a common use platform for mod makers to let players configure their mod at will
 - Contain a selection of common settings that most mods would use, and have them affect all of them
@@ -24,15 +33,16 @@ Mod Config Menu has a general section containing settings for Hud Offset, Overla
 
 Isaac.DebugString("Loading Mod Config Menu v" .. MCM.Version)
 
+--create the mod
+local MCMMod = RegisterMod("Mod Config Menu", 1)
+
 --require some lua libraries
 local json = require("json")
 local ScreenHelper = require("scripts.screenhelper")
 local CallbackHelper = require("scripts.callbackhelper")
 local TableHelper = require("scripts.tablehelper")
 local InputHelper = require("scripts.inputhelper")
-
---create the mod
-local mod = RegisterMod("Mod Config Menu", 1)
+local CacheHelper = require("scripts.cachehelper")
 
 --cache some values
 local vectorZero = Vector(0,0)
@@ -41,11 +51,13 @@ local colorDefault = Color(1,1,1,1,0,0,0)
 local colorHalf = Color(1,1,1,0.5,0,0,0)
 local colorInvisible = Color(1,1,1,0,0,0,0)
 
-local game = Game()
-local seeds = game:GetSeeds()
-local level = game:GetLevel()
-local room = game:GetRoom()
-local sfx = SFXManager()
+--cached values
+local game = CacheHelper.Game
+local level = CacheHelper.Level
+local room = CacheHelper.Room
+
+local seeds = CacheHelper.Seeds
+local sfx = CacheHelper.SFX
 
 
 --------------------
@@ -56,10 +68,10 @@ local sfx = SFXManager()
 --gets called when the hud offset setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when hud offset is changed
 --function(hudOffset)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 200
+CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 4300
 
 --this will make ScreenHelper's offset match MCM's offset when it is changed
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, function(_, hudOffset)
+CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, function(_, hudOffset)
 	ScreenHelper.SetOffset(hudOffset)
 end)
 
@@ -67,19 +79,19 @@ end)
 --gets called when the overlays setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when overlays are enabled or disabled
 --function(overlaysEnabled)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 201
+CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 4301
 
 --POST MODIFY CHARGE BARS
 --gets called when the charge bars setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when charge bars are enabled or disabled
 --function(chargeBarsEnabled)
-CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS = 202
+CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS = 4302
 
 --POST MODIFY BIG BOOKS
 --gets called when the big books setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when big books are enabled or disabled
 --function(chargeBarsEnabled)
-CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS = 203
+CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS = 4303
 
 
 ----------
@@ -148,7 +160,7 @@ versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
 
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
 	if MCM.Config.ShowControls then
 	
@@ -162,7 +174,7 @@ CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function
 	
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+MCMMod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 
 	if versionPrintTimer > 0 then
 	
@@ -172,7 +184,7 @@ mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 	
 end)
 
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 	if versionPrintTimer > 0 then
 	
@@ -1014,7 +1026,7 @@ local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
 MCM.ControlsEnabled = true
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	local isPaused = game:IsPaused()
 
 	local pressingButton = ""
@@ -1064,8 +1076,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	
 	if MCM.IsVisible then
 		if MCM.ControlsEnabled and not isPaused then
-			for i=1, game:GetNumPlayers() do
-				local player = Isaac.GetPlayer(i-1)
+			for i=1, #CacheHelper.Players do
+				local player = CacheHelper.Players[i]
 				local data = player:GetData()
 				
 				--freeze players and disable their controls
@@ -2137,8 +2149,8 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			
 		end
 	else
-		for i=1, game:GetNumPlayers() do
-			local player = Isaac.GetPlayer(i-1)
+		for i=1, #CacheHelper.Players do
+			local player = CacheHelper.Players[i]
 			local data = player:GetData()
 			
 			--enable player controls
@@ -2169,7 +2181,7 @@ mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 end)
 
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 	MCM.IsVisible = false
 end)
 
@@ -2201,7 +2213,7 @@ function MCM.ToggleConfigMenu()
 end
 
 --prevents the pause menu from opening when in the mod config menu
-mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
+MCMMod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
 	if MCM.IsVisible and buttonAction ~= ButtonAction.ACTION_FULLSCREEN and buttonAction ~= ButtonAction.ACTION_CONSOLE then
 		if inputHook == InputHook.IS_ACTION_PRESSED or inputHook == InputHook.IS_ACTION_TRIGGERED then 
 			return false
@@ -2237,7 +2249,7 @@ function MCM.RoomIsSafe()
 end
 
 local checkedForPotato = false
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 	if not checkedForPotato then
 	
 		local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
@@ -2260,7 +2272,7 @@ local toggleCommands = {
 	["mcm"] = true,
 	["mc"] = true
 }
-mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
+MCMMod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
 	command = command:lower()
 	if toggleCommands[command] then
 		MCM.ToggleConfigMenu()

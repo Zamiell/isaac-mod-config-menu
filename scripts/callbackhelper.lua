@@ -12,6 +12,11 @@ Do not edit this script file as it could conflict with the release version of th
 
 -------
 
+REQUIREMENTS:
+- CacheHelper
+
+-------
+
 Callback Helper's goals:
 - Make it easier to combine all callbacks of the same type to a single one, for use in bugged callbacks where only one will work.
 - Make creation of custom callbacks easier.
@@ -22,7 +27,13 @@ Callback Helper has a custom add callback function which, if you use it with a v
 ]]
 
 --create the mod
-local mod = RegisterMod("Callback Helper", 1)
+local CallbackHelperMod = RegisterMod("Callback Helper", 1)
+
+--require some lua libraries
+local CacheHelper = require("scripts.cachehelper")
+
+--cached values
+local game = CacheHelper.Game
 
 
 ------------------------
@@ -205,7 +216,7 @@ local callbacksCompareVariantExtraVar = {
 }
 
 CallbackHelper.ModsAdded = {}
-CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.CH_POST_ADD_CUSTOM_CALLBACK, function(_, modRef, callbackID, callbackFunction, extraVar)
+CallbackHelper.AddCallback(CallbackHelperMod, CallbackHelper.Callbacks.CH_POST_ADD_CUSTOM_CALLBACK, function(_, modRef, callbackID, callbackFunction, extraVar)
 
 	if not modRef.CallbackHelper_ModID then
 	
@@ -264,9 +275,8 @@ end)
 --------------
 --game start--
 --------------
-local game = Game()
 local firstPlayerInited = false
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player init is the first callback to trigger, before game started, new level, new room, etc
+CallbackHelperMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player init is the first callback to trigger, before game started, new level, new room, etc
 
 	if not firstPlayerInited then
 	
@@ -288,10 +298,10 @@ mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player i
 	end
 	
 end)
-mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
+CallbackHelperMod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
 	firstPlayerInited = false
 end)
-mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
+CallbackHelperMod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
 	firstPlayerInited = false
 end)
 
