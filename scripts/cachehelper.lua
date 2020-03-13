@@ -8,7 +8,7 @@ by piber
 
 Make sure this is located in MOD/scripts/cachehelper.lua otherwise it wont load properly!
 
-Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.\
+Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.
 
 ]]
 
