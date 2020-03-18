@@ -1927,9 +1927,9 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 										numberString = tonumber(numberString)
 									end
 									if numberString and type(numberString) == "number" then
-										textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
-										textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
-										textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
+										local textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
+										local textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
+										local textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
 										
 										local color = optionsFontColor
 										if not configMenuInOptions then

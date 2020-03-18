@@ -345,7 +345,7 @@ local skipNextLevelClear = false
 local skipNextRoomClear = false
 CallbackHelper.AddCallback(SaveHelperMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
-	skipNextLevelSave = true
+	skipNextLevelClear = true
 	skipNextRoomClear = true
 	
 	for _, modRef in ipairs(SaveHelper.ModsToSave) do
