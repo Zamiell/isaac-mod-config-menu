@@ -85,13 +85,13 @@ CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 4301
 --gets called when the charge bars setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when charge bars are enabled or disabled
 --function(chargeBarsEnabled)
-CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS = 4302
+CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS = 4302
 
 --POST MODIFY BIG BOOKS
 --gets called when the big books setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when big books are enabled or disabled
 --function(chargeBarsEnabled)
-CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS = 4303
+CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
 
 
 ----------
@@ -566,10 +566,10 @@ MCM.AddSetting("General", { --CHARGE BARS
 	
 		MCM.Config.ChargeBars = currentBool
 		
-		--MCM_POST_CHARGE_BARS
+		--MCM_POST_MODIFY_CHARGE_BARS
 		CallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS, --callback id
+			CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, --callback id
 			nil, --function to handle it
 			{currentBool} --args to send
 		)
@@ -600,10 +600,10 @@ MCM.AddSetting("General", { --BIGBOOKS
 	
 		MCM.Config.BigBooks = currentBool
 		
-		--MCM_POST_BIG_BOOKS
+		--MCM_POST_MODIFY_BIG_BOOKS
 		CallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS, --callback id
+			CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, --callback id
 			nil, --function to handle it
 			{currentBool} --args to send
 		)

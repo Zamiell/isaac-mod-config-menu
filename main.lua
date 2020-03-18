@@ -78,8 +78,8 @@ ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
 	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
 end
 ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
-	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_CHARGE_BARS, functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
 end
 ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
-	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_BIG_BOOKS, functionToAdd)
+	CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
 end
