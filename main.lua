@@ -15,19 +15,19 @@ local SaveHelper = require("scripts.savehelper")
 
 SaveHelper.AddMod(mod)
 SaveHelper.DefaultGameSave(mod, {
-	ModConfigMenu = {}
+	ModConfigSave = {}
 })
 
 CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_PRE_MOD_SAVE, function(_, modRef, saveData)
 
 	local mcmSave = MCM.GetSave()
-	saveData.ModConfigMenu = mcmSave
+	saveData.ModConfigSave = mcmSave
 	
 end, mod)
 
 CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_POST_MOD_LOAD, function(_, modRef, saveData)
 
-	MCM.LoadSave(saveData.ModConfigMenu)
+	MCM.LoadSave(saveData.ModConfigSave)
 	
 end, mod)
 
