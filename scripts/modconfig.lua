@@ -44,13 +44,6 @@ local TableHelper = require("scripts.tablehelper")
 local InputHelper = require("scripts.inputhelper")
 local CacheHelper = require("scripts.cachehelper")
 
---cache some values
-local vectorZero = Vector(0,0)
-
-local colorDefault = Color(1,1,1,1,0,0,0)
-local colorHalf = Color(1,1,1,0.5,0,0,0)
-local colorInvisible = Color(1,1,1,0,0,0,0)
-
 --cached values
 local game = CacheHelper.Game
 local level = CacheHelper.Level
@@ -58,6 +51,11 @@ local room = CacheHelper.Room
 
 local seeds = CacheHelper.Seeds
 local sfx = CacheHelper.SFX
+
+local vecZero = CacheHelper.VecZero
+
+local colorDefault = CacheHelper.Color
+local colorHalf = CacheHelper.ColorHalf
 
 
 --------------------
@@ -482,10 +480,10 @@ MCM.AddSetting("General", { --HUD OFFSET
 		if cursorIsHere then
 		
 			--render the visual
-			HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vectorZero, vectorZero)
-			HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vectorZero, vectorZero)
-			HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vectorZero, vectorZero)
-			HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vectorZero, vectorZero)
+			HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
+			HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vecZero, vecZero)
+			HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vecZero, vecZero)
+			HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vecZero, vecZero)
 			
 		end
 		
@@ -1081,7 +1079,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				local data = player:GetData()
 				
 				--freeze players and disable their controls
-				player.Velocity = vectorZero
+				player.Velocity = vecZero
 				
 				if not data.ConfigMenuPlayerPosition then
 					data.ConfigMenuPlayerPosition = player.Position
@@ -1689,7 +1687,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local infoPos = centerPos + Vector(-4,106)
 		local optionPos = centerPos + Vector(68,-88)
 		
-		MenuSprite:Render(centerPos, vectorZero, vectorZero)
+		MenuSprite:Render(centerPos, vecZero, vecZero)
 		
 		--category
 		local lastLeftPos = leftPos
@@ -1711,7 +1709,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				--cursor
 				if configMenuPositionCursorCategory == categoryIndex then
-					CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+					CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 				end
 				
 				--increase counter
@@ -1719,10 +1717,10 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if renderedLeft >= configMenuCategoryCanShow then --if this is the last one we should render
 					--render scroll arrows
 					if configMenuPositionFirstCategory > 1 then --if the first one we rendered wasnt the first in the list
-						CursorSpriteUp:Render(leftPos + Vector(45,-4), vectorZero, vectorZero)
+						CursorSpriteUp:Render(leftPos + Vector(45,-4), vecZero, vecZero)
 					end
 					if categoryIndex < #MCM.MenuData then --if this isnt the last category
-						CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vectorZero, vectorZero)
+						CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vecZero, vecZero)
 					end
 					break
 				end
@@ -1802,7 +1800,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						
 						--cursor
 						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 						end
 						
 						--increase counter
@@ -1810,10 +1808,10 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
 							--render scroll arrows
 							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
-								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vectorZero, vectorZero)
+								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
 							end
 							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
-								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vectorZero, vectorZero)
+								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
 							end
 							break
 						end
@@ -1826,7 +1824,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
-				SubcategoryDividerSprite:Render(lastOptionPos, vectorZero, vectorZero)
+				SubcategoryDividerSprite:Render(lastOptionPos, vecZero, vecZero)
 				
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
@@ -1964,7 +1962,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							
 							SliderSprite.Color = scrollColor
 							SliderSprite:SetFrame(sliderString, numberToShow)
-							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vectorZero, vectorZero)
+							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
 							
 							useAltSlider = not useAltSlider
 							
@@ -1978,13 +1976,13 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 								StrikeOutSprite.Color = colorHalf
 							end
 							StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
-							StrikeOutSprite:Render(lastOptionPos, vectorZero, vectorZero)
+							StrikeOutSprite:Render(lastOptionPos, vecZero, vecZero)
 						end
 					end
 					
 					--cursor
 					if cursorIsAtThisOption then
-						CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vectorZero, vectorZero)
+						CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 					end
 					
 					--increase counter
@@ -1992,10 +1990,10 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					if renderedOptions >= configMenuOptionsCanShow then --if this is the last one we should render
 						--render scroll arrows
 						if configMenuPositionFirstOption > 1 then --if the first one we rendered wasnt the first in the list
-							OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vectorZero, vectorZero)
+							OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vecZero, vecZero)
 						end
 						if optionIndex < #currentMenuSubcategory.Options then --if this isnt the last thing
-							OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vectorZero, vectorZero)
+							OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vecZero, vecZero)
 						end
 						break
 					end
@@ -2063,7 +2061,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInPopup
 		and currentMenuOption
 		and currentMenuOption.Popup then
-			PopupSprite:Render(centerPos, vectorZero, vectorZero)
+			PopupSprite:Render(centerPos, vecZero, vecZero)
 			
 			local popupTable = currentMenuOption.Popup
 			if type(popupTable) == "function" then
@@ -2098,9 +2096,9 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			--back
 			local bottomLeft = ScreenHelper.GetScreenBottomLeft(0)
 			if not configMenuInSubcategory then
-				CornerExit:Render(bottomLeft, vectorZero, vectorZero)
+				CornerExit:Render(bottomLeft, vecZero, vecZero)
 			else
-				CornerBack:Render(bottomLeft, vectorZero, vectorZero)
+				CornerBack:Render(bottomLeft, vecZero, vecZero)
 			end
 
 			local goBackString = ""
@@ -2130,9 +2128,9 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				]]
 				
 				if foundValidPopup then
-					CornerOpen:Render(bottomRight, vectorZero, vectorZero)
+					CornerOpen:Render(bottomRight, vecZero, vecZero)
 				else
-					CornerSelect:Render(bottomRight, vectorZero, vectorZero)
+					CornerSelect:Render(bottomRight, vecZero, vecZero)
 				end
 				
 				local selectString = ""

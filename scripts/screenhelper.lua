@@ -49,6 +49,8 @@ local CacheHelper = require("scripts.cachehelper")
 local game = CacheHelper.Game
 local room = CacheHelper.Room
 
+local vecZero = CacheHelper.VecZero
+
 
 ---------------------
 --hud offset helper--
@@ -77,7 +79,7 @@ end
 ------------------------------------
 function ScreenHelper.GetScreenSize() --based off of code from kilburn
 
-    local pos = room:WorldToScreenPosition(Vector(0,0)) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
+    local pos = room:WorldToScreenPosition(vecZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
     
     local rx = pos.X + 60 * 26 / 40
     local ry = pos.Y + 140 * (26 / 40)
@@ -128,12 +130,11 @@ function ScreenHelper.GetScreenTopRight(offset)
 	
 end
 
-local vectorZero = Vector(0,0)
 function ScreenHelper.GetScreenTopLeft(offset)
 
 	offset = offset or ScreenHelper.GetOffset()
 	
-	local pos = vectorZero
+	local pos = vecZero
 	local hudOffset = Vector(offset * 2, offset * 1.2)
 	pos = pos + hudOffset
 	
