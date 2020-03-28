@@ -95,12 +95,16 @@ CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
 ----------
 --saving--
 ----------
+
 MCM.ConfigDefault = {
+
+	--general
 	HudOffset = 0,
 	Overlays = true,
 	ChargeBars = false,
 	BigBooks = true,
 	
+	--mcm settings
 	OpenMenuKeyboard = Keyboard.KEY_L,
 	OpenMenuController = InputHelper.Controller.STICK_RIGHT,
 	
@@ -108,8 +112,10 @@ MCM.ConfigDefault = {
 	ResetToDefault = Keyboard.KEY_R,
 	ShowControls = true,
 	
+	--last button pressed tracker
 	LastBackPressed = Keyboard.KEY_BACKSPACE,
 	LastSelectPressed = Keyboard.KEY_ENTER
+	
 }
 MCM.Config = TableHelper.CopyTable(MCM.ConfigDefault)
 
@@ -151,7 +157,10 @@ function MCM.LoadSave(fromData)
 	
 end
 
---display info on new run, based on stageapi code
+
+---------------------------
+--startup version display--
+---------------------------
 
 local versionPrintFont = Font()
 versionPrintFont:Load("font/pftempestasevencondensed.fnt")
