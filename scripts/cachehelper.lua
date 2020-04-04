@@ -1,9 +1,9 @@
 local CacheHelper = {}
-CacheHelper.Version = 1
+CacheHelper.Version = 2
 
 --[[
 
-Cache Helper v1
+Cache Helper v2
 by piber
 
 Make sure this is located in MOD/scripts/cachehelper.lua otherwise it wont load properly!
@@ -99,12 +99,6 @@ function CacheHelper.ReCacheData()
 	
 	CacheHelper.Seeds = CacheHelper.Game:GetSeeds()
 	
-	CacheHelper.ReCachePlayers()
-	
-end
-
-function CacheHelper.ReCachePlayers()
-	
 	CacheHelper.Players = {}
 	for i=1, CacheHelper.Game:GetNumPlayers() do
 		CacheHelper.Players[i] = Isaac.GetPlayer(i-1)
@@ -115,6 +109,7 @@ end
 
 CacheHelperMod:AddCallback(ModCallbacks.MC_POST_RENDER, CacheHelper.ReCacheData)
 CacheHelperMod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, CacheHelper.ReCacheData)
-CacheHelperMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, CacheHelper.ReCachePlayers)
+CacheHelperMod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, CacheHelper.ReCacheData)
+CacheHelperMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, CacheHelper.ReCacheData)
 
 return CacheHelper
