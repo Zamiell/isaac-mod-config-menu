@@ -26,7 +26,9 @@ By default you can open the menu by pressing down the right control stick.
 [h1]Mirrors[/h1]
 
 Modding of Isaac: https://moddingofisaac.com/mod/3585/mod-config-menu
-Google Drive: https://drive.google.com/file/d/1sfd92dYr2IEFSN_3QMxFdwvsjsDDHZGZ/view</description>
+Google Drive: https://drive.google.com/file/d/1sfd92dYr2IEFSN_3QMxFdwvsjsDDHZGZ/view
+
+[url=https://gitlab.com/piber20/bindingofisaac-modconfigmenu]View on GitLab[/url]</description>
     <version>1.19</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
