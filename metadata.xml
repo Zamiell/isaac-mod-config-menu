@@ -37,7 +37,7 @@ By default you can open the menu by pressing down the right control stick.
 
 Modding of Isaac: https://moddingofisaac.com/mod/3585/mod-config-menu
 Google Drive: https://drive.google.com/file/d/1sfd92dYr2IEFSN_3QMxFdwvsjsDDHZGZ/view</description>
-    <version>1.15</version>
+    <version>1.16</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
