@@ -332,20 +332,20 @@ function MCM.GetSubcategoryIDByName(categoryID, name)
 	
 end
 
-function MCM.UpdateCategory(name, dataTable)
+function MCM.UpdateCategory(categoryName, dataTable)
 
-	if type(name) ~= "string" then
+	if type(categoryName) ~= "string" then
 		return
 	end
 
-	local categoryToChange = MCM.GetCategoryIDByName(name)
+	local categoryToChange = MCM.GetCategoryIDByName(categoryName)
 	if categoryToChange == nil then
 		categoryToChange = #MCM.MenuData+1
 		MCM.MenuData[categoryToChange] = {}
 		MCM.MenuData[categoryToChange].Subcategories = {}
 	end
 	
-	MCM.MenuData[categoryToChange].Name = tostring(name)
+	MCM.MenuData[categoryToChange].Name = tostring(categoryName)
 	
 	if dataTable.Info then
 		MCM.MenuData[categoryToChange].Info = dataTable.Info
@@ -357,32 +357,32 @@ function MCM.UpdateCategory(name, dataTable)
 	
 end
 
-function MCM.UpdateSubcategory(category, name, dataTable)
+function MCM.UpdateSubcategory(categoryName, subcategoryName, dataTable)
 
-	if type(category) ~= "string" then
+	if type(categoryName) ~= "string" then
 		return
 	end
 
-	if type(name) ~= "string" then
+	if type(subcategoryName) ~= "string" then
 		return
 	end
 	
-	local categoryToChange = MCM.GetCategoryIDByName(name)
+	local categoryToChange = MCM.GetCategoryIDByName(categoryName)
 	if categoryToChange == nil then
 		categoryToChange = #MCM.MenuData+1
 		MCM.MenuData[categoryToChange] = {}
-		MCM.MenuData[categoryToChange].Name = tostring(category)
+		MCM.MenuData[categoryToChange].Name = tostring(categoryName)
 		MCM.MenuData[categoryToChange].Subcategories = {}
 	end
 	
-	local subcategoryToChange = MCM.GetSubcategoryIDByName(categoryToChange, name)
+	local subcategoryToChange = MCM.GetSubcategoryIDByName(categoryToChange, subcategoryName)
 	if subcategoryToChange == nil then
 		subcategoryToChange = #MCM.MenuData[categoryToChange].Subcategories+1
 		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange] = {}
 		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options = {}
 	end
 	
-	MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(name)
+	MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(subcategoryName)
 	
 	if dataTable.Info then
 		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Info = dataTable.Info
@@ -390,29 +390,29 @@ function MCM.UpdateSubcategory(category, name, dataTable)
 	
 end
 
-function MCM.AddSetting(category, subcategory, settingTable)
+function MCM.AddSetting(categoryName, subcategoryName, settingTable)
 	if settingTable == nil then
-		settingTable = subcategory
-		subcategory = nil
+		settingTable = subcategoryName
+		subcategoryName = nil
 	end
 	
-	if subcategory == nil then
-		subcategory = "Uncategorized"
+	if subcategoryName == nil then
+		subcategoryName = "Uncategorized"
 	end
 	
-	local categoryToChange = MCM.GetCategoryIDByName(category)
+	local categoryToChange = MCM.GetCategoryIDByName(categoryName)
 	if categoryToChange == nil then
 		categoryToChange = #MCM.MenuData+1
 		MCM.MenuData[categoryToChange] = {}
-		MCM.MenuData[categoryToChange].Name = tostring(category)
+		MCM.MenuData[categoryToChange].Name = tostring(categoryName)
 		MCM.MenuData[categoryToChange].Subcategories = {}
 	end
 	
-	local subcategoryToChange = MCM.GetSubcategoryIDByName(categoryToChange, subcategory)
+	local subcategoryToChange = MCM.GetSubcategoryIDByName(categoryToChange, subcategoryName)
 	if subcategoryToChange == nil then
 		subcategoryToChange = #MCM.MenuData[categoryToChange].Subcategories+1
 		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange] = {}
-		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(subcategory)
+		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(subcategoryName)
 		MCM.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options = {}
 	end
 	
@@ -420,11 +420,11 @@ function MCM.AddSetting(category, subcategory, settingTable)
 	
 	return settingTable
 end
-function MCM.AddText(category, subcategory, text, color)
+function MCM.AddText(categoryName, subcategoryName, text, color)
 	if color == nil and type(text) ~= "string" and type(text) ~= "function" then
 		color = text
-		text = subcategory
-		subcategory = nil
+		text = subcategoryName
+		subcategoryName = nil
 	end
 	
 	local settingTable = {
@@ -434,13 +434,13 @@ function MCM.AddText(category, subcategory, text, color)
 		NoCursorHere = true
 	}
 	
-	return MCM.AddSetting(category, subcategory, settingTable)
+	return MCM.AddSetting(categoryName, subcategoryName, settingTable)
 end
-function MCM.AddTitle(category, subcategory, text, color)
+function MCM.AddTitle(categoryName, subcategoryName, text, color)
 	if color == nil and type(text) ~= "string" and type(text) ~= "function" then
 		color = text
-		text = subcategory
-		subcategory = nil
+		text = subcategoryName
+		subcategoryName = nil
 	end
 	
 	local settingTable = {
@@ -450,14 +450,14 @@ function MCM.AddTitle(category, subcategory, text, color)
 		NoCursorHere = true
 	}
 	
-	return MCM.AddSetting(category, subcategory, settingTable)
+	return MCM.AddSetting(categoryName, subcategoryName, settingTable)
 end
-function MCM.AddSpace(category, subcategory)
+function MCM.AddSpace(categoryName, subcategoryName)
 	local settingTable = {
 		Type = MCM.OptionType.SPACE
 	}
 	
-	return MCM.AddSetting(category, subcategory, settingTable)
+	return MCM.AddSetting(categoryName, subcategoryName, settingTable)
 end
 
 --------------------
