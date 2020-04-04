@@ -8,11 +8,6 @@
 This mod does not do much on its own, to get into the real action you should download a mod which supports this menu.
 
 
-[h1]Mods that support Mod Config Menu[/h1]
-Check out this collection:
-https://steamcommunity.com/workshop/filedetails/?id=1659279635
-
-
 [h1]Navigation[/h1]
 
 Keyboard:
@@ -32,7 +27,7 @@ By default you can open the menu by pressing down the right control stick.
 
 Modding of Isaac: https://moddingofisaac.com/mod/3585/mod-config-menu
 Google Drive: https://drive.google.com/file/d/1sfd92dYr2IEFSN_3QMxFdwvsjsDDHZGZ/view</description>
-    <version>1.17</version>
+    <version>1.18</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
