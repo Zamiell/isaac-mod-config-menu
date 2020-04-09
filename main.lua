@@ -16,7 +16,7 @@ local CacheHelper = require("scripts.cachehelper")
 
 SaveHelper.AddMod(mod)
 SaveHelper.DefaultGameSave(mod, {
-	ModConfigSave = {}
+	ModConfigSave = false
 })
 
 CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_PRE_MOD_SAVE, function(_, modRef, saveData)

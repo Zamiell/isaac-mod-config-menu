@@ -151,8 +151,6 @@ function MCM.LoadSave(fromData)
 		
 		return saveData
 		
-	else
-		error("MCM.LoadSave - arg 1 (fromData) couldnt be decoded or used directly as mcm data")
 	end
 	
 end

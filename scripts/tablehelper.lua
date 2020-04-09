@@ -1,9 +1,9 @@
 local TableHelper = {}
-TableHelper.Version = 1
+TableHelper.Version = 2
 
 --[[
 
-TABLE HELPER v1
+TABLE HELPER v2
 by piber
 some code based on publically available lua references
 
@@ -48,7 +48,13 @@ function TableHelper.FillTable(tableToFill, tableToFillFrom)
 		if tableToFill[i] ~= nil then
 		
 			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
 				tableToFill[i] = TableHelper.FillTable(tableToFill[i], value)
+				
 			else
 				tableToFill[i] = value
 			end
@@ -56,7 +62,13 @@ function TableHelper.FillTable(tableToFill, tableToFillFrom)
 		else
 		
 			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
 				tableToFill[i] = TableHelper.FillTable({}, value)
+				
 			else
 				tableToFill[i] = value
 			end
