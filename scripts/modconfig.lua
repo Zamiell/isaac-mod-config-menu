@@ -88,7 +88,7 @@ CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS = 4302
 --POST MODIFY BIG BOOKS
 --gets called when the big books setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when big books are enabled or disabled
---function(chargeBarsEnabled)
+--function(bigBooksEnabled)
 CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
 
 
