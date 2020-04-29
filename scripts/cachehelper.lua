@@ -1,9 +1,9 @@
 local CacheHelper = {}
-CacheHelper.Version = 2
+CacheHelper.Version = 3
 
 --[[
 
-Cache Helper v2
+Cache Helper v3
 by piber
 
 Make sure this is located in MOD/scripts/cachehelper.lua otherwise it wont load properly!
@@ -91,6 +91,8 @@ CacheHelper.KColorInvisMagenta = KColor(1.0, 0.0, 1.0, 0.0)
 CacheHelper.KColorInvisCyan =    KColor(0.0, 1.0, 1.0, 0.0)
 
 function CacheHelper.ReCacheData()
+	
+	CacheHelper.Game = Game()
 	
 	CacheHelper.Level = CacheHelper.Game:GetLevel()
 	CacheHelper.Room = CacheHelper.Game:GetRoom()
