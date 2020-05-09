@@ -159,12 +159,8 @@ local versionPrintTimer = 0
 CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
 	if MCM.Config.ShowControls then
-	
+	print("show controls")
 		versionPrintTimer = 120
-		
-	else
-	
-		versionPrintTimer = 60
 		
 	end
 	
@@ -845,9 +841,9 @@ MCM.AddSetting("Mod Config Menu", { --SHOW CONTROLS
 		MCM.Config.ShowControls = currentBool
 	end,
 	Info = {
-		"Disable this to make the start-up message go",
-		"away faster and to remove the back and select",
-		"widgets at the lower corners of the screen."
+		"Disable this to remove the back and select",
+		"widgets at the lower corners of the screen",
+		"and remove the bottom start-up message."
 	}
 })
 
@@ -1029,6 +1025,8 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
 	local game = Game()
 	local isPaused = game:IsPaused()
+	
+	local sfx = SFXManager()
 
 	local pressingButton = ""
 
@@ -1066,7 +1064,6 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		
 			MCM.CloseConfigMenu()
 			
-			local sfx = SFXManager()
 			sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 			
 		end
@@ -1212,8 +1209,6 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local leaveSubcategory = false
 		
 		if configMenuInPopup then
-		
-			local sfx = SFXManager()
 		
 			if currentMenuOption then
 				local optionType = currentMenuOption.Type

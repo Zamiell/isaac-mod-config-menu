@@ -4,9 +4,9 @@
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
 
 --require some lua libraries
-local MCM = require("scripts.modconfig")
 local CallbackHelper = require("scripts.callbackhelper")
 local SaveHelper = require("scripts.savehelper")
+local MCM = require("scripts.modconfig")
 
 --add MCM's save to savehelper
 SaveHelper.AddMod(mod)
