@@ -1,9 +1,9 @@
 local MCM = {}
-MCM.Version = 20
+MCM.Version = 21
 
 --[[
 
-MOD CONFIG MENU v20
+MOD CONFIG MENU v21
 by piber
 
 Make sure this is located in MOD/scripts/modconfig.lua otherwise it wont load properly!
