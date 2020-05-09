@@ -19,7 +19,6 @@ REQUIREMENTS:
 - CallbackHelper
 - TableHelper
 - InputHelper
-- CacheHelper
 
 -------
 
@@ -42,20 +41,12 @@ local ScreenHelper = require("scripts.screenhelper")
 local CallbackHelper = require("scripts.callbackhelper")
 local TableHelper = require("scripts.tablehelper")
 local InputHelper = require("scripts.inputhelper")
-local CacheHelper = require("scripts.cachehelper")
 
 --cached values
-local game = CacheHelper.Game
-local level = CacheHelper.Level
-local room = CacheHelper.Room
+local vecZero = Vector(0,0)
 
-local seeds = CacheHelper.Seeds
-local sfx = CacheHelper.SFX
-
-local vecZero = CacheHelper.VecZero
-
-local colorDefault = CacheHelper.Color
-local colorHalf = CacheHelper.ColorHalf
+local colorDefault = Color(1,1,1,1,0,0,0)
+local colorHalf = Color(1,1,1,0.5,0,0,0)
 
 
 --------------------
@@ -767,6 +758,9 @@ MCM.AddSetting("Mod Config Menu", { --HIDE HUD
 	OnChange = function(currentBool)
 		MCM.Config.HideHudInMenu = currentBool
 		
+		local game = Game()
+		local seeds = game:GetSeeds()
+		
 		if currentBool then
 			if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
 				seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
@@ -1032,6 +1026,8 @@ local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 --render the menu
 MCM.ControlsEnabled = true
 MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+
+	local game = Game()
 	local isPaused = game:IsPaused()
 
 	local pressingButton = ""
@@ -1061,12 +1057,18 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	if MCM.IsVisible then
 	
 		if isPaused then
+		
 			MCM.CloseConfigMenu()
+			
 		end
 		
 		if not MCM.RoomIsSafe() then
+		
 			MCM.CloseConfigMenu()
+			
+			local sfx = SFXManager()
 			sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+			
 		end
 		
 	end
@@ -1080,9 +1082,12 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 	
 	if MCM.IsVisible then
+	
 		if MCM.ControlsEnabled and not isPaused then
-			for i=1, #CacheHelper.Players do
-				local player = CacheHelper.Players[i]
+		
+			for i=0, game:GetNumPlayers()-1 do
+		
+				local player = Isaac.GetPlayer(i)
 				local data = player:GetData()
 				
 				--freeze players and disable their controls
@@ -1101,6 +1106,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if data.input and data.input.menu and data.input.menu.toggle then
 					data.input.menu.toggle = false
 				end
+				
 			end
 			
 			if not InputHelper.MultipleButtonTriggered(ignoreActionButtons) then
@@ -1187,6 +1193,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			if pressingButton ~= "" then
 				pressingNonRebindableKey = true
 			end
+			
 		end
 		
 		updateCurrentMenuVars()
@@ -1205,6 +1212,9 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local leaveSubcategory = false
 		
 		if configMenuInPopup then
+		
+			local sfx = SFXManager()
+		
 			if currentMenuOption then
 				local optionType = currentMenuOption.Type
 				local optionCurrent = currentMenuOption.CurrentSetting
@@ -2153,9 +2163,12 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			end
 			
 		end
+		
 	else
-		for i=1, #CacheHelper.Players do
-			local player = CacheHelper.Players[i]
+	
+		for i=0, game:GetNumPlayers()-1 do
+		
+			local player = Isaac.GetPlayer(i)
 			local data = player:GetData()
 			
 			--enable player controls
@@ -2166,6 +2179,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				player.ControlsEnabled = true
 				data.ConfigMenuPlayerControlsDisabled = false
 			end
+			
 		end
 		
 		configMenuInSubcategory = false
@@ -2183,6 +2197,7 @@ MCMMod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		configMenuPositionFirstCategory = 1
 		configMenuPositionFirstSubcategory = 1
 		configMenuPositionFirstOption = 1
+		
 	end
 end)
 
@@ -2191,22 +2206,41 @@ CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, funct
 end)
 
 function MCM.OpenConfigMenu()
+
 	if MCM.RoomIsSafe() then
+	
 		if MCM.Config.HideHudInMenu then
+		
+			local game = Game()
+			local seeds = game:GetSeeds()
 			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+			
 		end
+		
 		MCM.IsVisible = true
+		
 	else
+	
+		local sfx = SFXManager()
 		sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+		
 	end
+	
 end
 
 function MCM.CloseConfigMenu()
+
 	MCM.LeavePopup()
 	MCM.LeaveOptions()
 	MCM.LeaveSubcategory()
+	
+	local game = Game()
+	local seeds = game:GetSeeds()
 	seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+	
+	
 	MCM.IsVisible = false
+	
 end
 
 function MCM.ToggleConfigMenu()
@@ -2244,6 +2278,9 @@ function MCM.RoomIsSafe()
 			roomHasDanger = true
 		end
 	end
+	
+	local game = Game()
+	local room = game:GetRoom()
 	
 	if room:IsClear() and not roomHasDanger then
 		return true

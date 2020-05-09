@@ -1,19 +1,14 @@
 local CallbackHelper = {}
-CallbackHelper.Version = 1
+CallbackHelper.Version = 2
 
 --[[
 
-CALLBACK HELPER v1
+CALLBACK HELPER v2
 by piber
 
 Make sure this is located in MOD/scripts/callbackhelper.lua otherwise it wont load properly!
 
 Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.
-
--------
-
-REQUIREMENTS:
-- CacheHelper
 
 -------
 
@@ -28,12 +23,6 @@ Callback Helper has a custom add callback function which, if you use it with a v
 
 --create the mod
 local CallbackHelperMod = RegisterMod("Callback Helper", 1)
-
---require some lua libraries
-local CacheHelper = require("scripts.cachehelper")
-
---cached values
-local game = CacheHelper.Game
 
 
 ------------------------
@@ -281,6 +270,8 @@ CallbackHelperMod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, play
 	if not firstPlayerInited then
 	
 		firstPlayerInited = true
+		
+		local game = Game()
 		
 		local isSaveGame = false
 		if game.TimeCounter > 0 then

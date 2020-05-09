@@ -1,20 +1,15 @@
 local ScreenHelper = {}
-ScreenHelper.Version = 1
+ScreenHelper.Version = 2
 
 --[[
 
-SCREEN HELPER v1
+SCREEN HELPER v2
 by piber
 GetScreenSize is based on code by _Kilburn
 
 Make sure this is located in MOD/scripts/screenhelper.lua otherwise it wont load properly!
 
 Do not edit this script file as it could conflict with the release version of this file used by other mods. If you find a bug or need to something changed, let me know.
-
--------
-
-REQUIREMENTS:
-- CacheHelper
 
 -------
 
@@ -42,14 +37,8 @@ ScreenHelper.GetScreenTopLeft(offset) -- Returns a vector positioned at the top 
 
 ]]
 
---require some lua libraries
-local CacheHelper = require("scripts.cachehelper")
-
 --cached values
-local game = CacheHelper.Game
-local room = CacheHelper.Room
-
-local vecZero = CacheHelper.VecZero
+local vecZero = Vector(0,0)
 
 
 ---------------------
@@ -79,13 +68,16 @@ end
 ------------------------------------
 function ScreenHelper.GetScreenSize() --based off of code from kilburn
 
-    local pos = room:WorldToScreenPosition(vecZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
-    
-    local rx = pos.X + 60 * 26 / 40
-    local ry = pos.Y + 140 * (26 / 40)
-    
-    return Vector(rx*2 + 13*26, ry*2 + 7*26)
-	
+	local game = Game()
+	local room = game:GetRoom()
+
+	local pos = room:WorldToScreenPosition(vecZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
+
+	local rx = pos.X + 60 * 26 / 40
+	local ry = pos.Y + 140 * (26 / 40)
+
+	return Vector(rx*2 + 13*26, ry*2 + 7*26)
+
 end
 
 function ScreenHelper.GetScreenCenter()

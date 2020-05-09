@@ -9,7 +9,6 @@ if not ModConfigMenu then
 	--require some lua libraries
 	local MCM = require("scripts.modconfig")
 	local CallbackHelper = require("scripts.callbackhelper")
-	local CacheHelper = require("scripts.cachehelper")
 
 	-------------------------
 	--OLD MOD COMPATIBILITY--
@@ -37,11 +36,39 @@ if not ModConfigMenu then
 	ModConfigMenu.KCOLOR_HALF = KColor(1,1,1,0.5)
 	ModConfigMenu.KCOLOR_INVISIBLE = KColor(1,1,1,0)
 
-	ModConfigMenu.Game = CacheHelper.Game
-	ModConfigMenu.Seeds = CacheHelper.Seeds
-	ModConfigMenu.Level = CacheHelper.Level
-	ModConfigMenu.Room = CacheHelper.Room
-	ModConfigMenu.SFX = CacheHelper.SFX
+	setmetatable(ModConfigMenu, {
+
+		__index = function(this, key)
+
+			if key == "Game" then
+			
+				return Game()
+				
+			elseif key == "Seeds" then
+			
+				return Game():GetSeeds()
+				
+			elseif key == "Level" then
+			
+				return Game():GetLevel()
+				
+			elseif key == "Room" then
+			
+				return Game():GetRoom()
+				
+			elseif key == "SFX" then
+			
+				return SFXManager()
+				
+			else
+			
+				return this[key]
+				
+			end
+
+		end
+
+	})
 
 	ModConfigMenu.Config = MCM.Config
 
