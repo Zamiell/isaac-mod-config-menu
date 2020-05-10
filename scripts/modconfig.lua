@@ -159,7 +159,7 @@ local versionPrintTimer = 0
 CallbackHelper.AddCallback(MCMMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
 	if MCM.Config.ShowControls then
-	print("show controls")
+	
 		versionPrintTimer = 120
 		
 	end
