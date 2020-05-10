@@ -36,39 +36,32 @@ if not ModConfigMenu then
 	ModConfigMenu.KCOLOR_HALF = KColor(1,1,1,0.5)
 	ModConfigMenu.KCOLOR_INVISIBLE = KColor(1,1,1,0)
 
+	local fakeCachedDataToReturn = {
+		Game = Game,
+		Seeds = function() return Game():GetSeeds() end,
+		Level = function() return Game():GetLevel() end,
+		Room = function() return Game():GetRoom() end,
+		SFX = SFXManager
+	}
 	setmetatable(ModConfigMenu, {
 
 		__index = function(this, key)
 
-			if key == "Game" then
+			if fakeCachedDataToReturn[key] then
 			
-				return Game()
-				
-			elseif key == "Seeds" then
-			
-				return Game():GetSeeds()
-				
-			elseif key == "Level" then
-			
-				return Game():GetLevel()
-				
-			elseif key == "Room" then
-			
-				return Game():GetRoom()
-				
-			elseif key == "SFX" then
-			
-				return SFXManager()
-				
-			else
-			
-				return this[key]
+				return fakeCachedDataToReturn[key]()
 				
 			end
 
 		end
 
 	})
+	
+	-- ModConfigMenu.Game = CacheHelper.Game
+	-- ModConfigMenu.Seeds = CacheHelper.Seeds
+	-- ModConfigMenu.Level = CacheHelper.Level
+	-- ModConfigMenu.Room = CacheHelper.Room
+	-- ModConfigMenu.SFX = CacheHelper.SFX
 
 	ModConfigMenu.Config = MCM.Config
 
