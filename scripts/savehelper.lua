@@ -1,9 +1,9 @@
 local SaveHelper = {}
-SaveHelper.Version = 1
+SaveHelper.Version = 2
 
 --[[
 
-SAVE HELPER v1
+SAVE HELPER v2
 by piber
 
 Make sure this is located in MOD/scripts/savehelper.lua otherwise it wont load properly!
@@ -52,6 +52,54 @@ CallbackHelper.Callbacks.SH_PRE_MOD_LOAD = 1202
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 CallbackHelper.Callbacks.SH_POST_MOD_LOAD = 1202
+
+--triggered before savehelper resets the game save of all mods
+--function(modref, savedata)
+--extra variable is the desired mod reference to only run your code on
+--return false to prevent the save from being reset
+CallbackHelper.Callbacks.SH_PRE_RESET_GAME = 1203
+
+--triggered before savehelper resets the run save of all mods
+--function(modref, savedata)
+--extra variable is the desired mod reference to only run your code on
+--return false to prevent the save from being reset
+CallbackHelper.Callbacks.SH_PRE_RESET_RUN = 1204
+
+--triggered before savehelper resets the level save of all mods
+--function(modref, savedata)
+--extra variable is the desired mod reference to only run your code on
+--return false to prevent the save from being reset
+CallbackHelper.Callbacks.SH_PRE_RESET_LEVEL = 1205
+
+--triggered before savehelper resets the room save of all mods
+--function(modref, savedata)
+--extra variable is the desired mod reference to only run your code on
+--return false to prevent the save from being reset
+CallbackHelper.Callbacks.SH_PRE_RESET_ROOM = 1206
+
+--triggered after savehelper resets the game save of all mods
+--function(modref, originalsavedata)
+--originalsavedata is the save data as it existed before it was cleared
+--extra variable is the desired mod reference to only run your code on
+CallbackHelper.Callbacks.SH_POST_RESET_GAME = 1207
+
+--triggered after savehelper resets the run save of all mods
+--function(modref, originalsavedata)
+--originalsavedata is the save data as it existed before it was cleared
+--extra variable is the desired mod reference to only run your code on
+CallbackHelper.Callbacks.SH_POST_RESET_RUN = 1208
+
+--triggered after savehelper resets the level save of all mods
+--function(modref, originalsavedata)
+--originalsavedata is the save data as it existed before it was cleared
+--extra variable is the desired mod reference to only run your code on
+CallbackHelper.Callbacks.SH_POST_RESET_LEVEL = 1209
+
+--triggered after savehelper resets the room save of all mods
+--function(modref, originalsavedata)
+--originalsavedata is the save data as it existed before it was cleared
+--extra variable is the desired mod reference to only run your code on
+CallbackHelper.Callbacks.SH_POST_RESET_ROOM = 1210
 
 
 --------------
@@ -219,29 +267,186 @@ end
 ----------------------------
 function SaveHelper.ResetGameSave(modRef)
 
-	local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
-	return SaveHelper.GameSave(modRef, defaultSave)
+	local saveData = TableHelper.CopyTable(SaveHelper.GameSave(modRef))
+	
+	--SH_PRE_RESET_GAME
+	local doReset = true
+	
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.SH_PRE_RESET_GAME, --callback id
+		function(returned) --function to handle it
+		
+			if returned == false then
+				doReset = false
+				return true
+			end
+		
+		end,
+		{modRef, saveData}, --args to send
+		modRef --extra variable
+	)
+	
+	if doReset then
+	
+		SaveHelper.ResetRunSave(modRef)
+		SaveHelper.ResetLevelSave(modRef)
+		SaveHelper.ResetRoomSave(modRef)
+	
+		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
+		local resetSave = SaveHelper.GameSave(modRef, defaultSave)
+		
+		--SH_POST_RESET_GAME
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.SH_POST_RESET_GAME, --callback id
+			nil, --function to handle it
+			{modRef, saveData}, --args to send
+			modRef --extra variable
+		)
+		
+		return resetSave
+		
+	end
+	
+	return saveData
 
 end
 
 function SaveHelper.ResetRunSave(modRef)
 
-	local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
-	return SaveHelper.RunSave(modRef, defaultSave)
+	local saveData = TableHelper.CopyTable(SaveHelper.RunSave(modRef))
+	
+	--SH_PRE_RESET_RUN
+	local doReset = true
+	
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.SH_PRE_RESET_RUN, --callback id
+		function(returned) --function to handle it
+		
+			if returned == false then
+				doReset = false
+				return true
+			end
+		
+		end,
+		{modRef, saveData}, --args to send
+		modRef --extra variable
+	)
+	
+	if doReset then
+	
+		SaveHelper.ResetLevelSave(modRef)
+		SaveHelper.ResetRoomSave(modRef)
+	
+		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
+		local resetSave = SaveHelper.RunSave(modRef, defaultSave)
+		
+		--SH_POST_RESET_RUN
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.SH_POST_RESET_RUN, --callback id
+			nil, --function to handle it
+			{modRef, saveData}, --args to send
+			modRef --extra variable
+		)
+		
+		return resetSave
+		
+	end
+	
+	return saveData
 	
 end
 
 function SaveHelper.ResetLevelSave(modRef)
 
-	local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
-	return SaveHelper.LevelSave(modRef, defaultSave)
+	local saveData = TableHelper.CopyTable(SaveHelper.LevelSave(modRef))
+	
+	--SH_PRE_RESET_LEVEL
+	local doReset = true
+	
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.SH_PRE_RESET_LEVEL, --callback id
+		function(returned) --function to handle it
+		
+			if returned == false then
+				doReset = false
+				return true
+			end
+		
+		end,
+		{modRef, saveData}, --args to send
+		modRef --extra variable
+	)
+	
+	if doReset then
+	
+		SaveHelper.ResetRoomSave(modRef)
+	
+		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
+		local resetSave = SaveHelper.LevelSave(modRef, defaultSave)
+		
+		--SH_POST_RESET_LEVEL
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.SH_POST_RESET_LEVEL, --callback id
+			nil, --function to handle it
+			{modRef, saveData}, --args to send
+			modRef --extra variable
+		)
+		
+		return resetSave
+		
+	end
+	
+	return saveData
 	
 end
 
 function SaveHelper.ResetRoomSave(modRef)
 
-	local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
-	return SaveHelper.RoomSave(modRef, defaultSave)
+	local saveData = TableHelper.CopyTable(SaveHelper.RoomSave(modRef))
+	
+	--SH_PRE_RESET_ROOM
+	local doReset = true
+	
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.SH_PRE_RESET_ROOM, --callback id
+		function(returned) --function to handle it
+		
+			if returned == false then
+				doReset = false
+				return true
+			end
+		
+		end,
+		{modRef, saveData}, --args to send
+		modRef --extra variable
+	)
+	
+	if doReset then
+	
+		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
+		local resetSave = SaveHelper.RoomSave(modRef, defaultSave)
+		
+		--SH_POST_RESET_ROOM
+		CallbackHelper.CallCallbacks
+		(
+			CallbackHelper.Callbacks.SH_POST_RESET_ROOM, --callback id
+			nil, --function to handle it
+			{modRef, saveData}, --args to send
+			modRef --extra variable
+		)
+		
+		return resetSave
+		
+	end
+	
+	return saveData
 	
 end
 
