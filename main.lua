@@ -29,4 +29,4 @@ CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.SH_POST_MOD_LOAD, funct
 end, mod)
 
 --OLD VERSION COMPATIBILITY
-require("scripts.modconfigoldcompatibility")
+-- require("scripts.modconfigoldcompatibility")
