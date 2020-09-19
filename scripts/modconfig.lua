@@ -48,13 +48,13 @@ local colorHalf = Color(1,1,1,0.5,0,0,0)
 
 
 --------------------
---custom callbacks--
+--CUSTOM CALLBACKS--
 --------------------
 
---POST MODIFY HUD OFFSET
+--MCM_POST_MODIFY_HUD_OFFSET
 --gets called when the hud offset setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when hud offset is changed
---function(hudOffset)
+--function(number hudOffset)
 CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 4300
 
 --this will make ScreenHelper's offset match MCM's offset when it is changed
@@ -62,37 +62,44 @@ CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.MCM_POST_
 	ScreenHelper.SetOffset(hudOffset)
 end)
 
---POST MODIFY OVERLAYS
+--MCM_POST_MODIFY_OVERLAYS
 --gets called when the overlays setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when overlays are enabled or disabled
---function(overlaysEnabled)
+--function(boolean overlaysEnabled)
 CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 4301
 
---POST MODIFY CHARGE BARS
+--MCM_POST_MODIFY_CHARGE_BARS
 --gets called when the charge bars setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when charge bars are enabled or disabled
---function(chargeBarsEnabled)
+--function(boolean chargeBarsEnabled)
 CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS = 4302
 
---POST MODIFY BIG BOOKS
+--MCM_POST_MODIFY_BIG_BOOKS
 --gets called when the big books setting is changed in the general mod config menu section
 --use this if you need to change anything in your mod when big books are enabled or disabled
---function(bigBooksEnabled)
+--function(boolean bigBooksEnabled)
 CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
+
+--MCM_POST_MODIFY_ANNOUNCER
+--gets called when the announcer setting is changed in the general mod config menu section
+--use this if you need to change anything in your mod when the announcer mode is changed
+--function(number announcerMode)
+CallbackHelper.Callbacks.MCM_POST_MODIFY_ANNOUNCER = 4304
 
 
 ----------
---saving--
+--SAVING--
 ----------
 
 ModConfigMenu.ConfigDefault = {
 
 	["General"] = {
 	
-		HudOffset = 0,
+		HudOffset = 0, -- 0 to 10
 		Overlays = true,
 		ChargeBars = false,
-		BigBooks = true
+		BigBooks = true,
+		Announcer = 0 -- 0 = sometimes, 1 = never, 2 = always
 		
 	},
 
@@ -106,12 +113,6 @@ ModConfigMenu.ConfigDefault = {
 		ShowControls = true
 		
 	},
-
-	--general
-	HudOffset = 0,
-	Overlays = true,
-	ChargeBars = false,
-	BigBooks = true,
 	
 	--mcm settings
 	OpenMenuKeyboard = Keyboard.KEY_L,
@@ -156,7 +157,7 @@ function ModConfigMenu.LoadSave(fromData)
 		ModConfigMenu.Config = TableHelper.CopyTable(saveData)
 		
 		--make sure ScreenHelper's offset matches MCM's offset
-		ScreenHelper.SetOffset(ModConfigMenu.Config.HudOffset)
+		ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
 		
 		return saveData
 		
@@ -490,20 +491,35 @@ function ModConfigMenu.AddSpace(categoryName, subcategoryName)
 	
 end
 
-function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, displayValueProxies, info, color)
+function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color, functionName)
 
 	--move args around
-	if type(displayText) == "table" then
+	if type(configTableAttribute) ~= "string" then
+		functionName = color
 		color = info
 		info = displayValueProxies
 		displayValueProxies = displayText
 		displayText = defaultValue
-		defaultValue = configTableAttribute
+		defaultValue = modifyBy
+		modifyBy = maxValue
+		maxValue = minValue
+		minValue = configTableAttribute
 		configTableAttribute = subcategoryName
 		subcategoryName = nil
 	end
+	
+	if type(defaultValue) == "string" then
+		functionName = color
+		color = info
+		info = displayValueProxies
+		displayValueProxies = displayText
+		displayText = defaultValue
+		defaultValue = modifyBy
+		modifyBy = nil
+	end
 
-	if type(displayValueProxies) ~= "table" then
+	if type(displayValueProxies) ~= "table" or type(info) == "userdata" or type(info) == "nil" then
+		functionName = color
 		color = info
 		info = displayValueProxies
 		displayValueProxies = nil
@@ -511,15 +527,31 @@ function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttr
 	
 	--set default values
 	if defaultValue == nil then
-		defaultValue = false
+		if settingType == ModConfigMenu.OptionType.BOOLEAN then
+			defaultValue = false
+		else
+			defaultValue = 0
+		end
 	end
+	
+	if settingType == ModConfigMenu.OptionType.NUMBER then
+		minValue = minValue or 0
+		maxValue = maxValue or 10
+		modifyBy = modifyBy or 1
+	else
+		minValue = nil
+		maxValue = nil
+		modifyBy = nil
+	end
+	
+	functionName = functionName or "SimpleAddSetting"
 	
 	--erroring
 	if categoryName == nil then
-		error("ModConfigMenu.AddBoolean - No valid category name provided", 2)
+		error("ModConfigMenu." .. tostring(functionName) .. " - No valid category name provided", 2)
 	end
 	if configTableAttribute == nil then
-		error("ModConfigMenu.AddBoolean - No valid config table attribute provided", 2)
+		error("ModConfigMenu." .. tostring(functionName) .. " - No valid config table attribute provided", 2)
 	end
 	
 	--create config value
@@ -535,10 +567,13 @@ function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttr
 	
 	--setting
 	local settingTable = {
-		Type = ModConfigMenu.OptionType.BOOLEAN,
+		Type = settingType,
 		CurrentSetting = function()
 			return ModConfigMenu.Config[categoryName][configTableAttribute]
 		end,
+		Minimum = minValue,
+		Maximum = maxValue,
+		ModifyBy = modifyBy,
 		Default = defaultValue,
 		Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
 		
@@ -550,7 +585,9 @@ function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttr
 				displayString = displayText .. ": "
 			end
 			
-			if displayValueProxies and displayValueProxies[currentValue] then
+			if settingType == ModConfigMenu.OptionType.SCROLL then
+				displayString = displayString .. "$scroll" .. tostring(math.floor(currentValue))
+			elseif displayValueProxies and displayValueProxies[currentValue] then
 				displayString = displayString .. tostring(displayValueProxies[currentValue])
 			else
 				displayString = displayString .. tostring(currentValue)
@@ -559,9 +596,9 @@ function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttr
 			return displayString
 			
 		end,
-		OnChange = function(currentBool)
+		OnChange = function(currentValue)
 		
-			ModConfigMenu.Config[categoryName][configTableAttribute] = currentBool
+			ModConfigMenu.Config[categoryName][configTableAttribute] = currentValue
 			
 		end,
 		Info = info,
@@ -572,73 +609,94 @@ function ModConfigMenu.AddBoolean(categoryName, subcategoryName, configTableAttr
 	
 end
 
---------------------
---GENERAL SETTINGS--
---------------------
+function ModConfigMenu.AddBooleanSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, displayValueProxies, info, color)
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.BOOLEAN, categoryName, subcategoryName, configTableAttribute, nil, nil, defaultValue, displayText, displayValueProxies, info, color, "AddBooleanSetting")
+end
 
+function ModConfigMenu.AddNumberSetting(categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color)
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.NUMBER, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color, "AddNumberSetting")
+end
+
+function ModConfigMenu.AddScrollSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, info, color)
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.SCROLL, categoryName, subcategoryName, configTableAttribute, nil, nil, defaultValue, displayText, info, color, "AddScrollSetting")
+end
+
+-----------------
+--GENERAL SETUP--
+-----------------
 ModConfigMenu.UpdateCategory("General", {
 	Info = "Settings that affect the majority of mods"
 })
 
 ModConfigMenu.AddSpace("General") --SPACE
 
-ModConfigMenu.AddSpace("General") --SPACE
 
---hud offset visual
+----------------------
+--HUD OFFSET SETTING--
+----------------------
+local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
+	"General", --category
+	"HudOffset", --attribute in table
+	ModConfigMenu.ConfigDefault["General"].HudOffset, --default value
+	"Hud Offset", --display text
+	{ --info
+		"How far from the corners of the screen",
+		"custom hud elements will be.",
+		"Try to make this match your base-game setting."
+	}
+)
+
+--set up screen corner display for hud offset
 local HudOffsetVisualTopLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 0)
 local HudOffsetVisualTopRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 1)
 local HudOffsetVisualBottomRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 2)
 local HudOffsetVisualBottomLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 3)
 
-ModConfigMenu.AddSetting("General", { --HUD OFFSET
-	Type = ModConfigMenu.OptionType.SCROLL,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.HudOffset
-	end,
-	Default = ModConfigMenu.ConfigDefault.HudOffset,
-	Display = function(cursorIsHere)
-	
-		if cursorIsHere then
-		
-			--render the visual
-			HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
-			HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vecZero, vecZero)
-			HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vecZero, vecZero)
-			HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vecZero, vecZero)
-			
-		end
-		
-		return "Hud Offset: $scroll" .. tostring(math.floor(ModConfigMenu.Config.HudOffset))
-		
-	end,
-	OnChange = function(currentNum)
-	
-		ModConfigMenu.Config.HudOffset = currentNum
-		
-		--MCM_POST_MODIFY_HUD_OFFSET
-		CallbackHelper.CallCallbacks
-		(
-			CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, --callback id
-			nil, --function to handle it
-			{currentNum} --args to send
-		)
-		
-	end,
-	Info = {
-		"How far from the corners of the screen",
-		"custom hud elements will be.",
-		"Try to make this match your base-game setting."
-	},
-	HideControls = true
-})
+hudOffsetSetting.HideControls = true -- hide controls so the screen corner graphics are easier to see
 
---OVERLAYS
-local overlaySetting = ModConfigMenu.AddBoolean(
+local oldHudOffsetDisplay = hudOffsetSetting.Display
+hudOffsetSetting.Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
+
+	if cursorIsAtThisOption then
+	
+		--render the visual
+		HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
+		HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vecZero, vecZero)
+		HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vecZero, vecZero)
+		HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vecZero, vecZero)
+		
+	end
+
+	return oldHudOffsetDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
+	
+end
+
+--set up callback
+local oldHudOffsetOnChange = hudOffsetSetting.OnChange
+hudOffsetSetting.OnChange = function(currentValue)
+
+	oldHudOffsetOnChange(currentValue)
+	
+	--MCM_POST_MODIFY_HUD_OFFSET
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, --callback id
+		nil, --function to handle it
+		{currentValue} --args to send
+	)
+	
+end
+
+
+--------------------
+--OVERLAYS SETTING--
+--------------------
+local overlaySetting = ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"Overlays", --attribute in table
 	ModConfigMenu.ConfigDefault["General"].Overlays, --default value
-	"Overlays", --base display text
-	{ --value proxy strings
+	"Overlays", --display text
+	{ --value display text
 		[true] = "On",
 		[false] = "Off"
 	},
@@ -648,90 +706,134 @@ local overlaySetting = ModConfigMenu.AddBoolean(
 	}
 )
 
---set up callback for overlays
+--set up callback
 local oldOverlayOnChange = overlaySetting.OnChange
-overlaySetting.OnChange = function(currentBool)
+overlaySetting.OnChange = function(currentValue)
 
-	oldOverlayOnChange(currentBool)
+	oldOverlayOnChange(currentValue)
 	
 	--MCM_POST_MODIFY_OVERLAYS
 	CallbackHelper.CallCallbacks
 	(
 		CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, --callback id
 		nil, --function to handle it
-		{currentBool} --args to send
+		{currentValue} --args to send
 	)
 	
 end
 
-ModConfigMenu.AddSetting("General", { --CHARGE BARS
-	Type = ModConfigMenu.OptionType.BOOLEAN,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.ChargeBars
-	end,
-	Default = ModConfigMenu.ConfigDefault.ChargeBars,
-	Display = function()
-	
-		local onOff = "Off"
-		if ModConfigMenu.Config.ChargeBars then
-			onOff = "On"
-		end
-		
-		return "Charge Bars: " .. onOff
-		
-	end,
-	OnChange = function(currentBool)
-	
-		ModConfigMenu.Config.ChargeBars = currentBool
-		
-		--MCM_POST_MODIFY_CHARGE_BARS
-		CallbackHelper.CallCallbacks
-		(
-			CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, --callback id
-			nil, --function to handle it
-			{currentBool} --args to send
-		)
-		
-	end,
-	Info = {
+
+-----------------------
+--CHARGE BARS SETTING--
+-----------------------
+local chargeBarsSetting = ModConfigMenu.AddBooleanSetting(
+	"General", --category
+	"ChargeBars", --attribute in table
+	ModConfigMenu.ConfigDefault["General"].ChargeBars, --default value
+	"Charge Bars", --display text
+	{ --value display text
+		[true] = "On",
+		[false] = "Off"
+	},
+	{ --info
 		"Enable or disable custom charge bar visuals",
 		"for mod effects, like those from chargable items."
 	}
-})
-ModConfigMenu.AddSetting("General", { --BIGBOOKS
-	Type = ModConfigMenu.OptionType.BOOLEAN,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.BigBooks
-	end,
-	Default = ModConfigMenu.ConfigDefault.BigBooks,
-	Display = function()
+)
+
+--set up callback
+local oldChargeBarsOnChange = chargeBarsSetting.OnChange
+chargeBarsSetting.OnChange = function(currentValue)
+
+	oldChargeBarsOnChange(currentValue)
 	
-		local onOff = "Off"
-		if ModConfigMenu.Config.BigBooks then
-			onOff = "On"
-		end
-		
-		return "Bigbooks: " .. onOff
-		
-	end,
-	OnChange = function(currentBool)
+	--MCM_POST_MODIFY_CHARGE_BARS
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, --callback id
+		nil, --function to handle it
+		{currentValue} --args to send
+	)
 	
-		ModConfigMenu.Config.BigBooks = currentBool
-		
-		--MCM_POST_MODIFY_BIG_BOOKS
-		CallbackHelper.CallCallbacks
-		(
-			CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, --callback id
-			nil, --function to handle it
-			{currentBool} --args to send
-		)
-		
-	end,
-	Info = {
+end
+
+
+---------------------
+--BIG BOOKS SETTING--
+---------------------
+local bigBooksSetting = ModConfigMenu.AddBooleanSetting(
+	"General", --category
+	"BigBooks", --attribute in table
+	ModConfigMenu.ConfigDefault["General"].BigBooks, --default value
+	"Bigbooks", --display text
+	{ --value display text
+		[true] = "On",
+		[false] = "Off"
+	},
+	{ --info
 		"Enable or disable custom bigbook overlays,",
 		"like those which appear when an active item is used."
 	}
-})
+)
+
+--set up callback
+local oldBigBooksOnChange = bigBooksSetting.OnChange
+bigBooksSetting.OnChange = function(currentValue)
+
+	oldBigBooksOnChange(currentValue)
+	
+	--MCM_POST_MODIFY_BIG_BOOKS
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, --callback id
+		nil, --function to handle it
+		{currentValue} --args to send
+	)
+	
+end
+
+
+---------------------
+--ANNOUNCER SETTING--
+---------------------
+local announcerSetting = ModConfigMenu.AddNumberSetting(
+	"General", --category
+	"Announcer", --attribute in table
+	0, --minimum value
+	2, --max value
+	ModConfigMenu.ConfigDefault["General"].Announcer, --default value,
+	"Announcer", --display text
+	{ --value display text
+		[0] = "Sometimes",
+		[1] = "Never",
+		[2] = "Always"
+	},
+	{ --info
+		"Choose how often a voice-over will play,",
+		"like when a pocket item (pill or card) is used."
+	}
+)
+
+--set up callback
+local oldAnnouncerOnChange = announcerSetting.OnChange
+announcerSetting.OnChange = function(currentValue)
+
+	oldAnnouncerOnChange(currentValue)
+	
+	--MCM_POST_MODIFY_ANNOUNCER
+	CallbackHelper.CallCallbacks
+	(
+		CallbackHelper.Callbacks.MCM_POST_MODIFY_ANNOUNCER, --callback id
+		nil, --function to handle it
+		{currentValue} --args to send
+	)
+	
+end
+
+
+-----------------
+--GENERAL CLOSE--
+-----------------
 
 ModConfigMenu.AddSpace("General") --SPACE
 
