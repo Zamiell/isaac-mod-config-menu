@@ -9,6 +9,7 @@ if not ModConfigMenu then
 	--require some lua libraries
 	local MCM = require("scripts.modconfig")
 	local CallbackHelper = require("scripts.callbackhelper")
+	local InputHelper = require("scripts.inputhelper")
 
 	-------------------------
 	--OLD MOD COMPATIBILITY--
@@ -64,6 +65,10 @@ if not ModConfigMenu then
 	-- ModConfigMenu.SFX = CacheHelper.SFX
 
 	ModConfigMenu.Config = MCM.Config
+	
+	ModConfigMenuController = InputHelper.Controller
+	ModConfigMenuKeyboardToString = InputHelper.KeyboardToString
+	ModConfigMenuControllerToString = InputHelper.ControllerToString
 
 	ModConfigMenuPopupGfx = MCM.PopupGfx
 	ModConfigMenuOptionType = MCM.OptionType
