@@ -114,14 +114,6 @@ ModConfigMenu.ConfigDefault = {
 		
 	},
 	
-	--mcm settings
-	OpenMenuKeyboard = Keyboard.KEY_L,
-	OpenMenuController = InputHelper.Controller.STICK_RIGHT,
-	
-	HideHudInMenu = true,
-	ResetToDefault = Keyboard.KEY_R,
-	ShowControls = true,
-	
 	--last button pressed tracker
 	LastBackPressed = Keyboard.KEY_BACKSPACE,
 	LastSelectPressed = Keyboard.KEY_ENTER
@@ -177,7 +169,7 @@ local versionPrintTimer = 0
 
 CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
 
-	if ModConfigMenu.Config.ShowControls then
+	if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
 	
 		versionPrintTimer = 120
 		
@@ -202,8 +194,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
 
 		local openMenuButton = Keyboard.KEY_F10
-		if type(ModConfigMenu.Config.OpenMenuKeyboard) == "number" and ModConfigMenu.Config.OpenMenuKeyboard > -1 then
-			openMenuButton = ModConfigMenu.Config.OpenMenuKeyboard
+		if type(ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard) == "number" and ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard > -1 then
+			openMenuButton = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard
 		end
 
 		local openMenuButtonString = "Unknown Key"
@@ -491,39 +483,8 @@ function ModConfigMenu.AddSpace(categoryName, subcategoryName)
 	
 end
 
-function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color, functionName)
-
-	--move args around
-	if type(configTableAttribute) ~= "string" then
-		functionName = color
-		color = info
-		info = displayValueProxies
-		displayValueProxies = displayText
-		displayText = defaultValue
-		defaultValue = modifyBy
-		modifyBy = maxValue
-		maxValue = minValue
-		minValue = configTableAttribute
-		configTableAttribute = subcategoryName
-		subcategoryName = nil
-	end
-	
-	if type(defaultValue) == "string" then
-		functionName = color
-		color = info
-		info = displayValueProxies
-		displayValueProxies = displayText
-		displayText = defaultValue
-		defaultValue = modifyBy
-		modifyBy = nil
-	end
-
-	if type(displayValueProxies) ~= "table" or type(info) == "userdata" or type(info) == "nil" then
-		functionName = color
-		color = info
-		info = displayValueProxies
-		displayValueProxies = nil
-	end
+--need to check if display device works and add functionality to it
+function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, displayDevice, info, color, functionName)
 	
 	--set default values
 	if defaultValue == nil then
@@ -571,9 +532,6 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 		CurrentSetting = function()
 			return ModConfigMenu.Config[categoryName][configTableAttribute]
 		end,
-		Minimum = minValue,
-		Maximum = maxValue,
-		ModifyBy = modifyBy,
 		Default = defaultValue,
 		Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
 		
@@ -586,11 +544,61 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 			end
 			
 			if settingType == ModConfigMenu.OptionType.SCROLL then
+			
 				displayString = displayString .. "$scroll" .. tostring(math.floor(currentValue))
+				
+			elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD then
+				
+				local key = "None"
+				
+				if currentValue > -1 then
+				
+					key = "Unknown Key"
+					
+					if InputHelper.KeyboardToString[currentValue] then
+						key = InputHelper.KeyboardToString[currentValue]
+					end
+					
+				end
+				
+				displayString = displayString .. key
+				
+				if displayDevice then
+					
+					displayString = displayString .. " (keyboard)"
+					
+				end
+				
+			elseif settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+				
+				local key = "None"
+				
+				if currentValue > -1 then
+				
+					key = "Unknown Button"
+					
+					if InputHelper.ControllerToString[currentValue] then
+						key = InputHelper.ControllerToString[currentValue]
+					end
+					
+				end
+				
+				displayString = displayString .. key
+				
+				if displayDevice then
+					
+					displayString = displayString .. " (controller)"
+					
+				end
+				
 			elseif displayValueProxies and displayValueProxies[currentValue] then
+			
 				displayString = displayString .. tostring(displayValueProxies[currentValue])
+				
 			else
+			
 				displayString = displayString .. tostring(currentValue)
+				
 			end
 			
 			return displayString
@@ -598,6 +606,14 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 		end,
 		OnChange = function(currentValue)
 		
+			if not currentNum then
+			
+				if settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+					currentNum = -1
+				end
+				
+			end
+			
 			ModConfigMenu.Config[categoryName][configTableAttribute] = currentValue
 			
 		end,
@@ -605,25 +621,237 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 		Color = color
 	}
 	
+	if settingType == ModConfigMenu.OptionType.NUMBER then
+	
+		settingTable.Minimum = minValue
+		settingTable.Maximum = maxValue
+		settingTable.ModifyBy = modifyBy
+		
+	elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+		
+		settingTable.PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL
+		settingTable.Popup = function()
+		
+			local currentValue = ModConfigMenu.Config[categoryName][configTableAttribute]
+		
+			local goBackString = "back"
+			if ModConfigMenu.Config.LastBackPressed then
+			
+				if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
+					goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
+				elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
+					goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
+				end
+				
+			end
+			
+			local keepSettingString1 = ""
+			local keepSettingString2 = ""
+			if currentValue > -1 then
+			
+				local currentSettingString = nil
+				if (settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD and InputHelper.KeyboardToString[currentValue]) then
+					currentSettingString = InputHelper.KeyboardToString[currentValue]
+				elseif (settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER and InputHelper.ControllerToString[currentValue]) then
+					currentSettingString = InputHelper.ControllerToString[currentValue]
+				end
+				
+				keepSettingString1 = "This setting is currently set to \"" .. currentSettingString .. "\"."
+				keepSettingString2 = "Press this button to keep it unchanged."
+				
+			end
+			
+			local deviceString = ""
+			if settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD then
+				deviceString = "keyboard"
+			elseif settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+				deviceString = "controller"
+			end
+			
+			return {
+				"Press a button on your " .. deviceString .. " to change this setting.",
+				"",
+				keepSettingString1,
+				keepSettingString2,
+				"",
+				"Press \"" .. goBackString .. "\" to go back and clear this setting."
+			}
+			
+		end
+		
+	end
+	
 	return ModConfigMenu.AddSetting(categoryName, subcategoryName, settingTable)
 	
 end
 
 function ModConfigMenu.AddBooleanSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, displayValueProxies, info, color)
-	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.BOOLEAN, categoryName, subcategoryName, configTableAttribute, nil, nil, defaultValue, displayText, displayValueProxies, info, color, "AddBooleanSetting")
+
+	--move args around
+	if type(configTableAttribute) ~= "string" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = displayText
+		displayText = defaultValue
+		defaultValue = configTableAttribute
+		configTableAttribute = subcategoryName
+		subcategoryName = nil
+	end
+	
+	if type(defaultValue) ~= "boolean" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = displayText
+		displayText = defaultValue
+		defaultValue = false
+	end
+
+	if type(displayValueProxies) ~= "table" or type(info) == "userdata" or type(info) == "nil" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = nil
+	end
+	
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.BOOLEAN, categoryName, subcategoryName, configTableAttribute, nil, nil, nil, defaultValue, displayText, displayValueProxies, nil, info, color, "AddBooleanSetting")
+	
 end
 
 function ModConfigMenu.AddNumberSetting(categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color)
-	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.NUMBER, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, info, color, "AddNumberSetting")
+
+	--move args around
+	if type(configTableAttribute) ~= "string" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = displayText
+		displayText = defaultValue
+		defaultValue = modifyBy
+		modifyBy = maxValue
+		maxValue = minValue
+		minValue = configTableAttribute
+		configTableAttribute = subcategoryName
+		subcategoryName = nil
+	end
+	
+	if type(defaultValue) == "string" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = displayText
+		displayText = defaultValue
+		defaultValue = modifyBy
+		modifyBy = nil
+	end
+
+	if type(displayValueProxies) ~= "table" or type(info) == "userdata" or type(info) == "nil" then
+		color = info
+		info = displayValueProxies
+		displayValueProxies = nil
+	end
+	
+	--set default values
+	defaultValue = defaultValue or 0
+	minValue = minValue or 0
+	maxValue = maxValue or 10
+	modifyBy = modifyBy or 1
+	
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.NUMBER, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, nil, info, color, "AddNumberSetting")
+	
 end
 
 function ModConfigMenu.AddScrollSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, info, color)
-	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.SCROLL, categoryName, subcategoryName, configTableAttribute, nil, nil, defaultValue, displayText, info, color, "AddScrollSetting")
+
+	--move args around
+	if type(configTableAttribute) ~= "string" then
+		color = info
+		info = displayText
+		displayText = defaultValue
+		defaultValue = configTableAttribute
+		configTableAttribute = subcategoryName
+		subcategoryName = nil
+	end
+	
+	if type(defaultValue) ~= "number" then
+		color = info
+		info = displayText
+		displayText = defaultValue
+		defaultValue = nil
+	end
+	
+	--set default values
+	defaultValue = defaultValue or 0
+
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.SCROLL, categoryName, subcategoryName, configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, nil, info, color, "AddScrollSetting")
+	
 end
 
------------------
---GENERAL SETUP--
------------------
+function ModConfigMenu.AddKeyboardSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, displayDevice, info, color)
+
+	--move args around
+	if type(configTableAttribute) ~= "string" then
+		color = info
+		info = displayDevice
+		displayDevice = displayText
+		displayText = defaultValue
+		defaultValue = configTableAttribute
+		configTableAttribute = subcategoryName
+		subcategoryName = nil
+	end
+	
+	if type(defaultValue) ~= "number" then
+		color = info
+		info = displayText
+		displayText = defaultValue
+		defaultValue = nil
+	end
+	
+	if type(displayDevice) ~= "boolean" then
+		color = info
+		info = displayDevice
+		displayDevice = false
+	end
+	
+	--set default values
+	defaultValue = defaultValue or -1
+
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.KEYBIND_KEYBOARD, categoryName, subcategoryName, configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color, "AddKeyboardSetting")
+	
+end
+
+function ModConfigMenu.AddControllerSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText, displayDevice, info, color)
+
+	--move args around
+	if type(configTableAttribute) ~= "string" then
+		color = info
+		info = displayDevice
+		displayDevice = displayText
+		displayText = defaultValue
+		defaultValue = configTableAttribute
+		configTableAttribute = subcategoryName
+		subcategoryName = nil
+	end
+	
+	if type(defaultValue) ~= "number" then
+		color = info
+		info = displayText
+		displayText = defaultValue
+		defaultValue = nil
+	end
+	
+	if type(displayDevice) ~= "boolean" then
+		color = info
+		info = displayDevice
+		displayDevice = false
+	end
+	
+	--set default values
+	defaultValue = defaultValue or -1
+
+	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.KEYBIND_CONTROLLER, categoryName, subcategoryName, configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color, "AddControllerSetting")
+	
+end
+
+--------------------------
+--GENERAL SETTINGS SETUP--
+--------------------------
 ModConfigMenu.UpdateCategory("General", {
 	Info = "Settings that affect the majority of mods"
 })
@@ -831,9 +1059,9 @@ announcerSetting.OnChange = function(currentValue)
 end
 
 
------------------
---GENERAL CLOSE--
------------------
+--------------------------
+--GENERAL SETTINGS CLOSE--
+--------------------------
 
 ModConfigMenu.AddSpace("General") --SPACE
 
@@ -841,9 +1069,9 @@ ModConfigMenu.AddText("General", "These settings apply to")
 ModConfigMenu.AddText("General", "all mods which support them")
 
 
-----------------------------
---MOD CONFIG MENU SETTINGS--
-----------------------------
+----------------------------------
+--MOD CONFIG MENU SETTINGS SETUP--
+----------------------------------
 
 ModConfigMenu.UpdateCategory("Mod Config Menu", {
 	Info = {
@@ -858,222 +1086,120 @@ ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.V
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
-ModConfigMenu.AddSetting("Mod Config Menu", { --KEYBOARD KEYBIND
-	Type = ModConfigMenu.OptionType.KEYBIND_KEYBOARD,
-	IsOpenMenuKeybind = true,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.OpenMenuKeyboard
-	end,
-	Default = ModConfigMenu.ConfigDefault.OpenMenuKeyboard,
-	Display = function()
-		local key = "None"
-		if ModConfigMenu.Config.OpenMenuKeyboard > -1 then
-			key = "Unknown Key"
-			if InputHelper.KeyboardToString[ModConfigMenu.Config.OpenMenuKeyboard] then
-				key = InputHelper.KeyboardToString[ModConfigMenu.Config.OpenMenuKeyboard]
-			end
-		end
-		return "Open Menu: " .. key .. " (keyboard)"
-	end,
-	OnChange = function(currentNum)
-		if not currentNum then
-			currentNum = -1
-		end
-		ModConfigMenu.Config.OpenMenuKeyboard = currentNum
-	end,
-	Info = "Keyboard button that opens this menu.",
-	PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
-	Popup = function()
-		local goBackString = "back"
-		if ModConfigMenu.Config.LastBackPressed then
-			if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
-			elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
-			end
-		end
-		
-		local keepSettingString1 = ""
-		local keepSettingString2 = ""
-		if ModConfigMenu.Config.OpenMenuKeyboard > -1 and InputHelper.KeyboardToString[ModConfigMenu.Config.OpenMenuKeyboard] then
-			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.KeyboardToString[ModConfigMenu.Config.OpenMenuKeyboard] .. "\"."
-			keepSettingString2 = "Press this button to keep it unchanged."
-		end
-		
-		return {
-			"Press a keyboard button to change this setting.",
-			"",
-			keepSettingString1,
-			keepSettingString2,
-			"",
-			"Press \"" .. goBackString .. "\" to go back and clear this setting."
-		}
-	end
-})
-ModConfigMenu.AddSetting("Mod Config Menu", { --CONTROLLER KEYBIND
-	Type = ModConfigMenu.OptionType.KEYBIND_CONTROLLER,
-	IsOpenMenuKeybind = true,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.OpenMenuController
-	end,
-	Default = ModConfigMenu.ConfigDefault.OpenMenuController,
-	Display = function()
-		local key = "None"
-		if ModConfigMenu.Config.OpenMenuController > -1 then
-			key = "Unknown Button"
-			if InputHelper.ControllerToString[ModConfigMenu.Config.OpenMenuController] then
-				key = InputHelper.ControllerToString[ModConfigMenu.Config.OpenMenuController]
-			end
-		end
-		return "Open Menu: " .. key .. " (controller)"
-	end,
-	OnChange = function(currentNum)
-		if not currentNum then
-			currentNum = -1
-		end
-		ModConfigMenu.Config.OpenMenuController = currentNum
-	end,
-	Info = "Controller button that opens this menu.",
-	PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
-	Popup = function()
-		local goBackString = "back"
-		if ModConfigMenu.Config.LastBackPressed then
-			if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
-			elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
-			end
-		end
-		
-		local keepSettingString1 = ""
-		local keepSettingString2 = ""
-		if ModConfigMenu.Config.OpenMenuController > -1 and InputHelper.ControllerToString[ModConfigMenu.Config.OpenMenuController] then
-			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.ControllerToString[ModConfigMenu.Config.OpenMenuController] .. "\"."
-			keepSettingString2 = "Press this button to keep it unchanged."
-		end
-		
-		return {
-			"Press a controller button to change this setting.",
-			"",
-			keepSettingString1,
-			keepSettingString2,
-			"",
-			"Press \"" .. goBackString .. "\" to go back and clear this setting."
-		}
-	end
-})
+
+----------------------
+--OPEN MENU KEYBOARD--
+----------------------
+local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
+	"Mod Config Menu", --category
+	"OpenMenuKeyboard", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuKeyboard, --default value
+	"Open Menu", --display text
+	true, --if (keyboard) is displayed after the key text
+	{ --info
+		"Choose what button on your keyboard",
+		"will open Mod Config Menu."
+	}
+)
+
+openMenuKeyboardSetting.IsOpenMenuKeybind = true
+
+
+------------------------
+--OPEN MENU CONTROLLER--
+------------------------
+local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
+	"Mod Config Menu", --category
+	"OpenMenuController", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuController, --default value
+	"Open Menu", --display text
+	true, --if (controller) is displayed after the key text
+	{ --info
+		"Choose what button on your controller",
+		"will open Mod Config Menu."
+	}
+)
+
+openMenuControllerSetting.IsOpenMenuKeybind = true
+
+--f10 note
 ModConfigMenu.AddText("Mod Config Menu", "F10 will always open this menu.")
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
-ModConfigMenu.AddSetting("Mod Config Menu", { --HIDE HUD
-	Type = ModConfigMenu.OptionType.BOOLEAN,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.HideHudInMenu
-	end,
-	Default = ModConfigMenu.ConfigDefault.HideHudInMenu,
-	Display = function()
-		local onOff = "No"
-		if ModConfigMenu.Config.HideHudInMenu then
-			onOff = "Yes"
-		end
-		return "Hide HUD: " .. onOff
-	end,
-	OnChange = function(currentBool)
-		ModConfigMenu.Config.HideHudInMenu = currentBool
-		
-		local game = Game()
-		local seeds = game:GetSeeds()
-		
-		if currentBool then
-			if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-				seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
-			end
-		else
-			if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-				seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
-			end
-		end
-	end,
-	Info = "Enable or disable the hud when this menu is open."
-})
-ModConfigMenu.AddSetting("Mod Config Menu", { --RESET TO DEFAULT BUTTON
-	Type = ModConfigMenu.OptionType.KEYBIND_KEYBOARD,
-	IsResetKeybind = true,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.ResetToDefault
-	end,
-	Default = ModConfigMenu.ConfigDefault.ResetToDefault,
-	Display = function()
-		local key = "None"
-		if ModConfigMenu.Config.ResetToDefault > -1 then
-			key = "Unknown Key"
-			if InputHelper.KeyboardToString[ModConfigMenu.Config.ResetToDefault] then
-				key = InputHelper.KeyboardToString[ModConfigMenu.Config.ResetToDefault]
-			end
-		end
-		return "Reset To Default Keybind: " .. key
-	end,
-	OnChange = function(currentNum)
-		if not currentNum then
-			currentNum = -1
-		end
-		ModConfigMenu.Config.ResetToDefault = currentNum
-	end,
-	Info = {
-		"Press this keyboard button to reset a setting",
-		"to its default value if supported."
+
+------------
+--HIDE HUD--
+------------
+local hideHudSetting = ModConfigMenu.AddBooleanSetting(
+	"Mod Config Menu", --category
+	"HideHudInMenu", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].HideHudInMenu, --default value
+	"Hide HUD", --display text
+	{ --value display text
+		[true] = "Yes",
+		[false] = "No"
 	},
-	PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL,
-	Popup = function()
-		local goBackString = "back"
-		if ModConfigMenu.Config.LastBackPressed then
-			if InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.KeyboardToString[ModConfigMenu.Config.LastBackPressed]
-			elseif InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed] then
-				goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
-			end
+	"Enable or disable the hud when this menu is open." --info
+)
+
+--actively modify the hud visibility as this setting changes
+local oldHideHudOnChange = hideHudSetting.OnChange
+hideHudSetting.OnChange = function(currentValue)
+
+	oldHideHudOnChange(currentValue)
+	
+	local game = Game()
+	local seeds = game:GetSeeds()
+	
+	if currentValue then
+		if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
 		end
-		
-		local keepSettingString1 = ""
-		local keepSettingString2 = ""
-		if ModConfigMenu.Config.ResetToDefault > -1 and InputHelper.KeyboardToString[ModConfigMenu.Config.ResetToDefault] then
-			keepSettingString1 = "This setting is currently set to \"" .. InputHelper.KeyboardToString[ModConfigMenu.Config.ResetToDefault] .. "\"."
-			keepSettingString2 = "Press this button to keep it unchanged."
+	else
+		if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+			seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
 		end
-		
-		return {
-			"Press a keyboard button to change this setting.",
-			"",
-			keepSettingString1,
-			keepSettingString2,
-			"",
-			"Press \"" .. goBackString .. "\" to go back and clear this setting."
-		}
 	end
-})
-ModConfigMenu.AddSetting("Mod Config Menu", { --SHOW CONTROLS
-	Type = ModConfigMenu.OptionType.BOOLEAN,
-	CurrentSetting = function()
-		return ModConfigMenu.Config.ShowControls
-	end,
-	Default = ModConfigMenu.ConfigDefault.ShowControls,
-	Display = function()
-		local onOff = "No"
-		if ModConfigMenu.Config.ShowControls then
-			onOff = "Yes"
-		end
-		return "Show Controls: " .. onOff
-	end,
-	OnChange = function(currentBool)
-		ModConfigMenu.Config.ShowControls = currentBool
-	end,
-	Info = {
+
+end
+
+
+----------------------------
+--RESET TO DEFAULT KEYBIND--
+----------------------------
+local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
+	"Mod Config Menu", --category
+	"ResetToDefault", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].ResetToDefault, --default value
+	"Reset To Default Keybind", --display text
+	{ --info
+		"Press this button on your keyboard",
+		"to reset a setting to its default value."
+	}
+)
+
+resetKeybindSetting.IsResetKeybind = true
+
+
+-----------------
+--SHOW CONTROLS--
+-----------------
+local hideHudSetting = ModConfigMenu.AddBooleanSetting(
+	"Mod Config Menu", --category
+	"ShowControls", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].ShowControls, --default value
+	"Show Controls", --display text
+	{ --value display text
+		[true] = "Yes",
+		[false] = "No"
+	},
+	{ --info
 		"Disable this to remove the back and select",
 		"widgets at the lower corners of the screen",
 		"and remove the bottom start-up message."
 	}
-})
+)
 
 local configMenuCategoryCanShow = 11
 local configMenuSubcategoriesCanShow = 3
@@ -1262,11 +1388,15 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	local pressedToggleMenu = false
 
 	local openMenuGlobal = Keyboard.KEY_F10
-	local openMenuKeyboard = ModConfigMenu.Config.OpenMenuKeyboard
-	local openMenuController = ModConfigMenu.Config.OpenMenuController
+	local openMenuKeyboard = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard
+	local openMenuController = ModConfigMenu.Config["Mod Config Menu"].OpenMenuController
+	
+	local takeScreenshot = Keyboard.KEY_F12
 
 	if ModConfigMenu.ControlsEnabled and not isPaused then
+	
 		for i=0, 4 do
+		
 			if InputHelper.KeyboardTriggered(openMenuGlobal, i)
 			or (openMenuKeyboard > -1 and InputHelper.KeyboardTriggered(openMenuKeyboard, i))
 			or (openMenuController > -1 and Input.IsButtonTriggered(openMenuController, i)) then
@@ -1276,7 +1406,13 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					ModConfigMenu.ToggleConfigMenu()
 				end
 			end
+			
+			if InputHelper.KeyboardTriggered(takeScreenshot, i) then
+				pressingNonRebindableKey = true
+			end
+			
 		end
+		
 	end
 	
 	--force close the menu in some situations
@@ -1368,7 +1504,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						ModConfigMenu.Config.LastSelectPressed = possiblyPressedButton
 					end
 				end
-				if ModConfigMenu.Config.ResetToDefault > -1 and InputHelper.MultipleKeyboardTriggered({ModConfigMenu.Config.ResetToDefault}) then
+				if ModConfigMenu.Config["Mod Config Menu"].ResetToDefault > -1 and InputHelper.MultipleKeyboardTriggered({ModConfigMenu.Config["Mod Config Menu"].ResetToDefault}) then
 					pressingButton = "RESET"
 				end
 				
@@ -2328,7 +2464,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInOptions and currentMenuOption and currentMenuOption.HideControls then
 			shouldShowControls = false
 		end
-		if not ModConfigMenu.Config.ShowControls then
+		if not ModConfigMenu.Config["Mod Config Menu"].ShowControls then
 			shouldShowControls = false
 		end
 		if shouldShowControls then
@@ -2432,7 +2568,7 @@ function ModConfigMenu.OpenConfigMenu()
 
 	if ModConfigMenu.RoomIsSafe() then
 	
-		if ModConfigMenu.Config.HideHudInMenu then
+		if ModConfigMenu.Config["Mod Config Menu"].HideHudInMenu then
 		
 			local game = Game()
 			local seeds = game:GetSeeds()
