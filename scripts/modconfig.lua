@@ -115,7 +115,7 @@ ModConfigMenu.ConfigDefault = {
 	},
 	
 	--last button pressed tracker
-	LastBackPressed = Keyboard.KEY_BACKSPACE,
+	LastBackPressed = Keyboard.KEY_ESCAPE,
 	LastSelectPressed = Keyboard.KEY_ENTER
 	
 }
@@ -856,8 +856,6 @@ ModConfigMenu.UpdateCategory("General", {
 	Info = "Settings that affect the majority of mods"
 })
 
-ModConfigMenu.AddSpace("General") --SPACE
-
 
 ----------------------
 --HUD OFFSET SETTING--
@@ -1080,8 +1078,6 @@ ModConfigMenu.UpdateCategory("Mod Config Menu", {
 	}
 })
 
-ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
-
 ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.Version) .. " !") --VERSION INDICATOR
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
@@ -1124,8 +1120,6 @@ openMenuControllerSetting.IsOpenMenuKeybind = true
 
 --f10 note
 ModConfigMenu.AddText("Mod Config Menu", "F10 will always open this menu.")
-
-ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
 
 ------------
@@ -1201,9 +1195,324 @@ local hideHudSetting = ModConfigMenu.AddBooleanSetting(
 	}
 )
 
-local configMenuCategoryCanShow = 11
-local configMenuSubcategoriesCanShow = 3
-local configMenuOptionsCanShow = 11
+
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 2", "Yep its a test", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 3", "test 1", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddText("This is a test 3", "test 2", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 3", "test 6", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+
+ModConfigMenu.AddText("This is a test 4", "subcat", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 6", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 7", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 8", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 9", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 10", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 11", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 12", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 13", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 14", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 15", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 16", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 17", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 18", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 19", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 20", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 21", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 22", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 23", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 24", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 25", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 26", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 27", "whee what am i doing this is wacky")
 
 local configMenuInSubcategory = false
 local configMenuInOptions = false
@@ -1217,9 +1526,6 @@ local holdingCounterLeft = 0
 local configMenuPositionCursorCategory = 1
 local configMenuPositionCursorSubcategory = 1
 local configMenuPositionCursorOption = 1
-local configMenuPositionFirstCategory = 1
-local configMenuPositionFirstSubcategory = 1
-local configMenuPositionFirstOption = 1
 
 --valid action presses
 local actionsDown = {ButtonAction.ACTION_DOWN, ButtonAction.ACTION_SHOOTDOWN, ButtonAction.ACTION_MENUDOWN}
@@ -1951,26 +2257,16 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					configMenuPositionCursorCategory = 1
 				end
 				
-				--first category selection to render
-				if configMenuPositionFirstCategory > 1 and configMenuPositionCursorCategory <= configMenuPositionFirstCategory+1 then
-					configMenuPositionFirstCategory = configMenuPositionCursorCategory-1
-				end
-				if configMenuPositionFirstCategory+(configMenuCategoryCanShow-1) < #ModConfigMenu.MenuData and configMenuPositionCursorCategory >= configMenuPositionFirstCategory+(configMenuCategoryCanShow-2) then
-					configMenuPositionFirstCategory = configMenuPositionCursorCategory-(configMenuCategoryCanShow-2)
-				end
-				configMenuPositionFirstCategory = math.min(math.max(configMenuPositionFirstCategory, 1), #ModConfigMenu.MenuData-(configMenuCategoryCanShow-1))
-				
 				--make sure subcategory and option positions are 1
 				configMenuPositionCursorSubcategory = 1
-				configMenuPositionFirstSubcategory = 1
 				configMenuPositionCursorOption = 1
-				configMenuPositionFirstOption = 1
 			end
 		end
 		
 		--subcategory cursor position was changed
 		if lastCursorSubcategoryPosition ~= configMenuPositionCursorSubcategory then
 			if not configMenuInOptions then
+			
 				--cursor position
 				if configMenuPositionCursorSubcategory < 1 then --move from the top of the list to the bottom
 					configMenuPositionCursorSubcategory = #currentMenuCategory.Subcategories
@@ -1979,18 +2275,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					configMenuPositionCursorSubcategory = 1
 				end
 				
-				--first category selection to render
-				if configMenuPositionFirstSubcategory > 1 and configMenuPositionCursorSubcategory <= configMenuPositionFirstSubcategory+1 then
-					configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory-1
-				end
-				if configMenuPositionFirstSubcategory+(configMenuSubcategoriesCanShow-1) < #currentMenuCategory.Subcategories and configMenuPositionCursorSubcategory >= configMenuPositionFirstCategory+(configMenuSubcategoriesCanShow-2) then
-					configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory-(configMenuSubcategoriesCanShow-2)
-				end
-				configMenuPositionFirstSubcategory = math.min(math.max(configMenuPositionFirstSubcategory, 1), #currentMenuCategory.Subcategories-(configMenuSubcategoriesCanShow-1))
-				
 				--make sure option positions are 1
 				configMenuPositionCursorOption = 1
-				configMenuPositionFirstOption = 1
+				
 			end
 		end
 		
@@ -2037,10 +2324,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				updateCurrentMenuVars()
 				
 				--first options selection to render
-				if configMenuPositionFirstOption > 1 and configMenuPositionCursorOption <= configMenuPositionFirstOption+1 then
-					configMenuPositionFirstOption = configMenuPositionCursorOption-1
-				end
-				local lastOption = configMenuOptionsCanShow
 				local hasSubcategories = false
 				for j=1, #currentMenuCategory.Subcategories do
 					if currentMenuCategory.Subcategories[j].Name ~= "Uncategorized" then
@@ -2048,12 +2331,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					end
 				end
 				if hasSubcategories then
-					lastOption = lastOption - 2
+					--todo
 				end
-				if configMenuPositionFirstOption+(lastOption-1) < #currentMenuSubcategory.Options and configMenuPositionCursorOption >= configMenuPositionFirstOption+(lastOption-2) then
-					configMenuPositionFirstOption = configMenuPositionCursorOption-(lastOption-2)
-				end
-				configMenuPositionFirstOption = math.min(math.max(configMenuPositionFirstOption, 1), #currentMenuSubcategory.Options-(lastOption-1))
+				
 			end
 		end
 		
@@ -2069,41 +2349,36 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local lastLeftPos = leftPos
 		local renderedLeft = 0
 		for categoryIndex=1, #ModConfigMenu.MenuData do
-			if categoryIndex >= configMenuPositionFirstCategory then
-				--text
-				local textToDraw = tostring(ModConfigMenu.MenuData[categoryIndex].Name)
-				
-				local color = leftFontColor
-				--[[
-				if configMenuPositionCursorCategory == categoryIndex then
-					color = leftFontColorSelected
-				end
-				]]
-				
-				local posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
-				Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
-				
-				--cursor
-				if configMenuPositionCursorCategory == categoryIndex then
-					CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
-				end
-				
-				--increase counter
-				renderedLeft = renderedLeft + 1
-				if renderedLeft >= configMenuCategoryCanShow then --if this is the last one we should render
-					--render scroll arrows
-					if configMenuPositionFirstCategory > 1 then --if the first one we rendered wasnt the first in the list
-						CursorSpriteUp:Render(leftPos + Vector(45,-4), vecZero, vecZero)
-					end
-					if categoryIndex < #ModConfigMenu.MenuData then --if this isnt the last category
-						CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vecZero, vecZero)
-					end
-					break
-				end
-				
-				--pos mod
-				lastLeftPos = lastLeftPos + Vector(0,16)
+		
+			--text
+			local textToDraw = tostring(ModConfigMenu.MenuData[categoryIndex].Name)
+			
+			local color = leftFontColor
+			--[[
+			if configMenuPositionCursorCategory == categoryIndex then
+				color = leftFontColorSelected
 			end
+			]]
+			
+			local posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+			Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
+			
+			--cursor
+			if configMenuPositionCursorCategory == categoryIndex then
+				CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+			end
+			
+			--increase counter
+			renderedLeft = renderedLeft + 1
+			--[[
+				--render scroll arrows
+				CursorSpriteUp:Render(leftPos + Vector(45,-4), vecZero, vecZero) --up arrow
+				CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vecZero, vecZero) --down arrow
+			]]
+			
+			--pos mod
+			lastLeftPos = lastLeftPos + Vector(0,16)
+			
 		end
 		
 		--title
@@ -2149,52 +2424,45 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				end
 			
 				for subcategoryIndex=1, #currentMenuCategory.Subcategories do
-				
-					if subcategoryIndex >= configMenuPositionFirstSubcategory then
+					
+					local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
+					
+					local posOffset = 0
+					
+					if thisSubcategory.Name then
+						local textToDraw = thisSubcategory.Name
 						
-						local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
+						textToDraw = tostring(textToDraw)
 						
-						local posOffset = 0
-						
-						if thisSubcategory.Name then
-							local textToDraw = thisSubcategory.Name
-							
-							textToDraw = tostring(textToDraw)
-							
-							local color = subcategoryFontColor
-							if not configMenuInSubcategory then
-								color = subcategoryFontColorAlpha
-							--[[
-							elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-								color = subcategoryFontColorSelected
-							]]
-							end
-							
-							posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
-							Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
+						local color = subcategoryFontColor
+						if not configMenuInSubcategory then
+							color = subcategoryFontColorAlpha
+						--[[
+						elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+							color = subcategoryFontColorSelected
+						]]
 						end
 						
-						--cursor
-						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
-						end
-						
-						--increase counter
-						renderedSubcategories = renderedSubcategories + 1
-						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
-							--render scroll arrows
-							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
-								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
-							end
-							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
-								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
-							end
-							break
-						end
-						
-						--pos mod
-						lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
+						posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+						Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
 					end
+					
+					--cursor
+					if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+						CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+					end
+					
+					--increase counter
+					renderedSubcategories = renderedSubcategories + 1
+						--render scroll arrows
+						--[[
+							SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero) --up arrow
+							SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero) --down arrow
+						]]
+					
+					--pos mod
+					lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
+					
 				end
 				
 				renderedOptions = renderedOptions + 1
@@ -2218,165 +2486,158 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			local useAltSlider = false
 		
 			for optionIndex=1, #currentMenuSubcategory.Options do
-			
-				if optionIndex >= configMenuPositionFirstOption then
+				
+				local thisOption = currentMenuSubcategory.Options[optionIndex]
+				
+				local cursorIsAtThisOption = configMenuPositionCursorOption == optionIndex and configMenuInOptions
+				local posOffset = 10
+				
+				if thisOption.Type
+				and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
+				and thisOption.Display then
+				
+					local optionType = thisOption.Type
+					local optionDisplay = thisOption.Display
+					local optionColor = thisOption.Color
 					
-					local thisOption = currentMenuSubcategory.Options[optionIndex]
-					
-					local cursorIsAtThisOption = configMenuPositionCursorOption == optionIndex and configMenuInOptions
-					local posOffset = 10
-					
-					if thisOption.Type
-					and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
-					and thisOption.Display then
-					
-						local optionType = thisOption.Type
-						local optionDisplay = thisOption.Display
-						local optionColor = thisOption.Color
+					--get what to draw
+					if optionType == ModConfigMenu.OptionType.TEXT
+					or optionType == ModConfigMenu.OptionType.BOOLEAN
+					or optionType == ModConfigMenu.OptionType.NUMBER
+					or optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD
+					or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER
+					or optionType == ModConfigMenu.OptionType.TITLE then
+						local textToDraw = optionDisplay
 						
-						--get what to draw
-						if optionType == ModConfigMenu.OptionType.TEXT
-						or optionType == ModConfigMenu.OptionType.BOOLEAN
-						or optionType == ModConfigMenu.OptionType.NUMBER
-						or optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD
-						or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER
-						or optionType == ModConfigMenu.OptionType.TITLE then
-							local textToDraw = optionDisplay
-							
-							if type(optionDisplay) == "function" then
-								textToDraw = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-							end
-							
-							textToDraw = tostring(textToDraw)
-							
-							local heightOffset = 6
-							local font = Font10
-							local color = optionsFontColor
-							if not configMenuInOptions then
-								if thisOption.NoCursorHere then
-									color = optionsFontColorNoCursorAlpha
-								else
-									color = optionsFontColorAlpha
-								end
-							elseif thisOption.NoCursorHere then
-								color = optionsFontColorNoCursor
-							end
-							if optionType == ModConfigMenu.OptionType.TITLE then
-								heightOffset = 8
-								font = Font12
-								color = optionsFontColorTitle
-								if not configMenuInOptions then
-									color = optionsFontColorTitleAlpha
-								end
-							end
-							
-							if optionColor then
-								color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
-							end
-							
-							posOffset = font:GetStringWidthUTF8(textToDraw)/2
-							font:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
-						elseif optionType == ModConfigMenu.OptionType.SCROLL then
-							local numberToShow = optionDisplay
-							
-							if type(optionDisplay) == "function" then
-								numberToShow = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-							end
-							
-							posOffset = 31
-							local scrollOffset = 0
-							
-							if type(numberToShow) == "number" then
-								numberToShow = math.max(math.min(math.floor(numberToShow), 10), 0)
-							elseif type(numberToShow) == "string" then
-								local numberToShowStart, numberToShowEnd = string.find(numberToShow, "$scroll")
-								if numberToShowStart and numberToShowEnd then
-									local numberStart = numberToShowEnd+1
-									local numberEnd = numberToShowEnd+3
-									local numberString = string.sub(numberToShow, numberStart, numberEnd)
-									numberString = tonumber(numberString)
-									if not numberString or (numberString and not type(numberString) == "number") or (numberString and type(numberString) == "number" and numberString < 10) then
-										numberEnd = numberEnd-1
-										numberString = string.sub(numberToShow, numberStart, numberEnd)
-										numberString = tonumber(numberString)
-									end
-									if numberString and type(numberString) == "number" then
-										local textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
-										local textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
-										local textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
-										
-										local color = optionsFontColor
-										if not configMenuInOptions then
-											color = optionsFontColorAlpha
-										end
-										if optionColor then
-											color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
-										end
-										
-										scrollOffset = posOffset
-										posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
-										Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
-										
-										scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
-										numberToShow = numberString
-									end
-								end
-							end
-							
-							local scrollColor = optionsSpriteColor
-							if not configMenuInOptions then
-								scrollColor = optionsSpriteColorAlpha
-							end
-							if optionColor then
-								scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO, scrollColor.GO, scrollColor.BO)
-							end
-							
-							local sliderString = "Slider1"
-							if useAltSlider then
-								sliderString = "Slider2"
-							end
-							
-							SliderSprite.Color = scrollColor
-							SliderSprite:SetFrame(sliderString, numberToShow)
-							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
-							
-							useAltSlider = not useAltSlider
-							
+						if type(optionDisplay) == "function" then
+							textToDraw = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
 						end
 						
-						local showStrikeout = thisOption.ShowStrikeout
-						if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
-							if configMenuInOptions then
-								StrikeOutSprite.Color = colorDefault
+						textToDraw = tostring(textToDraw)
+						
+						local heightOffset = 6
+						local font = Font10
+						local color = optionsFontColor
+						if not configMenuInOptions then
+							if thisOption.NoCursorHere then
+								color = optionsFontColorNoCursorAlpha
 							else
-								StrikeOutSprite.Color = colorHalf
+								color = optionsFontColorAlpha
 							end
-							StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
-							StrikeOutSprite:Render(lastOptionPos, vecZero, vecZero)
+						elseif thisOption.NoCursorHere then
+							color = optionsFontColorNoCursor
 						end
+						if optionType == ModConfigMenu.OptionType.TITLE then
+							heightOffset = 8
+							font = Font12
+							color = optionsFontColorTitle
+							if not configMenuInOptions then
+								color = optionsFontColorTitleAlpha
+							end
+						end
+						
+						if optionColor then
+							color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+						end
+						
+						posOffset = font:GetStringWidthUTF8(textToDraw)/2
+						font:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
+					elseif optionType == ModConfigMenu.OptionType.SCROLL then
+						local numberToShow = optionDisplay
+						
+						if type(optionDisplay) == "function" then
+							numberToShow = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
+						end
+						
+						posOffset = 31
+						local scrollOffset = 0
+						
+						if type(numberToShow) == "number" then
+							numberToShow = math.max(math.min(math.floor(numberToShow), 10), 0)
+						elseif type(numberToShow) == "string" then
+							local numberToShowStart, numberToShowEnd = string.find(numberToShow, "$scroll")
+							if numberToShowStart and numberToShowEnd then
+								local numberStart = numberToShowEnd+1
+								local numberEnd = numberToShowEnd+3
+								local numberString = string.sub(numberToShow, numberStart, numberEnd)
+								numberString = tonumber(numberString)
+								if not numberString or (numberString and not type(numberString) == "number") or (numberString and type(numberString) == "number" and numberString < 10) then
+									numberEnd = numberEnd-1
+									numberString = string.sub(numberToShow, numberStart, numberEnd)
+									numberString = tonumber(numberString)
+								end
+								if numberString and type(numberString) == "number" then
+									local textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
+									local textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
+									local textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
+									
+									local color = optionsFontColor
+									if not configMenuInOptions then
+										color = optionsFontColorAlpha
+									end
+									if optionColor then
+										color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+									end
+									
+									scrollOffset = posOffset
+									posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
+									Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
+									
+									scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
+									numberToShow = numberString
+								end
+							end
+						end
+						
+						local scrollColor = optionsSpriteColor
+						if not configMenuInOptions then
+							scrollColor = optionsSpriteColorAlpha
+						end
+						if optionColor then
+							scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO, scrollColor.GO, scrollColor.BO)
+						end
+						
+						local sliderString = "Slider1"
+						if useAltSlider then
+							sliderString = "Slider2"
+						end
+						
+						SliderSprite.Color = scrollColor
+						SliderSprite:SetFrame(sliderString, numberToShow)
+						SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
+						
+						useAltSlider = not useAltSlider
+						
 					end
 					
-					--cursor
-					if cursorIsAtThisOption then
-						CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
-					end
-					
-					--increase counter
-					renderedOptions = renderedOptions + 1
-					if renderedOptions >= configMenuOptionsCanShow then --if this is the last one we should render
-						--render scroll arrows
-						if configMenuPositionFirstOption > 1 then --if the first one we rendered wasnt the first in the list
-							OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vecZero, vecZero)
+					local showStrikeout = thisOption.ShowStrikeout
+					if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
+						if configMenuInOptions then
+							StrikeOutSprite.Color = colorDefault
+						else
+							StrikeOutSprite.Color = colorHalf
 						end
-						if optionIndex < #currentMenuSubcategory.Options then --if this isnt the last thing
-							OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vecZero, vecZero)
-						end
-						break
+						StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
+						StrikeOutSprite:Render(lastOptionPos, vecZero, vecZero)
 					end
-					
-					--pos mod
-					lastOptionPos = lastOptionPos + Vector(0,14)
 				end
+				
+				--cursor
+				if cursorIsAtThisOption then
+					CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+				end
+				
+				--increase counter
+				renderedOptions = renderedOptions + 1
+				--[[
+					--render scroll arrows
+					OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vecZero, vecZero) --up arrow
+					OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vecZero, vecZero) --down arrow
+				]]
+				
+				--pos mod
+				lastOptionPos = lastOptionPos + Vector(0,14)
+				
 			end
 		end
 		
@@ -2553,9 +2814,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		configMenuPositionCursorCategory = 1
 		configMenuPositionCursorSubcategory = 1
 		configMenuPositionCursorOption = 1
-		configMenuPositionFirstCategory = 1
-		configMenuPositionFirstSubcategory = 1
-		configMenuPositionFirstOption = 1
 		
 	end
 end)
