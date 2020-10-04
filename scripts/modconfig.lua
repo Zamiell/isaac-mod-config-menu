@@ -1121,6 +1121,8 @@ openMenuControllerSetting.IsOpenMenuKeybind = true
 --f10 note
 ModConfigMenu.AddText("Mod Config Menu", "F10 will always open this menu.")
 
+ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
+
 
 ------------
 --HIDE HUD--
@@ -1492,7 +1494,294 @@ ModConfigMenu.AddBooleanSetting(
 ModConfigMenu.AddText("This is a test 4", "subcat", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 5", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 6", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 7", "whee what am i doing this is wacky")
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
+ModConfigMenu.AddBooleanSetting(
+	"This is a test 7", --category
+	"eeee", --attribute in table
+	false, --default value
+	"what is this" --display text
+)
 ModConfigMenu.AddText("This is a test 8", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 9", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 10", "whee what am i doing this is wacky")
@@ -1680,6 +1969,7 @@ local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
 local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
+local optionsCurrentOffset = 0
 ModConfigMenu.ControlsEnabled = true
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 
@@ -2249,6 +2539,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		--category cursor position was changed
 		if lastCursorCategoryPosition ~= configMenuPositionCursorCategory then
 			if not configMenuInSubcategory then
+			
 				--cursor position
 				if configMenuPositionCursorCategory < 1 then --move from the top of the list to the bottom
 					configMenuPositionCursorCategory = #ModConfigMenu.MenuData
@@ -2260,6 +2551,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				--make sure subcategory and option positions are 1
 				configMenuPositionCursorSubcategory = 1
 				configMenuPositionCursorOption = 1
+				optionsCurrentOffset = 0
+				
 			end
 		end
 		
@@ -2277,6 +2570,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				--make sure option positions are 1
 				configMenuPositionCursorOption = 1
+				optionsCurrentOffset = 0
 				
 			end
 		end
@@ -2341,8 +2635,74 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local leftPos = centerPos + Vector(-142,-102)
 		local titlePos = centerPos + Vector(68,-118)
 		local infoPos = centerPos + Vector(-4,106)
-		local optionPos = centerPos + Vector(68,-88)
 		
+		local optionsDesiredOffset = 0
+		local optionsCanScrollUp = false
+		local optionsCanScrollDown = false
+		local numOptions = 0
+		local optionPos = centerPos + Vector(68,-18)
+		if currentMenuSubcategory
+		and currentMenuSubcategory.Options
+		and #currentMenuSubcategory.Options > 0 then
+			
+			numOptions = #currentMenuSubcategory.Options
+		
+			if currentMenuCategory.Subcategories then
+				for j=1, #currentMenuCategory.Subcategories do
+					if currentMenuCategory.Subcategories[j].Name ~= "Uncategorized" then
+						numOptions = numOptions + 2
+						break
+					end
+				end
+			end
+			
+			optionPos = optionPos + Vector(0, math.min(numOptions-1, 10) * -7)
+			
+			if numOptions > 10 then
+			
+				if configMenuPositionCursorOption > 6 then
+				
+					optionsCanScrollUp = true
+					
+					local cursorScroll = configMenuPositionCursorOption - 6
+					local maxOptionsScroll = numOptions - 11
+					optionsDesiredOffset = math.min(cursorScroll, maxOptionsScroll) * -14
+					
+					if cursorScroll < maxOptionsScroll then
+						optionsCanScrollDown = true
+					end
+				
+				else
+			
+					optionsCanScrollDown = true
+				
+				end
+				
+			end
+			
+		end
+	
+		if optionsDesiredOffset ~= optionsCurrentOffset then
+		
+			local modifyOffset = math.floor(optionsDesiredOffset - optionsCurrentOffset)/10
+			if modifyOffset > -0.1 and modifyOffset < 0 then
+				modifyOffset = -0.1
+			end
+			if modifyOffset < 0.1 and modifyOffset > 0 then
+				modifyOffset = 0.1
+			end
+			
+			optionsCurrentOffset = optionsCurrentOffset + modifyOffset
+			if (optionsDesiredOffset - optionsCurrentOffset) < 0.25 and (optionsDesiredOffset - optionsCurrentOffset) > -0.25 then
+				optionsCurrentOffset = optionsDesiredOffset
+			end
+			
+		end
+		
+		if optionsCurrentOffset ~= 0 then
+			optionPos = optionPos + Vector(0, optionsCurrentOffset)
+		end
+	
 		MenuSprite:Render(centerPos, vecZero, vecZero)
 		
 		--category
@@ -2389,7 +2749,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local titleTextOffset = Font16Bold:GetStringWidthUTF8(titleText)/2
 		Font16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
 		
-		--subcategory
+		------------------------
+		--RENDER SUBCATEGORIES--
+		------------------------
 		
 		local lastOptionPos = optionPos
 		local renderedOptions = 0
@@ -2465,17 +2827,23 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					
 				end
 				
+				--subcategory selection counts as an option that gets rendered
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
+				--subcategory to options divider
 				SubcategoryDividerSprite:Render(lastOptionPos, vecZero, vecZero)
 				
+				--subcategory to options divider counts as an option that gets rendered
 				renderedOptions = renderedOptions + 1
 				lastOptionPos = lastOptionPos + Vector(0,14)
+
 			end
 		end
 		
-		--options
+		------------------
+		--RENDER OPTIONS--
+		------------------
 		
 		local firstOptionPos = lastOptionPos
 		
@@ -2629,16 +2997,20 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				--increase counter
 				renderedOptions = renderedOptions + 1
-				--[[
-					--render scroll arrows
-					OptionsCursorSpriteUp:Render(firstOptionPos + Vector(125,-4), vecZero, vecZero) --up arrow
-					OptionsCursorSpriteDown:Render(lastOptionPos + Vector(125,4), vecZero, vecZero) --down arrow
-				]]
 				
 				--pos mod
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
 			end
+			
+			--render scroll arrows
+			if optionsCanScrollUp then
+				OptionsCursorSpriteUp:Render(centerPos + Vector(193,-86), vecZero, vecZero) --up arrow
+			end
+			if optionsCanScrollDown then
+				OptionsCursorSpriteDown:Render(centerPos + Vector(193,50), vecZero, vecZero) --down arrow
+			end
+		
 		end
 		
 		--info
@@ -2814,6 +3186,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		configMenuPositionCursorCategory = 1
 		configMenuPositionCursorSubcategory = 1
 		configMenuPositionCursorOption = 1
+		optionsCurrentOffset = 0
 		
 	end
 end)
