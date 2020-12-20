@@ -37,7 +37,7 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 local json = require("json")
 local ScreenHelper = require("scripts.screenhelper")
 local CallbackHelper = require("scripts.callbackhelper")
-local TableHelper = require("scripts.tablehelper")
+local SaveHelper = require("scripts.savehelper")
 local InputHelper = require("scripts.inputhelper")
 
 --cached values
@@ -119,12 +119,12 @@ ModConfigMenu.ConfigDefault = {
 	LastSelectPressed = Keyboard.KEY_ENTER
 	
 }
-ModConfigMenu.Config = TableHelper.CopyTable(ModConfigMenu.ConfigDefault)
+ModConfigMenu.Config = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
 
 function ModConfigMenu.GetSave()
 	
-	local saveData = TableHelper.CopyTable(ModConfigMenu.ConfigDefault)
-	saveData = TableHelper.FillTable(saveData, ModConfigMenu.Config)
+	local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+	saveData = SaveHelper.FillTable(saveData, ModConfigMenu.Config)
 	
 	saveData = json.encode(saveData)
 	
@@ -136,17 +136,17 @@ function ModConfigMenu.LoadSave(fromData)
 
 	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
 	
-		local saveData = TableHelper.CopyTable(ModConfigMenu.ConfigDefault)
+		local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
 		
 		if type(fromData) == "string" then
 			fromData = json.decode(fromData)
 		end
-		saveData = TableHelper.FillTable(saveData, fromData)
+		saveData = SaveHelper.FillTable(saveData, fromData)
 		
-		local currentData = TableHelper.CopyTable(ModConfigMenu.Config)
-		saveData = TableHelper.FillTable(currentData, saveData)
+		local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+		saveData = SaveHelper.FillTable(currentData, saveData)
 		
-		ModConfigMenu.Config = TableHelper.CopyTable(saveData)
+		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
 		
 		--make sure ScreenHelper's offset matches MCM's offset
 		ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)

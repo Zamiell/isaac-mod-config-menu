@@ -1,9 +1,9 @@
 local SaveHelper = {}
-SaveHelper.Version = 2
+SaveHelper.Version = 3
 
 --[[
 
-SAVE HELPER v2
+SAVE HELPER v3
 by piber
 
 Make sure this is located in MOD/scripts/savehelper.lua otherwise it wont load properly!
@@ -14,7 +14,6 @@ Do not edit this script file as it could conflict with the release version of th
 
 REQUIREMENTS:
 - CallbackHelper
-- TableHelper
 
 ]]
 
@@ -24,7 +23,68 @@ local SaveHelperMod = RegisterMod("Cache Helper", 1)
 --require some lua libraries
 local json = require("json")
 local CallbackHelper = require("scripts.callbackhelper")
-local TableHelper = require("scripts.tablehelper")
+
+
+----------
+--TABLES--
+----------
+function SaveHelper.CopyTable(tableToCopy)
+
+	local table2 = {}
+	
+	for i, value in pairs(tableToCopy) do
+	
+		if type(value) == "table" then
+			table2[i] = SaveHelper.CopyTable(value)
+		else
+			table2[i] = value
+		end
+		
+	end
+	
+	return table2
+	
+end
+
+function SaveHelper.FillTable(tableToFill, tableToFillFrom)
+
+	for i, value in pairs(tableToFillFrom) do
+	
+		if tableToFill[i] ~= nil then
+		
+			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
+				tableToFill[i] = SaveHelper.FillTable(tableToFill[i], value)
+				
+			else
+				tableToFill[i] = value
+			end
+			
+		else
+		
+			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
+				tableToFill[i] = SaveHelper.FillTable({}, value)
+				
+			else
+				tableToFill[i] = value
+			end
+			
+		end
+		
+	end
+	
+	return tableToFill
+	
+end
 
 
 --------------------
@@ -267,7 +327,7 @@ end
 ----------------------------
 function SaveHelper.ResetGameSave(modRef)
 
-	local saveData = TableHelper.CopyTable(SaveHelper.GameSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.GameSave(modRef))
 	
 	--SH_PRE_RESET_GAME
 	local doReset = true
@@ -293,7 +353,7 @@ function SaveHelper.ResetGameSave(modRef)
 		SaveHelper.ResetLevelSave(modRef)
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
+		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
 		local resetSave = SaveHelper.GameSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_GAME
@@ -315,7 +375,7 @@ end
 
 function SaveHelper.ResetRunSave(modRef)
 
-	local saveData = TableHelper.CopyTable(SaveHelper.RunSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.RunSave(modRef))
 	
 	--SH_PRE_RESET_RUN
 	local doReset = true
@@ -340,7 +400,7 @@ function SaveHelper.ResetRunSave(modRef)
 		SaveHelper.ResetLevelSave(modRef)
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
+		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
 		local resetSave = SaveHelper.RunSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_RUN
@@ -362,7 +422,7 @@ end
 
 function SaveHelper.ResetLevelSave(modRef)
 
-	local saveData = TableHelper.CopyTable(SaveHelper.LevelSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.LevelSave(modRef))
 	
 	--SH_PRE_RESET_LEVEL
 	local doReset = true
@@ -386,7 +446,7 @@ function SaveHelper.ResetLevelSave(modRef)
 	
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
+		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
 		local resetSave = SaveHelper.LevelSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_LEVEL
@@ -408,7 +468,7 @@ end
 
 function SaveHelper.ResetRoomSave(modRef)
 
-	local saveData = TableHelper.CopyTable(SaveHelper.RoomSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.RoomSave(modRef))
 	
 	--SH_PRE_RESET_ROOM
 	local doReset = true
@@ -430,7 +490,7 @@ function SaveHelper.ResetRoomSave(modRef)
 	
 	if doReset then
 	
-		local defaultSave = TableHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
+		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
 		local resetSave = SaveHelper.RoomSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_ROOM
@@ -457,8 +517,8 @@ end
 
 function SaveHelper.Save(modRef)
 	
-	local saveData = TableHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
-	saveData = TableHelper.FillTable(saveData, SaveHelper.GameSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
+	saveData = SaveHelper.FillTable(saveData, SaveHelper.GameSave(modRef))
 	
 	--SH_PRE_MOD_SAVE
 	local cancelSave = false
@@ -499,11 +559,11 @@ end
 
 function SaveHelper.Load(modRef)
 
-	local saveData = TableHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
+	local saveData = SaveHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
 	
 	if modRef:HasData() then
 		local loadData = json.decode(modRef:LoadData())
-		saveData = TableHelper.FillTable(saveData, loadData)
+		saveData = SaveHelper.FillTable(saveData, loadData)
 	end
 	
 	--SH_PRE_MOD_LOAD
@@ -528,7 +588,7 @@ function SaveHelper.Load(modRef)
 		return
 	end
 	
-	SaveHelper.GameSave(modRef, TableHelper.CopyTable(saveData))
+	SaveHelper.GameSave(modRef, SaveHelper.CopyTable(saveData))
 	
 	--SH_POST_MOD_LOAD
 	CallbackHelper.CallCallbacks
