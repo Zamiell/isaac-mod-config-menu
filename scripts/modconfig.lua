@@ -233,6 +233,7 @@ end
 
 --main menu sprites
 local MenuSprite = ModConfigMenu.GetMenuAnm2Sprite("Idle", 0)
+local MenuOverlaySprite = ModConfigMenu.GetMenuAnm2Sprite("IdleOverlay", 0)
 local PopupSprite = ModConfigMenu.GetMenuAnm2Sprite("Popup", 0)
 
 --main cursors
@@ -1197,7 +1198,6 @@ local hideHudSetting = ModConfigMenu.AddBooleanSetting(
 	}
 )
 
-
 ModConfigMenu.AddBooleanSetting(
 	"This is a test", --category
 	"eeee", --attribute in table
@@ -1481,8 +1481,24 @@ ModConfigMenu.AddBooleanSetting(
 	"what is this" --display text
 )
 ModConfigMenu.AddText("This is a test 3", "test 2", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 2", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
+ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
 ModConfigMenu.AddBooleanSetting(
 	"This is a test 3", "test 6", --category
@@ -1969,6 +1985,7 @@ local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
 local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
 --render the menu
+local leftCurrentOffset = 0
 local optionsCurrentOffset = 0
 ModConfigMenu.ControlsEnabled = true
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
@@ -2632,15 +2649,76 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		end
 		
 		local centerPos = ScreenHelper.GetScreenCenter()
-		local leftPos = centerPos + Vector(-142,-102)
-		local titlePos = centerPos + Vector(68,-118)
-		local infoPos = centerPos + Vector(-4,106)
 		
+		--title pos handling
+		local titlePos = centerPos + Vector(68,-118)
+		
+		--left pos handling
+		
+		local leftDesiredOffset = 0
+		local leftCanScrollUp = false
+		local leftCanScrollDown = false
+		
+		local numLeft = #ModConfigMenu.MenuData
+		
+		local leftPos = centerPos + Vector(-142,-102)
+		local leftPosTopmost = centerPos.Y - 116
+		local leftPosBottommost = centerPos.Y + 90
+		
+		if numLeft > 7 then
+		
+			if configMenuPositionCursorCategory > 6 then
+			
+				leftCanScrollUp = true
+				
+				local cursorScroll = configMenuPositionCursorCategory - 6
+				local maxLeftScroll = numLeft - 8
+				leftDesiredOffset = math.min(cursorScroll, maxLeftScroll) * -14
+				
+				if cursorScroll < maxLeftScroll then
+					leftCanScrollDown = true
+				end
+			
+			else
+		
+				leftCanScrollDown = true
+			
+			end
+			
+		end
+
+		if leftDesiredOffset ~= leftCurrentOffset then
+		
+			local modifyOffset = math.floor(leftDesiredOffset - leftCurrentOffset)/10
+			if modifyOffset > -0.1 and modifyOffset < 0 then
+				modifyOffset = -0.1
+			end
+			if modifyOffset < 0.1 and modifyOffset > 0 then
+				modifyOffset = 0.1
+			end
+			
+			leftCurrentOffset = leftCurrentOffset + modifyOffset
+			if (leftDesiredOffset - leftCurrentOffset) < 0.25 and (leftDesiredOffset - leftCurrentOffset) > -0.25 then
+				leftCurrentOffset = leftDesiredOffset
+			end
+			
+		end
+		
+		if leftCurrentOffset ~= 0 then
+			leftPos = leftPos + Vector(0, leftCurrentOffset)
+		end
+		
+		--options pos handling
 		local optionsDesiredOffset = 0
 		local optionsCanScrollUp = false
 		local optionsCanScrollDown = false
+		
 		local numOptions = 0
+		
 		local optionPos = centerPos + Vector(68,-18)
+		local optionPosTopmost = centerPos.Y - 108
+		local optionPosBottommost = centerPos.Y + 86
+		
 		if currentMenuSubcategory
 		and currentMenuSubcategory.Options
 		and #currentMenuSubcategory.Options > 0 then
@@ -2702,6 +2780,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if optionsCurrentOffset ~= 0 then
 			optionPos = optionPos + Vector(0, optionsCurrentOffset)
 		end
+		
+		--info pos handling
+		local infoPos = centerPos + Vector(-4,106)
 	
 		MenuSprite:Render(centerPos, vecZero, vecZero)
 		
@@ -2711,43 +2792,42 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		for categoryIndex=1, #ModConfigMenu.MenuData do
 		
 			--text
-			local textToDraw = tostring(ModConfigMenu.MenuData[categoryIndex].Name)
+			if lastLeftPos.Y > leftPosTopmost and lastLeftPos.Y < leftPosBottommost then
 			
-			local color = leftFontColor
-			--[[
-			if configMenuPositionCursorCategory == categoryIndex then
-				color = leftFontColorSelected
-			end
-			]]
-			
-			local posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
-			Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
-			
-			--cursor
-			if configMenuPositionCursorCategory == categoryIndex then
-				CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+				local textToDraw = tostring(ModConfigMenu.MenuData[categoryIndex].Name)
+				
+				local color = leftFontColor
+				--[[
+				if configMenuPositionCursorCategory == categoryIndex then
+					color = leftFontColorSelected
+				end
+				]]
+				
+				local posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+				Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
+				
+				--cursor
+				if configMenuPositionCursorCategory == categoryIndex then
+					CursorSpriteRight:Render(lastLeftPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+				end
+				
 			end
 			
 			--increase counter
 			renderedLeft = renderedLeft + 1
-			--[[
-				--render scroll arrows
-				CursorSpriteUp:Render(leftPos + Vector(45,-4), vecZero, vecZero) --up arrow
-				CursorSpriteDown:Render(lastLeftPos + Vector(45,4), vecZero, vecZero) --down arrow
-			]]
 			
 			--pos mod
 			lastLeftPos = lastLeftPos + Vector(0,16)
 			
 		end
 		
-		--title
-		local titleText = "Mod Config Menu"
-		if configMenuInSubcategory then
-			titleText = tostring(currentMenuCategory.Name)
+		--render scroll arrows
+		if leftCanScrollUp then
+			CursorSpriteUp:Render(centerPos + Vector(-78,-104), vecZero, vecZero) --up arrow
 		end
-		local titleTextOffset = Font16Bold:GetStringWidthUTF8(titleText)/2
-		Font16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
+		if leftCanScrollDown then
+			CursorSpriteDown:Render(centerPos + Vector(-78,70), vecZero, vecZero) --down arrow
+		end
 		
 		------------------------
 		--RENDER SUBCATEGORIES--
@@ -2791,27 +2871,31 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					
 					local posOffset = 0
 					
-					if thisSubcategory.Name then
-						local textToDraw = thisSubcategory.Name
-						
-						textToDraw = tostring(textToDraw)
-						
-						local color = subcategoryFontColor
-						if not configMenuInSubcategory then
-							color = subcategoryFontColorAlpha
-						--[[
-						elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							color = subcategoryFontColorSelected
-						]]
+					if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
+					
+						if thisSubcategory.Name then
+							local textToDraw = thisSubcategory.Name
+							
+							textToDraw = tostring(textToDraw)
+							
+							local color = subcategoryFontColor
+							if not configMenuInSubcategory then
+								color = subcategoryFontColorAlpha
+							--[[
+							elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+								color = subcategoryFontColorSelected
+							]]
+							end
+							
+							posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+							Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
 						end
 						
-						posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
-						Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
-					end
-					
-					--cursor
-					if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-						CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+						--cursor
+						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+						end
+						
 					end
 					
 					--increase counter
@@ -2832,7 +2916,11 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				lastOptionPos = lastOptionPos + Vector(0,14)
 				
 				--subcategory to options divider
-				SubcategoryDividerSprite:Render(lastOptionPos, vecZero, vecZero)
+				if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
+				
+					SubcategoryDividerSprite:Render(lastOptionPos, vecZero, vecZero)
+					
+				end
 				
 				--subcategory to options divider counts as an option that gets rendered
 				renderedOptions = renderedOptions + 1
@@ -2860,139 +2948,143 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				local cursorIsAtThisOption = configMenuPositionCursorOption == optionIndex and configMenuInOptions
 				local posOffset = 10
 				
-				if thisOption.Type
-				and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
-				and thisOption.Display then
-				
-					local optionType = thisOption.Type
-					local optionDisplay = thisOption.Display
-					local optionColor = thisOption.Color
+				if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
 					
-					--get what to draw
-					if optionType == ModConfigMenu.OptionType.TEXT
-					or optionType == ModConfigMenu.OptionType.BOOLEAN
-					or optionType == ModConfigMenu.OptionType.NUMBER
-					or optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD
-					or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER
-					or optionType == ModConfigMenu.OptionType.TITLE then
-						local textToDraw = optionDisplay
+					if thisOption.Type
+					and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
+					and thisOption.Display then
+					
+						local optionType = thisOption.Type
+						local optionDisplay = thisOption.Display
+						local optionColor = thisOption.Color
 						
-						if type(optionDisplay) == "function" then
-							textToDraw = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-						end
-						
-						textToDraw = tostring(textToDraw)
-						
-						local heightOffset = 6
-						local font = Font10
-						local color = optionsFontColor
-						if not configMenuInOptions then
-							if thisOption.NoCursorHere then
-								color = optionsFontColorNoCursorAlpha
-							else
-								color = optionsFontColorAlpha
+						--get what to draw
+						if optionType == ModConfigMenu.OptionType.TEXT
+						or optionType == ModConfigMenu.OptionType.BOOLEAN
+						or optionType == ModConfigMenu.OptionType.NUMBER
+						or optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD
+						or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER
+						or optionType == ModConfigMenu.OptionType.TITLE then
+							local textToDraw = optionDisplay
+							
+							if type(optionDisplay) == "function" then
+								textToDraw = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
 							end
-						elseif thisOption.NoCursorHere then
-							color = optionsFontColorNoCursor
-						end
-						if optionType == ModConfigMenu.OptionType.TITLE then
-							heightOffset = 8
-							font = Font12
-							color = optionsFontColorTitle
+							
+							textToDraw = tostring(textToDraw)
+							
+							local heightOffset = 6
+							local font = Font10
+							local color = optionsFontColor
 							if not configMenuInOptions then
-								color = optionsFontColorTitleAlpha
+								if thisOption.NoCursorHere then
+									color = optionsFontColorNoCursorAlpha
+								else
+									color = optionsFontColorAlpha
+								end
+							elseif thisOption.NoCursorHere then
+								color = optionsFontColorNoCursor
 							end
-						end
-						
-						if optionColor then
-							color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
-						end
-						
-						posOffset = font:GetStringWidthUTF8(textToDraw)/2
-						font:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
-					elseif optionType == ModConfigMenu.OptionType.SCROLL then
-						local numberToShow = optionDisplay
-						
-						if type(optionDisplay) == "function" then
-							numberToShow = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-						end
-						
-						posOffset = 31
-						local scrollOffset = 0
-						
-						if type(numberToShow) == "number" then
-							numberToShow = math.max(math.min(math.floor(numberToShow), 10), 0)
-						elseif type(numberToShow) == "string" then
-							local numberToShowStart, numberToShowEnd = string.find(numberToShow, "$scroll")
-							if numberToShowStart and numberToShowEnd then
-								local numberStart = numberToShowEnd+1
-								local numberEnd = numberToShowEnd+3
-								local numberString = string.sub(numberToShow, numberStart, numberEnd)
-								numberString = tonumber(numberString)
-								if not numberString or (numberString and not type(numberString) == "number") or (numberString and type(numberString) == "number" and numberString < 10) then
-									numberEnd = numberEnd-1
-									numberString = string.sub(numberToShow, numberStart, numberEnd)
+							if optionType == ModConfigMenu.OptionType.TITLE then
+								heightOffset = 8
+								font = Font12
+								color = optionsFontColorTitle
+								if not configMenuInOptions then
+									color = optionsFontColorTitleAlpha
+								end
+							end
+							
+							if optionColor then
+								color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+							end
+							
+							posOffset = font:GetStringWidthUTF8(textToDraw)/2
+							font:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
+						elseif optionType == ModConfigMenu.OptionType.SCROLL then
+							local numberToShow = optionDisplay
+							
+							if type(optionDisplay) == "function" then
+								numberToShow = optionDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
+							end
+							
+							posOffset = 31
+							local scrollOffset = 0
+							
+							if type(numberToShow) == "number" then
+								numberToShow = math.max(math.min(math.floor(numberToShow), 10), 0)
+							elseif type(numberToShow) == "string" then
+								local numberToShowStart, numberToShowEnd = string.find(numberToShow, "$scroll")
+								if numberToShowStart and numberToShowEnd then
+									local numberStart = numberToShowEnd+1
+									local numberEnd = numberToShowEnd+3
+									local numberString = string.sub(numberToShow, numberStart, numberEnd)
 									numberString = tonumber(numberString)
-								end
-								if numberString and type(numberString) == "number" then
-									local textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
-									local textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
-									local textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
-									
-									local color = optionsFontColor
-									if not configMenuInOptions then
-										color = optionsFontColorAlpha
+									if not numberString or (numberString and not type(numberString) == "number") or (numberString and type(numberString) == "number" and numberString < 10) then
+										numberEnd = numberEnd-1
+										numberString = string.sub(numberToShow, numberStart, numberEnd)
+										numberString = tonumber(numberString)
 									end
-									if optionColor then
-										color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+									if numberString and type(numberString) == "number" then
+										local textToDrawPreScroll = string.sub(numberToShow, 0, numberToShowStart-1)
+										local textToDrawPostScroll = string.sub(numberToShow, numberEnd, string.len(numberToShow))
+										local textToDraw = textToDrawPreScroll .. "               " .. textToDrawPostScroll
+										
+										local color = optionsFontColor
+										if not configMenuInOptions then
+											color = optionsFontColorAlpha
+										end
+										if optionColor then
+											color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+										end
+										
+										scrollOffset = posOffset
+										posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
+										Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
+										
+										scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
+										numberToShow = numberString
 									end
-									
-									scrollOffset = posOffset
-									posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
-									Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
-									
-									scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll)+scrollOffset)
-									numberToShow = numberString
 								end
 							end
+							
+							local scrollColor = optionsSpriteColor
+							if not configMenuInOptions then
+								scrollColor = optionsSpriteColorAlpha
+							end
+							if optionColor then
+								scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO, scrollColor.GO, scrollColor.BO)
+							end
+							
+							local sliderString = "Slider1"
+							if useAltSlider then
+								sliderString = "Slider2"
+							end
+							
+							SliderSprite.Color = scrollColor
+							SliderSprite:SetFrame(sliderString, numberToShow)
+							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
+							
+							useAltSlider = not useAltSlider
+							
 						end
 						
-						local scrollColor = optionsSpriteColor
-						if not configMenuInOptions then
-							scrollColor = optionsSpriteColorAlpha
+						local showStrikeout = thisOption.ShowStrikeout
+						if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
+							if configMenuInOptions then
+								StrikeOutSprite.Color = colorDefault
+							else
+								StrikeOutSprite.Color = colorHalf
+							end
+							StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
+							StrikeOutSprite:Render(lastOptionPos, vecZero, vecZero)
 						end
-						if optionColor then
-							scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO, scrollColor.GO, scrollColor.BO)
-						end
-						
-						local sliderString = "Slider1"
-						if useAltSlider then
-							sliderString = "Slider2"
-						end
-						
-						SliderSprite.Color = scrollColor
-						SliderSprite:SetFrame(sliderString, numberToShow)
-						SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
-						
-						useAltSlider = not useAltSlider
-						
 					end
 					
-					local showStrikeout = thisOption.ShowStrikeout
-					if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
-						if configMenuInOptions then
-							StrikeOutSprite.Color = colorDefault
-						else
-							StrikeOutSprite.Color = colorHalf
-						end
-						StrikeOutSprite:SetFrame("Strikeout", math.floor(posOffset))
-						StrikeOutSprite:Render(lastOptionPos, vecZero, vecZero)
+					--cursor
+					if cursorIsAtThisOption then
+						CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 					end
-				end
 				
-				--cursor
-				if cursorIsAtThisOption then
-					CursorSpriteRight:Render(lastOptionPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 				end
 				
 				--increase counter
@@ -3008,10 +3100,20 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				OptionsCursorSpriteUp:Render(centerPos + Vector(193,-86), vecZero, vecZero) --up arrow
 			end
 			if optionsCanScrollDown then
-				OptionsCursorSpriteDown:Render(centerPos + Vector(193,50), vecZero, vecZero) --down arrow
+				OptionsCursorSpriteDown:Render(centerPos + Vector(193,66), vecZero, vecZero) --down arrow
 			end
 		
 		end
+		
+		MenuOverlaySprite:Render(centerPos, vecZero, vecZero)
+		
+		--title
+		local titleText = "Mod Config Menu"
+		if configMenuInSubcategory then
+			titleText = tostring(currentMenuCategory.Name)
+		end
+		local titleTextOffset = Font16Bold:GetStringWidthUTF8(titleText)/2
+		Font16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
 		
 		--info
 		local infoTable = nil
@@ -3186,6 +3288,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		configMenuPositionCursorCategory = 1
 		configMenuPositionCursorSubcategory = 1
 		configMenuPositionCursorOption = 1
+		
+		leftCurrentOffset = 0
 		optionsCurrentOffset = 0
 		
 	end
