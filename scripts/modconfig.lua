@@ -2738,7 +2738,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			
 			if numOptions > 10 then
 			
-				if configMenuPositionCursorOption > 6 then
+				if configMenuPositionCursorOption > 6 and configMenuInOptions then
 				
 					optionsCanScrollUp = true
 					
