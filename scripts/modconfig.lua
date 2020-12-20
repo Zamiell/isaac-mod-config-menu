@@ -1819,6 +1819,8 @@ ModConfigMenu.AddText("This is a test 25", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 26", "whee what am i doing this is wacky")
 ModConfigMenu.AddText("This is a test 27", "whee what am i doing this is wacky")
 
+local configMenuSubcategoriesCanShow = 3
+
 local configMenuInSubcategory = false
 local configMenuInOptions = false
 local configMenuInPopup = false
@@ -1831,6 +1833,8 @@ local holdingCounterLeft = 0
 local configMenuPositionCursorCategory = 1
 local configMenuPositionCursorSubcategory = 1
 local configMenuPositionCursorOption = 1
+
+local configMenuPositionFirstSubcategory = 1
 
 --valid action presses
 local actionsDown = {ButtonAction.ACTION_DOWN, ButtonAction.ACTION_SHOOTDOWN, ButtonAction.ACTION_MENUDOWN}
@@ -2567,6 +2571,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				
 				--make sure subcategory and option positions are 1
 				configMenuPositionCursorSubcategory = 1
+				configMenuPositionFirstSubcategory = 1
 				configMenuPositionCursorOption = 1
 				optionsCurrentOffset = 0
 				
@@ -2584,6 +2589,15 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				if configMenuPositionCursorSubcategory > #currentMenuCategory.Subcategories then --move from the bottom of the list to the top
 					configMenuPositionCursorSubcategory = 1
 				end
+				
+				--first category selection to render
+				if configMenuPositionFirstSubcategory > 1 and configMenuPositionCursorSubcategory <= configMenuPositionFirstSubcategory+1 then
+					configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory-1
+				end
+				if configMenuPositionFirstSubcategory+(configMenuSubcategoriesCanShow-1) < #currentMenuCategory.Subcategories and configMenuPositionCursorSubcategory >= 1+(configMenuSubcategoriesCanShow-2) then
+					configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory-(configMenuSubcategoriesCanShow-2)
+				end
+				configMenuPositionFirstSubcategory = math.min(math.max(configMenuPositionFirstSubcategory, 1), #currentMenuCategory.Subcategories-(configMenuSubcategoriesCanShow-1))
 				
 				--make sure option positions are 1
 				configMenuPositionCursorOption = 1
@@ -2866,48 +2880,62 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				end
 			
 				for subcategoryIndex=1, #currentMenuCategory.Subcategories do
+				
+					if subcategoryIndex >= configMenuPositionFirstSubcategory then
 					
-					local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
-					
-					local posOffset = 0
-					
-					if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
-					
-						if thisSubcategory.Name then
-							local textToDraw = thisSubcategory.Name
-							
-							textToDraw = tostring(textToDraw)
-							
-							local color = subcategoryFontColor
-							if not configMenuInSubcategory then
-								color = subcategoryFontColorAlpha
-							--[[
-							elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-								color = subcategoryFontColorSelected
-							]]
+						local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
+						
+						local posOffset = 0
+						
+						if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
+						
+							if thisSubcategory.Name then
+								local textToDraw = thisSubcategory.Name
+								
+								textToDraw = tostring(textToDraw)
+								
+								local color = subcategoryFontColor
+								if not configMenuInSubcategory then
+									color = subcategoryFontColorAlpha
+								--[[
+								elseif configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+									color = subcategoryFontColorSelected
+								]]
+								end
+								
+								posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
+								Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
 							end
 							
-							posOffset = Font12:GetStringWidthUTF8(textToDraw)/2
-							Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
+							--cursor
+							if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
+								CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
+							end
+							
 						end
 						
-						--cursor
-						if configMenuPositionCursorSubcategory == subcategoryIndex and configMenuInSubcategory then
-							CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
-						end
+						--increase counter
+						renderedSubcategories = renderedSubcategories + 1
+					
+						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
 						
+							--render scroll arrows
+							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
+								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
+							end
+							
+							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
+								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
+							end
+							
+							break
+							
+						end
+					
+						--pos mod
+						lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
+					
 					end
-					
-					--increase counter
-					renderedSubcategories = renderedSubcategories + 1
-						--render scroll arrows
-						--[[
-							SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero) --up arrow
-							SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero) --down arrow
-						]]
-					
-					--pos mod
-					lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
 					
 				end
 				
@@ -3288,6 +3316,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		configMenuPositionCursorCategory = 1
 		configMenuPositionCursorSubcategory = 1
 		configMenuPositionCursorOption = 1
+		
+		configMenuPositionFirstSubcategory = 1
 		
 		leftCurrentOffset = 0
 		optionsCurrentOffset = 0
