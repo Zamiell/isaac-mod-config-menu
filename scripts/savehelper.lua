@@ -1,9 +1,9 @@
 local SaveHelper = {}
-SaveHelper.Version = 3
+SaveHelper.Version = 4
 
 --[[
 
-SAVE HELPER v3
+SAVE HELPER v4
 by piber
 
 Make sure this is located in MOD/scripts/savehelper.lua otherwise it wont load properly!
@@ -22,7 +22,8 @@ local SaveHelperMod = RegisterMod("Cache Helper", 1)
 
 --require some lua libraries
 local json = require("json")
-local CallbackHelper = require("scripts.callbackhelper")
+
+pcall(require, "scripts.customcallbacks")
 
 
 ----------
@@ -95,71 +96,71 @@ end
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being saved
-CallbackHelper.Callbacks.SH_PRE_MOD_SAVE = 1200
+CustomCallbacks.SH_PRE_MOD_SAVE = 1200
 
 --triggered after a mod saves its data
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_MOD_SAVE = 1201
+CustomCallbacks.SH_POST_MOD_SAVE = 1201
 
 --triggered before a mod loads its data
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being loaded
-CallbackHelper.Callbacks.SH_PRE_MOD_LOAD = 1202
+CustomCallbacks.SH_PRE_MOD_LOAD = 1202
 
 --triggered after a mod loads its data
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_MOD_LOAD = 1202
+CustomCallbacks.SH_POST_MOD_LOAD = 1202
 
 --triggered before savehelper resets the game save of all mods
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being reset
-CallbackHelper.Callbacks.SH_PRE_RESET_GAME = 1203
+CustomCallbacks.SH_PRE_RESET_GAME = 1203
 
 --triggered before savehelper resets the run save of all mods
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being reset
-CallbackHelper.Callbacks.SH_PRE_RESET_RUN = 1204
+CustomCallbacks.SH_PRE_RESET_RUN = 1204
 
 --triggered before savehelper resets the level save of all mods
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being reset
-CallbackHelper.Callbacks.SH_PRE_RESET_LEVEL = 1205
+CustomCallbacks.SH_PRE_RESET_LEVEL = 1205
 
 --triggered before savehelper resets the room save of all mods
 --function(modref, savedata)
 --extra variable is the desired mod reference to only run your code on
 --return false to prevent the save from being reset
-CallbackHelper.Callbacks.SH_PRE_RESET_ROOM = 1206
+CustomCallbacks.SH_PRE_RESET_ROOM = 1206
 
 --triggered after savehelper resets the game save of all mods
 --function(modref, originalsavedata)
 --originalsavedata is the save data as it existed before it was cleared
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_RESET_GAME = 1207
+CustomCallbacks.SH_POST_RESET_GAME = 1207
 
 --triggered after savehelper resets the run save of all mods
 --function(modref, originalsavedata)
 --originalsavedata is the save data as it existed before it was cleared
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_RESET_RUN = 1208
+CustomCallbacks.SH_POST_RESET_RUN = 1208
 
 --triggered after savehelper resets the level save of all mods
 --function(modref, originalsavedata)
 --originalsavedata is the save data as it existed before it was cleared
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_RESET_LEVEL = 1209
+CustomCallbacks.SH_POST_RESET_LEVEL = 1209
 
 --triggered after savehelper resets the room save of all mods
 --function(modref, originalsavedata)
 --originalsavedata is the save data as it existed before it was cleared
 --extra variable is the desired mod reference to only run your code on
-CallbackHelper.Callbacks.SH_POST_RESET_ROOM = 1210
+CustomCallbacks.SH_POST_RESET_ROOM = 1210
 
 
 --------------
@@ -332,9 +333,9 @@ function SaveHelper.ResetGameSave(modRef)
 	--SH_PRE_RESET_GAME
 	local doReset = true
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_RESET_GAME, --callback id
+		CustomCallbacks.SH_PRE_RESET_GAME, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -357,9 +358,9 @@ function SaveHelper.ResetGameSave(modRef)
 		local resetSave = SaveHelper.GameSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_GAME
-		CallbackHelper.CallCallbacks
+		CustomCallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.SH_POST_RESET_GAME, --callback id
+			CustomCallbacks.SH_POST_RESET_GAME, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
 			modRef --extra variable
@@ -380,9 +381,9 @@ function SaveHelper.ResetRunSave(modRef)
 	--SH_PRE_RESET_RUN
 	local doReset = true
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_RESET_RUN, --callback id
+		CustomCallbacks.SH_PRE_RESET_RUN, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -404,9 +405,9 @@ function SaveHelper.ResetRunSave(modRef)
 		local resetSave = SaveHelper.RunSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_RUN
-		CallbackHelper.CallCallbacks
+		CustomCallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.SH_POST_RESET_RUN, --callback id
+			CustomCallbacks.SH_POST_RESET_RUN, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
 			modRef --extra variable
@@ -427,9 +428,9 @@ function SaveHelper.ResetLevelSave(modRef)
 	--SH_PRE_RESET_LEVEL
 	local doReset = true
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_RESET_LEVEL, --callback id
+		CustomCallbacks.SH_PRE_RESET_LEVEL, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -450,9 +451,9 @@ function SaveHelper.ResetLevelSave(modRef)
 		local resetSave = SaveHelper.LevelSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_LEVEL
-		CallbackHelper.CallCallbacks
+		CustomCallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.SH_POST_RESET_LEVEL, --callback id
+			CustomCallbacks.SH_POST_RESET_LEVEL, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
 			modRef --extra variable
@@ -473,9 +474,9 @@ function SaveHelper.ResetRoomSave(modRef)
 	--SH_PRE_RESET_ROOM
 	local doReset = true
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_RESET_ROOM, --callback id
+		CustomCallbacks.SH_PRE_RESET_ROOM, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -494,9 +495,9 @@ function SaveHelper.ResetRoomSave(modRef)
 		local resetSave = SaveHelper.RoomSave(modRef, defaultSave)
 		
 		--SH_POST_RESET_ROOM
-		CallbackHelper.CallCallbacks
+		CustomCallbackHelper.CallCallbacks
 		(
-			CallbackHelper.Callbacks.SH_POST_RESET_ROOM, --callback id
+			CustomCallbacks.SH_POST_RESET_ROOM, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
 			modRef --extra variable
@@ -523,9 +524,9 @@ function SaveHelper.Save(modRef)
 	--SH_PRE_MOD_SAVE
 	local cancelSave = false
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_MOD_SAVE, --callback id
+		CustomCallbacks.SH_PRE_MOD_SAVE, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -545,9 +546,9 @@ function SaveHelper.Save(modRef)
 	modRef:SaveData(json.encode(saveData))
 	
 	--SH_POST_MOD_SAVE
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_POST_MOD_SAVE, --callback id
+		CustomCallbacks.SH_POST_MOD_SAVE, --callback id
 		nil, --function to handle it
 		{modRef, saveData}, --args to send
 		modRef --extra variable
@@ -569,9 +570,9 @@ function SaveHelper.Load(modRef)
 	--SH_PRE_MOD_LOAD
 	local cancelLoad = false
 	
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_PRE_MOD_LOAD, --callback id
+		CustomCallbacks.SH_PRE_MOD_LOAD, --callback id
 		function(returned) --function to handle it
 		
 			if returned == false then
@@ -591,9 +592,9 @@ function SaveHelper.Load(modRef)
 	SaveHelper.GameSave(modRef, SaveHelper.CopyTable(saveData))
 	
 	--SH_POST_MOD_LOAD
-	CallbackHelper.CallCallbacks
+	CustomCallbackHelper.CallCallbacks
 	(
-		CallbackHelper.Callbacks.SH_POST_MOD_LOAD, --callback id
+		CustomCallbacks.SH_POST_MOD_LOAD, --callback id
 		nil, --function to handle it
 		{modRef, saveData}, --args to send
 		modRef --extra variable
@@ -608,7 +609,7 @@ end
 
 local skipNextLevelClear = false
 local skipNextRoomClear = false
-CallbackHelper.AddCallback(SaveHelperMod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+SaveHelperMod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
 
 	skipNextLevelClear = true
 	skipNextRoomClear = true

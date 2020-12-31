@@ -30,61 +30,23 @@ end
 -----------
 Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 
---create the mod
-ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
-
---require some lua libraries
+--load some lua scripts
 local json = require("json")
+
+pcall(require, "scripts.customcallbacks")
+
 local ScreenHelper = require("scripts.screenhelper")
-local CallbackHelper = require("scripts.callbackhelper")
 local SaveHelper = require("scripts.savehelper")
 local InputHelper = require("scripts.inputhelper")
+
+--create the mod
+ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 
 --cached values
 local vecZero = Vector(0,0)
 
 local colorDefault = Color(1,1,1,1,0,0,0)
 local colorHalf = Color(1,1,1,0.5,0,0,0)
-
-
---------------------
---CUSTOM CALLBACKS--
---------------------
-
---MCM_POST_MODIFY_HUD_OFFSET
---gets called when the hud offset setting is changed in the general mod config menu section
---use this if you need to change anything in your mod when hud offset is changed
---function(number hudOffset)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 4300
-
---this will make ScreenHelper's offset match MCM's offset when it is changed
-CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, function(_, hudOffset)
-	ScreenHelper.SetOffset(hudOffset)
-end)
-
---MCM_POST_MODIFY_OVERLAYS
---gets called when the overlays setting is changed in the general mod config menu section
---use this if you need to change anything in your mod when overlays are enabled or disabled
---function(boolean overlaysEnabled)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 4301
-
---MCM_POST_MODIFY_CHARGE_BARS
---gets called when the charge bars setting is changed in the general mod config menu section
---use this if you need to change anything in your mod when charge bars are enabled or disabled
---function(boolean chargeBarsEnabled)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS = 4302
-
---MCM_POST_MODIFY_BIG_BOOKS
---gets called when the big books setting is changed in the general mod config menu section
---use this if you need to change anything in your mod when big books are enabled or disabled
---function(boolean bigBooksEnabled)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
-
---MCM_POST_MODIFY_ANNOUNCER
---gets called when the announcer setting is changed in the general mod config menu section
---use this if you need to change anything in your mod when the announcer mode is changed
---function(number announcerMode)
-CallbackHelper.Callbacks.MCM_POST_MODIFY_ANNOUNCER = 4304
 
 
 ----------
@@ -110,7 +72,9 @@ ModConfigMenu.ConfigDefault = {
 		
 		HideHudInMenu = true,
 		ResetToDefault = Keyboard.KEY_R,
-		ShowControls = true
+		ShowControls = true,
+		
+		CompatibilityLayer = false
 		
 	},
 	
@@ -167,15 +131,31 @@ versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
 
-CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
+if ModConfigMenu.Mod.AddCustomCallback then
 
-	if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
-	
-		versionPrintTimer = 120
+	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
+
+		if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
 		
-	end
+			versionPrintTimer = 120
+			
+		end
+		
+	end)
 	
-end)
+else
+
+	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, player, isSaveGame)
+
+		if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
+		
+			versionPrintTimer = 120
+			
+		end
+		
+	end)
+	
+end
 
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 
@@ -351,6 +331,18 @@ function ModConfigMenu.UpdateCategory(categoryName, dataTable)
 	if dataTable.IsOld then
 		ModConfigMenu.MenuData[categoryToChange].IsOld = dataTable.IsOld
 	end
+	
+end
+
+function ModConfigMenu.SetCategoryInfo(categoryName, info)
+
+	if type(categoryName) ~= "string" then
+		error("ModConfigMenu.SetCategoryInfo - No valid category name provided", 2)
+	end
+
+	ModConfigMenu.UpdateCategory(categoryName, {
+		Info = info
+	})
 	
 end
 
@@ -853,9 +845,7 @@ end
 --------------------------
 --GENERAL SETTINGS SETUP--
 --------------------------
-ModConfigMenu.UpdateCategory("General", {
-	Info = "Settings that affect the majority of mods"
-})
+ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of mods")
 
 
 ----------------------
@@ -866,11 +856,7 @@ local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
 	"HudOffset", --attribute in table
 	ModConfigMenu.ConfigDefault["General"].HudOffset, --default value
 	"Hud Offset", --display text
-	{ --info
-		"How far from the corners of the screen",
-		"custom hud elements will be.",
-		"Try to make this match your base-game setting."
-	}
+	"How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
 
 --set up screen corner display for hud offset
@@ -884,7 +870,7 @@ hudOffsetSetting.HideControls = true -- hide controls so the screen corner graph
 local oldHudOffsetDisplay = hudOffsetSetting.Display
 hudOffsetSetting.Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
 
-	if cursorIsAtThisOption then
+	if cursorIsAtThisOption and ScreenHelper then
 	
 		--render the visual
 		HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
@@ -902,15 +888,12 @@ end
 local oldHudOffsetOnChange = hudOffsetSetting.OnChange
 hudOffsetSetting.OnChange = function(currentValue)
 
-	oldHudOffsetOnChange(currentValue)
-	
-	--MCM_POST_MODIFY_HUD_OFFSET
-	CallbackHelper.CallCallbacks
-	(
-		CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, --callback id
-		nil, --function to handle it
-		{currentValue} --args to send
-	)
+	--update screenhelper's offset
+	if ScreenHelper then
+		ScreenHelper.SetOffset(currentValue)
+	end
+
+	return oldHudOffsetOnChange(currentValue)
 	
 end
 
@@ -918,7 +901,7 @@ end
 --------------------
 --OVERLAYS SETTING--
 --------------------
-local overlaySetting = ModConfigMenu.AddBooleanSetting(
+ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"Overlays", --attribute in table
 	ModConfigMenu.ConfigDefault["General"].Overlays, --default value
@@ -927,33 +910,14 @@ local overlaySetting = ModConfigMenu.AddBooleanSetting(
 		[true] = "On",
 		[false] = "Off"
 	},
-	{ --info
-		"Enable or disable custom visual overlays,",
-		"like screen-wide fog."
-	}
+	"Enable or disable custom visual overlays, like screen-wide fog."
 )
-
---set up callback
-local oldOverlayOnChange = overlaySetting.OnChange
-overlaySetting.OnChange = function(currentValue)
-
-	oldOverlayOnChange(currentValue)
-	
-	--MCM_POST_MODIFY_OVERLAYS
-	CallbackHelper.CallCallbacks
-	(
-		CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, --callback id
-		nil, --function to handle it
-		{currentValue} --args to send
-	)
-	
-end
 
 
 -----------------------
 --CHARGE BARS SETTING--
 -----------------------
-local chargeBarsSetting = ModConfigMenu.AddBooleanSetting(
+ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"ChargeBars", --attribute in table
 	ModConfigMenu.ConfigDefault["General"].ChargeBars, --default value
@@ -962,33 +926,14 @@ local chargeBarsSetting = ModConfigMenu.AddBooleanSetting(
 		[true] = "On",
 		[false] = "Off"
 	},
-	{ --info
-		"Enable or disable custom charge bar visuals",
-		"for mod effects, like those from chargable items."
-	}
+	"Enable or disable custom charge bar visuals for mod effects, like those from chargable items."
 )
-
---set up callback
-local oldChargeBarsOnChange = chargeBarsSetting.OnChange
-chargeBarsSetting.OnChange = function(currentValue)
-
-	oldChargeBarsOnChange(currentValue)
-	
-	--MCM_POST_MODIFY_CHARGE_BARS
-	CallbackHelper.CallCallbacks
-	(
-		CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, --callback id
-		nil, --function to handle it
-		{currentValue} --args to send
-	)
-	
-end
 
 
 ---------------------
 --BIG BOOKS SETTING--
 ---------------------
-local bigBooksSetting = ModConfigMenu.AddBooleanSetting(
+ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"BigBooks", --attribute in table
 	ModConfigMenu.ConfigDefault["General"].BigBooks, --default value
@@ -997,33 +942,14 @@ local bigBooksSetting = ModConfigMenu.AddBooleanSetting(
 		[true] = "On",
 		[false] = "Off"
 	},
-	{ --info
-		"Enable or disable custom bigbook overlays,",
-		"like those which appear when an active item is used."
-	}
+	"Enable or disable custom bigbook overlays which can appear when an active item is used."
 )
-
---set up callback
-local oldBigBooksOnChange = bigBooksSetting.OnChange
-bigBooksSetting.OnChange = function(currentValue)
-
-	oldBigBooksOnChange(currentValue)
-	
-	--MCM_POST_MODIFY_BIG_BOOKS
-	CallbackHelper.CallCallbacks
-	(
-		CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, --callback id
-		nil, --function to handle it
-		{currentValue} --args to send
-	)
-	
-end
 
 
 ---------------------
 --ANNOUNCER SETTING--
 ---------------------
-local announcerSetting = ModConfigMenu.AddNumberSetting(
+ModConfigMenu.AddNumberSetting(
 	"General", --category
 	"Announcer", --attribute in table
 	0, --minimum value
@@ -1035,27 +961,8 @@ local announcerSetting = ModConfigMenu.AddNumberSetting(
 		[1] = "Never",
 		[2] = "Always"
 	},
-	{ --info
-		"Choose how often a voice-over will play,",
-		"like when a pocket item (pill or card) is used."
-	}
+	"Choose how often a voice-over will play when a pocket item (pill or card) is used."
 )
-
---set up callback
-local oldAnnouncerOnChange = announcerSetting.OnChange
-announcerSetting.OnChange = function(currentValue)
-
-	oldAnnouncerOnChange(currentValue)
-	
-	--MCM_POST_MODIFY_ANNOUNCER
-	CallbackHelper.CallCallbacks
-	(
-		CallbackHelper.Callbacks.MCM_POST_MODIFY_ANNOUNCER, --callback id
-		nil, --function to handle it
-		{currentValue} --args to send
-	)
-	
-end
 
 
 --------------------------
@@ -1072,12 +979,7 @@ ModConfigMenu.AddText("General", "all mods which support them")
 --MOD CONFIG MENU SETTINGS SETUP--
 ----------------------------------
 
-ModConfigMenu.UpdateCategory("Mod Config Menu", {
-	Info = {
-		"Settings specific to Mod Config Menu",
-		"Change keybindings for the menu here"
-	}
-})
+ModConfigMenu.SetCategoryInfo("Mod Config Menu", "Settings specific to Mod Config Menu.$newlineChange keybindings for the menu here.")
 
 ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.Version) .. " !") --VERSION INDICATOR
 
@@ -1093,10 +995,7 @@ local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuKeyboard, --default value
 	"Open Menu", --display text
 	true, --if (keyboard) is displayed after the key text
-	{ --info
-		"Choose what button on your keyboard",
-		"will open Mod Config Menu."
-	}
+	"Choose what button on your keyboard will open Mod Config Menu."
 )
 
 openMenuKeyboardSetting.IsOpenMenuKeybind = true
@@ -1111,10 +1010,7 @@ local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuController, --default value
 	"Open Menu", --display text
 	true, --if (controller) is displayed after the key text
-	{ --info
-		"Choose what button on your controller",
-		"will open Mod Config Menu."
-	}
+	"Choose what button on your controller will open Mod Config Menu."
 )
 
 openMenuControllerSetting.IsOpenMenuKeybind = true
@@ -1137,7 +1033,7 @@ local hideHudSetting = ModConfigMenu.AddBooleanSetting(
 		[true] = "Yes",
 		[false] = "No"
 	},
-	"Enable or disable the hud when this menu is open." --info
+	"Enable or disable the hud when this menu is open."
 )
 
 --actively modify the hud visibility as this setting changes
@@ -1170,10 +1066,7 @@ local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
 	"ResetToDefault", --attribute in table
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].ResetToDefault, --default value
 	"Reset To Default Keybind", --display text
-	{ --info
-		"Press this button on your keyboard",
-		"to reset a setting to its default value."
-	}
+	"Press this button on your keyboard to reset a setting to its default value."
 )
 
 resetKeybindSetting.IsResetKeybind = true
@@ -1182,7 +1075,7 @@ resetKeybindSetting.IsResetKeybind = true
 -----------------
 --SHOW CONTROLS--
 -----------------
-local hideHudSetting = ModConfigMenu.AddBooleanSetting(
+ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"ShowControls", --attribute in table
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].ShowControls, --default value
@@ -1191,18 +1084,33 @@ local hideHudSetting = ModConfigMenu.AddBooleanSetting(
 		[true] = "Yes",
 		[false] = "No"
 	},
-	{ --info
-		"Disable this to remove the back and select",
-		"widgets at the lower corners of the screen",
-		"and remove the bottom start-up message."
-	}
+	"Disable this to remove the back and select widgets at the lower corners of the screen and remove the bottom start-up message."
+)
+
+ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
+
+
+-----------------
+--COMPATIBILITY--
+-----------------
+ModConfigMenu.AddBooleanSetting(
+	"Mod Config Menu", --category
+	"CompatibilityLayer", --attribute in table
+	ModConfigMenu.ConfigDefault["Mod Config Menu"].CompatibilityLayer, --default value
+	"Compatibility Layer", --display text
+	{ --value display text
+		[true] = "Yes",
+		[false] = "No"
+	},
+	"Enable this if you have some old mods which only work with old versions of Mod Config Menu.$newlineThere's a chance this will make it work."
 )
 
 ModConfigMenu.AddBooleanSetting(
 	"This is a test", --category
 	"eeee", --attribute in table
 	false, --default value
-	"what is this" --display text
+	"what is this", --display text
+	"l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l"
 )
 ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
 ModConfigMenu.AddBooleanSetting(
@@ -2750,14 +2658,14 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 			
 			optionPos = optionPos + Vector(0, math.min(numOptions-1, 10) * -7)
 			
-			if numOptions > 10 then
+			if numOptions > 11 then
 			
 				if configMenuPositionCursorOption > 6 and configMenuInOptions then
 				
 					optionsCanScrollUp = true
 					
 					local cursorScroll = configMenuPositionCursorOption - 6
-					local maxOptionsScroll = numOptions - 11
+					local maxOptionsScroll = numOptions - 12
 					optionsDesiredOffset = math.min(cursorScroll, maxOptionsScroll) * -14
 					
 					if cursorScroll < maxOptionsScroll then
@@ -2799,6 +2707,15 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local infoPos = centerPos + Vector(-4,106)
 	
 		MenuSprite:Render(centerPos, vecZero, vecZero)
+		
+		--get if controls can be shown
+		local shouldShowControls = true
+		if configMenuInOptions and currentMenuOption and currentMenuOption.HideControls then
+			shouldShowControls = false
+		end
+		if not ModConfigMenu.Config["Mod Config Menu"].ShowControls then
+			shouldShowControls = false
+		end
 		
 		--category
 		local lastLeftPos = leftPos
@@ -2850,9 +2767,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local lastOptionPos = optionPos
 		local renderedOptions = 0
 		
-		local lastSubcategoryPos = optionPos
-		local renderedSubcategories = 0
-		
 		if currentMenuCategory then
 		
 			local hasUncategorizedCategory = false
@@ -2873,21 +2787,24 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					numCategories = numCategories + 1
 				end
 				
-				if numCategories == 2 then
-					lastSubcategoryPos = lastOptionPos + Vector(-38,0)
-				elseif numCategories >= 3 then
-					lastSubcategoryPos = lastOptionPos + Vector(-76,0)
-				end
-			
-				for subcategoryIndex=1, #currentMenuCategory.Subcategories do
+				if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
 				
-					if subcategoryIndex >= configMenuPositionFirstSubcategory then
+					local lastSubcategoryPos = optionPos
+					if numCategories == 2 then
+						lastSubcategoryPos = lastOptionPos + Vector(-38,0)
+					elseif numCategories >= 3 then
+						lastSubcategoryPos = lastOptionPos + Vector(-76,0)
+					end
+				
+					local renderedSubcategories = 0
+				
+					for subcategoryIndex=1, #currentMenuCategory.Subcategories do
 					
-						local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
+						if subcategoryIndex >= configMenuPositionFirstSubcategory then
 						
-						local posOffset = 0
-						
-						if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
+							local thisSubcategory = currentMenuCategory.Subcategories[subcategoryIndex]
+							
+							local posOffset = 0
 						
 							if thisSubcategory.Name then
 								local textToDraw = thisSubcategory.Name
@@ -2912,31 +2829,31 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 								CursorSpriteRight:Render(lastSubcategoryPos + Vector((posOffset + 10)*-1,0), vecZero, vecZero)
 							end
 							
+							--increase counter
+							renderedSubcategories = renderedSubcategories + 1
+						
+							if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
+							
+								--render scroll arrows
+								if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
+									SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
+								end
+								
+								if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
+									SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
+								end
+								
+								break
+								
+							end
+						
+							--pos mod
+							lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
+						
 						end
 						
-						--increase counter
-						renderedSubcategories = renderedSubcategories + 1
-					
-						if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
-						
-							--render scroll arrows
-							if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
-								SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
-							end
-							
-							if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
-								SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
-							end
-							
-							break
-							
-						end
-					
-						--pos mod
-						lastSubcategoryPos = lastSubcategoryPos + Vector(76,0)
-					
 					end
-					
+				
 				end
 				
 				--subcategory selection counts as an option that gets rendered
@@ -3128,7 +3045,14 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				OptionsCursorSpriteUp:Render(centerPos + Vector(193,-86), vecZero, vecZero) --up arrow
 			end
 			if optionsCanScrollDown then
-				OptionsCursorSpriteDown:Render(centerPos + Vector(193,66), vecZero, vecZero) --down arrow
+			
+				local yPos = 66
+				if shouldShowControls then
+					yPos = 40
+				end
+				
+				OptionsCursorSpriteDown:Render(centerPos + Vector(193,yPos), vecZero, vecZero) --down arrow
+				
 			end
 		
 		end
@@ -3170,18 +3094,87 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		
 		if infoTable then
 			
+			local infoTableDisplay = {}
 			if type(infoTable) == "function" then
-				infoTable = infoTable()
-			end
-			if type(infoTable) ~= "table" then
-				infoTable = {infoTable}
+			
+				infoTableDisplay = infoTable()
+				
+				if type(infoTableDisplay) ~= "string" and type(infoTableDisplay) ~= "table" then
+					infoTableDisplay = tostring(infoTableDisplay)
+				end
+				
 			end
 			
-			local lastInfoPos = infoPos - Vector(0,6*#infoTable)
-			for line=1, #infoTable do
+			if type(infoTable) ~= "string" and type(infoTable) ~= "table" then
+				infoTableDisplay = {tostring(infoTable)}
+			end
+			if type(infoTable) == "string" then
+				infoTableDisplay = {infoTable}
+			end
+			
+			if type(infoTableDisplay) == "string" then
+				infoTableDisplay = {infoTableDisplay}
+			end
+			
+			--create new lines based on $newline modifier
+			local infoTableDisplayAfterNewlines = {}
+			for lineIndex=1, #infoTableDisplay do
+			
+				local line = infoTableDisplay[lineIndex]
+				local startIdx, endIdx = string.find(line,"$newline")
+				while startIdx do
+
+					local newline = string.sub(line, 0, startIdx-1)
+					table.insert(infoTableDisplayAfterNewlines, newline)
+					
+					line = string.sub(line, endIdx+1)
+					
+					startIdx, endIdx = string.find(line,"$newline")
+					
+				end
+				table.insert(infoTableDisplayAfterNewlines, line)
+				
+			end
+		
+			--dynamic string new line creation, based on code by wofsauge
+			local lineWidth = 340
+			if shouldShowControls then
+				lineWidth = 260
+			end
+			
+			local infoTableDisplayAfterWordLength = {}
+			for lineIndex=1, #infoTableDisplayAfterNewlines do
+			
+				local line = infoTableDisplayAfterNewlines[lineIndex]
+				local curLength = 0
+				local text = ""
+				for word in string.gmatch(tostring(line), "([^%s]+)") do
+				
+					local wordLength = Font10:GetStringWidthUTF8(word)
+
+					if curLength + wordLength <= lineWidth or curLength < 12 then
+					
+						text = text .. word .. " "
+						curLength = curLength + wordLength
+						
+					else
+					
+						table.insert(infoTableDisplayAfterWordLength, text)
+						text = word .. " "
+						curLength = wordLength
+						
+					end
+					
+				end
+				table.insert(infoTableDisplayAfterWordLength, text)
+				
+			end
+			
+			local lastInfoPos = infoPos - Vector(0,6*#infoTableDisplayAfterWordLength)
+			for line=1, #infoTableDisplayAfterWordLength do
 			
 				--text
-				local textToDraw = tostring(infoTable[line])
+				local textToDraw = tostring(infoTableDisplayAfterWordLength[line])
 				local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
 				local color = mainFontColor
 				if isOldInfo then
@@ -3223,13 +3216,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		end
 		
 		--controls
-		local shouldShowControls = true
-		if configMenuInOptions and currentMenuOption and currentMenuOption.HideControls then
-			shouldShowControls = false
-		end
-		if not ModConfigMenu.Config["Mod Config Menu"].ShowControls then
-			shouldShowControls = false
-		end
 		if shouldShowControls then
 
 			--back
@@ -3325,9 +3311,23 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 end)
 
-CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
-	ModConfigMenu.IsVisible = false
-end)
+if ModConfigMenu.Mod.AddCustomCallback then
+
+	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
+	print("game start")
+		ModConfigMenu.IsVisible = false
+		
+	end)
+	
+else
+
+	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, player, isSaveGame)
+	
+		ModConfigMenu.IsVisible = false
+		
+	end)
+	
+end
 
 function ModConfigMenu.OpenConfigMenu()
 
@@ -3414,22 +3414,27 @@ function ModConfigMenu.RoomIsSafe()
 	
 end
 
-local checkedForPotato = false
-CallbackHelper.AddCallback(ModConfigMenu.Mod, CallbackHelper.Callbacks.CH_GAME_START, function(_, player, isSaveGame)
-	if not checkedForPotato then
+function ModConfigMenu.CheckForPotato()
+print("potato")
+	local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
+	local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
 	
-		local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
-		local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
-		
-		if potatoType and potatoType > 0 then
-			ModConfigMenu.IgnoreActiveEnemies[potatoType] = {}
-			ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
-		end
-		
-		checkedForPotato = true
-		
+	if potatoType and potatoType > 0 then
+		ModConfigMenu.IgnoreActiveEnemies[potatoType] = {}
+		ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
 	end
-end)
+
+end
+
+if ModConfigMenu.Mod.AddCustomCallback then
+
+	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_MODS_LOADED, ModConfigMenu.CheckForPotato)
+	
+else
+
+	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.CheckForPotato)
+	
+end
 
 --console commands that toggle the menu
 local toggleCommands = {

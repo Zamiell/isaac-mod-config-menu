@@ -8,7 +8,7 @@ if not ModConfigMenu then
 
 	--require some lua libraries
 	local MCM = require("scripts.modconfig")
-	local CallbackHelper = require("scripts.callbackhelper")
+	-- local CallbackHelper = require("scripts.callbackhelper")
 	local InputHelper = require("scripts.inputhelper")
 
 	-------------------------
@@ -57,12 +57,6 @@ if not ModConfigMenu then
 		end
 
 	})
-	
-	-- ModConfigMenu.Game = CacheHelper.Game
-	-- ModConfigMenu.Seeds = CacheHelper.Seeds
-	-- ModConfigMenu.Level = CacheHelper.Level
-	-- ModConfigMenu.Room = CacheHelper.Room
-	-- ModConfigMenu.SFX = CacheHelper.SFX
 
 	ModConfigMenu.Config = MCM.Config
 	
@@ -78,8 +72,7 @@ if not ModConfigMenu then
 	ModConfigMenu.SetOldCategoryInfo = function(category)
 		MCM.UpdateCategory(category, {
 			Info = {
-				"This mod adds settings through",
-				"an older method and may not work right"
+				"This mod adds settings through an older method and may not work right"
 			},
 			IsOld = true
 		})
@@ -103,16 +96,16 @@ if not ModConfigMenu then
 	end
 
 	ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
-		CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
+		-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
 	end
 	ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
-		CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
+		-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
 	end
 	ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
-		CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
+		-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
 	end
 	ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
-		CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
+		-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
 	end
 	
 	return true --return true if creating old version stuff was necessary
