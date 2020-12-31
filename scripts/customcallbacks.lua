@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 1
+local fileVersion = 0
 
 --prevent older/same version versions of this script from loading
 if CustomCallbackHelper and CustomCallbackHelper.Version >= fileVersion then
