@@ -599,10 +599,10 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 		end,
 		OnChange = function(currentValue)
 		
-			if not currentNum then
+			if not currentValue then
 			
 				if settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
-					currentNum = -1
+					currentValue = -1
 				end
 				
 			end
@@ -623,6 +623,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 	elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
 		
 		settingTable.PopupGfx = ModConfigMenu.PopupGfx.WIDE_SMALL
+		settingTable.PopupWidth = 280
 		settingTable.Popup = function()
 		
 			local currentValue = ModConfigMenu.Config[categoryName][configTableAttribute]
@@ -638,8 +639,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 				
 			end
 			
-			local keepSettingString1 = ""
-			local keepSettingString2 = ""
+			local keepSettingString = ""
 			if currentValue > -1 then
 			
 				local currentSettingString = nil
@@ -649,8 +649,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 					currentSettingString = InputHelper.ControllerToString[currentValue]
 				end
 				
-				keepSettingString1 = "This setting is currently set to \"" .. currentSettingString .. "\"."
-				keepSettingString2 = "Press this button to keep it unchanged."
+				keepSettingString = "This setting is currently set to \"" .. currentSettingString .. "\".$newlinePress this button to keep it unchanged.$newline$newline"
 				
 			end
 			
@@ -661,14 +660,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 				deviceString = "controller"
 			end
 			
-			return {
-				"Press a button on your " .. deviceString .. " to change this setting.",
-				"",
-				keepSettingString1,
-				keepSettingString2,
-				"",
-				"Press \"" .. goBackString .. "\" to go back and clear this setting."
-			}
+			return "Press a button on your " .. deviceString .. " to change this setting.$newline$newline" .. keepSettingString .. "Press \"" .. goBackString .. "\" to go back and clear this setting."
 			
 		end
 		
@@ -1896,6 +1888,79 @@ local subcategoryFontColorSelected = KColor(34/255,50/255,70/255,1)
 local subcategoryFontColorAlpha = KColor(34/255,32/255,30/255,0.5)
 local subcategoryFontColorSelectedAlpha = KColor(34/255,50/255,70/255,0.5)
 
+function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
+
+	lineWidth = lineWidth or 340
+
+	local textTableDisplay = {}
+	if type(displayValue) == "function" then
+		displayValue = displayValue()
+	end
+	
+	if type(displayValue) ~= "string" and type(displayValue) ~= "table" then
+		textTableDisplay = {tostring(displayValue)}
+	end
+	if type(displayValue) == "string" then
+		textTableDisplay = {displayValue}
+	end
+	
+	if type(textTableDisplay) == "string" then
+		textTableDisplay = {textTableDisplay}
+	end
+	
+	--create new lines based on $newline modifier
+	local textTableDisplayAfterNewlines = {}
+	for lineIndex=1, #textTableDisplay do
+	
+		local line = textTableDisplay[lineIndex]
+		local startIdx, endIdx = string.find(line,"$newline")
+		while startIdx do
+
+			local newline = string.sub(line, 0, startIdx-1)
+			table.insert(textTableDisplayAfterNewlines, newline)
+			
+			line = string.sub(line, endIdx+1)
+			
+			startIdx, endIdx = string.find(line,"$newline")
+			
+		end
+		table.insert(textTableDisplayAfterNewlines, line)
+		
+	end
+
+	--dynamic string new line creation, based on code by wofsauge
+	local textTableDisplayAfterWordLength = {}
+	for lineIndex=1, #textTableDisplayAfterNewlines do
+	
+		local line = textTableDisplayAfterNewlines[lineIndex]
+		local curLength = 0
+		local text = ""
+		for word in string.gmatch(tostring(line), "([^%s]+)") do
+		
+			local wordLength = font:GetStringWidthUTF8(word)
+
+			if curLength + wordLength <= lineWidth or curLength < 12 then
+			
+				text = text .. word .. " "
+				curLength = curLength + wordLength
+				
+			else
+			
+				table.insert(textTableDisplayAfterWordLength, text)
+				text = word .. " "
+				curLength = wordLength
+				
+			end
+			
+		end
+		table.insert(textTableDisplayAfterWordLength, text)
+		
+	end
+	
+	return textTableDisplayAfterWordLength
+	
+end
+
 --render the menu
 local leftCurrentOffset = 0
 local optionsCurrentOffset = 0
@@ -3094,87 +3159,18 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		
 		if infoTable then
 			
-			local infoTableDisplay = {}
-			if type(infoTable) == "function" then
-			
-				infoTableDisplay = infoTable()
-				
-				if type(infoTableDisplay) ~= "string" and type(infoTableDisplay) ~= "table" then
-					infoTableDisplay = tostring(infoTableDisplay)
-				end
-				
-			end
-			
-			if type(infoTable) ~= "string" and type(infoTable) ~= "table" then
-				infoTableDisplay = {tostring(infoTable)}
-			end
-			if type(infoTable) == "string" then
-				infoTableDisplay = {infoTable}
-			end
-			
-			if type(infoTableDisplay) == "string" then
-				infoTableDisplay = {infoTableDisplay}
-			end
-			
-			--create new lines based on $newline modifier
-			local infoTableDisplayAfterNewlines = {}
-			for lineIndex=1, #infoTableDisplay do
-			
-				local line = infoTableDisplay[lineIndex]
-				local startIdx, endIdx = string.find(line,"$newline")
-				while startIdx do
-
-					local newline = string.sub(line, 0, startIdx-1)
-					table.insert(infoTableDisplayAfterNewlines, newline)
-					
-					line = string.sub(line, endIdx+1)
-					
-					startIdx, endIdx = string.find(line,"$newline")
-					
-				end
-				table.insert(infoTableDisplayAfterNewlines, line)
-				
-			end
-		
-			--dynamic string new line creation, based on code by wofsauge
 			local lineWidth = 340
 			if shouldShowControls then
 				lineWidth = 260
 			end
 			
-			local infoTableDisplayAfterWordLength = {}
-			for lineIndex=1, #infoTableDisplayAfterNewlines do
+			local infoTableDisplay = ModConfigMenu.ConvertDisplayToTextTable(infoTable, lineWidth, Font10)
 			
-				local line = infoTableDisplayAfterNewlines[lineIndex]
-				local curLength = 0
-				local text = ""
-				for word in string.gmatch(tostring(line), "([^%s]+)") do
-				
-					local wordLength = Font10:GetStringWidthUTF8(word)
-
-					if curLength + wordLength <= lineWidth or curLength < 12 then
-					
-						text = text .. word .. " "
-						curLength = curLength + wordLength
-						
-					else
-					
-						table.insert(infoTableDisplayAfterWordLength, text)
-						text = word .. " "
-						curLength = wordLength
-						
-					end
-					
-				end
-				table.insert(infoTableDisplayAfterWordLength, text)
-				
-			end
-			
-			local lastInfoPos = infoPos - Vector(0,6*#infoTableDisplayAfterWordLength)
-			for line=1, #infoTableDisplayAfterWordLength do
+			local lastInfoPos = infoPos - Vector(0,6*#infoTableDisplay)
+			for line=1, #infoTableDisplay do
 			
 				--text
-				local textToDraw = tostring(infoTableDisplayAfterWordLength[line])
+				local textToDraw = tostring(infoTableDisplay[line])
 				local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
 				local color = mainFontColor
 				if isOldInfo then
@@ -3193,26 +3189,32 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		if configMenuInPopup
 		and currentMenuOption
 		and currentMenuOption.Popup then
+		
 			PopupSprite:Render(centerPos, vecZero, vecZero)
 			
 			local popupTable = currentMenuOption.Popup
-			if type(popupTable) == "function" then
-				popupTable = popupTable()
-			end
-			if type(popupTable) ~= "table" then
-				popupTable = {popupTable}
+			
+			if popupTable then
+				
+				local lineWidth = currentMenuOption.PopupWidth or 180
+				
+				local popupTableDisplay = ModConfigMenu.ConvertDisplayToTextTable(popupTable, lineWidth, Font10)
+				
+				local lastPopupPos = (centerPos + Vector(0,2)) - Vector(0,6*#popupTableDisplay)
+				for line=1, #popupTableDisplay do
+				
+					--text
+					local textToDraw = tostring(popupTableDisplay[line])
+					local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
+					Font10:DrawString(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
+					
+					--pos mod
+					lastPopupPos = lastPopupPos + Vector(0,10)
+					
+				end
+			
 			end
 			
-			local lastPopupPos = (centerPos + Vector(0,2)) - Vector(0,6*#popupTable)
-			for line=1, #popupTable do
-				--text
-				local textToDraw = tostring(popupTable[line])
-				local posOffset = Font10:GetStringWidthUTF8(textToDraw)/2
-				Font10:DrawString(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
-				
-				--pos mod
-				lastPopupPos = lastPopupPos + Vector(0,10)
-			end
 		end
 		
 		--controls
@@ -3314,7 +3316,7 @@ end)
 if ModConfigMenu.Mod.AddCustomCallback then
 
 	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
-	print("game start")
+	
 		ModConfigMenu.IsVisible = false
 		
 	end)
@@ -3415,7 +3417,7 @@ function ModConfigMenu.RoomIsSafe()
 end
 
 function ModConfigMenu.CheckForPotato()
-print("potato")
+
 	local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
 	local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
 	
