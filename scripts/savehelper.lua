@@ -18,7 +18,7 @@ REQUIREMENTS:
 ]]
 
 --create the mod
-local SaveHelperMod = RegisterMod("Cache Helper", 1)
+local SaveHelperMod = RegisterMod("Save Helper", 1)
 
 --require some lua libraries
 local json = require("json")
@@ -345,7 +345,7 @@ function SaveHelper.ResetGameSave(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if doReset then
@@ -363,7 +363,7 @@ function SaveHelper.ResetGameSave(modRef)
 			CustomCallbacks.SH_POST_RESET_GAME, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
-			modRef --extra variable
+			modRef.Name --extra variable
 		)
 		
 		return resetSave
@@ -393,7 +393,7 @@ function SaveHelper.ResetRunSave(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if doReset then
@@ -410,7 +410,7 @@ function SaveHelper.ResetRunSave(modRef)
 			CustomCallbacks.SH_POST_RESET_RUN, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
-			modRef --extra variable
+			modRef.Name --extra variable
 		)
 		
 		return resetSave
@@ -440,7 +440,7 @@ function SaveHelper.ResetLevelSave(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if doReset then
@@ -456,7 +456,7 @@ function SaveHelper.ResetLevelSave(modRef)
 			CustomCallbacks.SH_POST_RESET_LEVEL, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
-			modRef --extra variable
+			modRef.Name --extra variable
 		)
 		
 		return resetSave
@@ -486,7 +486,7 @@ function SaveHelper.ResetRoomSave(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if doReset then
@@ -500,7 +500,7 @@ function SaveHelper.ResetRoomSave(modRef)
 			CustomCallbacks.SH_POST_RESET_ROOM, --callback id
 			nil, --function to handle it
 			{modRef, saveData}, --args to send
-			modRef --extra variable
+			modRef.Name --extra variable
 		)
 		
 		return resetSave
@@ -536,7 +536,7 @@ function SaveHelper.Save(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if cancelSave then
@@ -551,7 +551,7 @@ function SaveHelper.Save(modRef)
 		CustomCallbacks.SH_POST_MOD_SAVE, --callback id
 		nil, --function to handle it
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	return saveData
@@ -582,7 +582,7 @@ function SaveHelper.Load(modRef)
 		
 		end,
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 	if cancelLoad then
@@ -597,7 +597,7 @@ function SaveHelper.Load(modRef)
 		CustomCallbacks.SH_POST_MOD_LOAD, --callback id
 		nil, --function to handle it
 		{modRef, saveData}, --args to send
-		modRef --extra variable
+		modRef.Name --extra variable
 	)
 	
 end

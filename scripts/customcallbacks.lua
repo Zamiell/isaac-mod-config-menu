@@ -78,16 +78,22 @@ CustomCallbacks.CCH_MODS_LOADED = 4
 --functionToHandleCallbacks is a function that takes what the mod's callback function has returned
 --return true within the functionToHandleCallbacks callback to cancel all future functions
 --this function returns true if the callbacks were cancelled, otherwise it returns nothing
-function CustomCallbackHelper.CallCallbacks(callbackId, functionToHandleCallbacks, args, ...)
+function CustomCallbackHelper.CallCallbacks(callbackId, functionToHandleCallbacks, args, extraArgs)
 
-	local extraArgs = {...}
+	if type(args) ~= "table" then
+		args = {args}
+	end
+
+	if type(extraArgs) ~= "table" then
+		extraArgs = {extraArgs}
+	end
 
 	if CustomCallbackHelper.Callbacks[callbackId] then
-	
+
 		for _, callbackData in ipairs(CustomCallbackHelper.Callbacks[callbackId]) do
 		
 			local extraVarsMatch = false
-			if not callbackData.extraVariables then
+			if not callbackData.extraVariables or #callbackData.extraVariables == 0 then
 			
 				extraVarsMatch = true
 				

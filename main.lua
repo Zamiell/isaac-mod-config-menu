@@ -21,13 +21,13 @@ mod:AddCustomCallback(CustomCallbacks.SH_PRE_MOD_SAVE, function(_, modRef, saveD
 	local mcmSave = MCM.GetSave()
 	saveData.ModConfigSave = mcmSave
 	
-end, mod)
+end, mod.Name)
 
 mod:AddCustomCallback(CustomCallbacks.SH_POST_MOD_LOAD, function(_, modRef, saveData)
 
 	MCM.LoadSave(saveData.ModConfigSave)
 	
-end, mod)
+end, mod.Name)
 
 --OLD VERSION COMPATIBILITY
 -- require("scripts.modconfigoldcompatibility")
