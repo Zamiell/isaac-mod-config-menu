@@ -1,5 +1,5 @@
 local SaveHelper = {}
-SaveHelper.Version = 4
+SaveHelper.Version = 0
 
 --[[
 

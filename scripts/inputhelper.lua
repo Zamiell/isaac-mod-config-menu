@@ -1,5 +1,5 @@
 local InputHelper = {}
-InputHelper.Version = 1
+InputHelper.Version = 0
 
 --[[
 
