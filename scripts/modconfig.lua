@@ -33,7 +33,9 @@ Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 --load some lua scripts
 local json = require("json")
 
-pcall(require, "scripts.customcallbacks")
+if not CustomCallbackHelper then
+	pcall(require, "scripts.customcallbacks")
+end
 
 local ScreenHelper = require("scripts.screenhelper")
 local SaveHelper = require("scripts.savehelper")
