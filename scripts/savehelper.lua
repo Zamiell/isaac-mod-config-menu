@@ -23,7 +23,7 @@ local SaveHelperMod = RegisterMod("Save Helper", 1)
 --require some lua libraries
 local json = require("json")
 
-pcall(require, "scripts.customcallbacks")
+pcall(require, "scripts/customcallbacks")
 
 
 ----------

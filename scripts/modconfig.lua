@@ -33,13 +33,38 @@ Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 --load some lua scripts
 local json = require("json")
 
-if not CustomCallbackHelper then
-	pcall(require, "scripts.customcallbacks")
+--load filepath helper
+if not FilepathHelper then
+	pcall(require, "scripts.filepathhelper")
 end
 
-local ScreenHelper = require("scripts.screenhelper")
-local SaveHelper = require("scripts.savehelper")
-local InputHelper = require("scripts.inputhelper")
+--load other scripts
+local loadScript
+if FilepathHelper then
+	pcall(dofile, "scripts/filepathhelper")
+	loadScript = dofile
+else
+	loadScript = require
+end
+
+if not CustomCallbackHelper then
+
+	pcall(loadScript, "scripts/customcallbacks")
+	
+end
+
+if not InputHelper then
+
+	pcall(loadScript, "scripts/inputhelper")
+	
+	if not InputHelper then
+		error("Mod Config Menu requires Input Helper to function", 2)
+	end
+	
+end
+
+local ScreenHelper = require("scripts/screenhelper")
+local SaveHelper = require("scripts/savehelper")
 
 --create the mod
 ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
@@ -70,7 +95,7 @@ ModConfigMenu.ConfigDefault = {
 	["Mod Config Menu"] = {
 	
 		OpenMenuKeyboard = Keyboard.KEY_L,
-		OpenMenuController = InputHelper.Controller.STICK_RIGHT,
+		OpenMenuController = Controller.STICK_RIGHT,
 		
 		HideHudInMenu = true,
 		ResetToDefault = Keyboard.KEY_R,
@@ -1747,7 +1772,7 @@ local actionsBack = {ButtonAction.ACTION_PILLCARD, ButtonAction.ACTION_MAP, Butt
 local actionsSelect = {ButtonAction.ACTION_ITEM, ButtonAction.ACTION_PAUSE, ButtonAction.ACTION_MENUCONFIRM, ButtonAction.ACTION_BOMB}
 
 --ignore these buttons for the above actions
-local ignoreActionButtons = {InputHelper.Controller.BUTTON_A, InputHelper.Controller.BUTTON_B, InputHelper.Controller.BUTTON_X, InputHelper.Controller.BUTTON_Y}
+local ignoreActionButtons = {Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y}
 
 local currentMenuCategory = nil
 local currentMenuSubcategory = nil
@@ -2027,9 +2052,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	end
 
 	if revel and revel.data and revel.data.controllerToggle then
-		if openMenuController == InputHelper.Controller.STICK_RIGHT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 3 or revel.data.controllerToggle == 4) then
+		if openMenuController == Controller.STICK_RIGHT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 3 or revel.data.controllerToggle == 4) then
 			revel.data.controllerToggle = 2 --force revelations' menu to only use the left stick
-		elseif openMenuController == InputHelper.Controller.STICK_LEFT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 2 or revel.data.controllerToggle == 4) then
+		elseif openMenuController == Controller.STICK_LEFT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 2 or revel.data.controllerToggle == 4) then
 			revel.data.controllerToggle = 3 --force revelations' menu to only use the right stick
 		end
 	end
@@ -2134,10 +2159,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					pressingButton = "LEFT"
 				end
 			else
-				if InputHelper.MultipleButtonTriggered({InputHelper.Controller.BUTTON_B}) then
+				if InputHelper.MultipleButtonTriggered({Controller.BUTTON_B}) then
 					pressingButton = "BACK"
 				end
-				if InputHelper.MultipleButtonTriggered({InputHelper.Controller.BUTTON_A}) then
+				if InputHelper.MultipleButtonTriggered({Controller.BUTTON_A}) then
 					pressingButton = "SELECT"
 				end
 				pressingNonRebindableKey = true

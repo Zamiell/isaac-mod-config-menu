@@ -1,7 +1,7 @@
 ---------------------
 -- FILEPATH HELPER --
 ---------------------
--- Version 3
+-- Version 4
 -- Created by piber
 
 -- This script creates functions to assist with manipulating and digging through directories and files, exposing some extremely hacky methods as easy to use ready made functions.
@@ -83,7 +83,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 3
+local fileVersion = 4
 
 --prevent older/same version versions of this script from loading
 if FilepathHelper and FilepathHelper.Version >= fileVersion then
@@ -102,7 +102,6 @@ elseif FilepathHelper.Version < fileVersion then
 	local oldVersion = FilepathHelper.Version
 	
 	--handle old versions
-	--nothing yet, cause no old versions yet
 
 	FilepathHelper.Version = fileVersion
 
@@ -219,8 +218,22 @@ function FilepathHelper.DoFile(filename)
 		
 		end
 		
+		--check if the file is missing
+		local cannotOpen = true
+		for _,errorString in ipairs(errors) do
+		
+			if not string.find(errorString, "cannot open")
+			and not string.find(errorString, "no file")
+			and not string.find(errorString, "falling back to require") then
+			
+				cannotOpen = false
+				
+			end
+		
+		end
+	
 		--try using require instead
-		if not fileLoaded then
+		if cannotOpen and not fileLoaded then
 		
 			fileLoaded, returned = pcall(require, filename)
 			

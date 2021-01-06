@@ -20,7 +20,6 @@ if CustomCallbackHelper and CustomCallbackHelper.Version >= fileVersion then
 
 end
 
-local recreateCondensedCallbacks = false
 if not CustomCallbackHelper then
 
 	CustomCallbackHelper = {}

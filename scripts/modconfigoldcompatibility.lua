@@ -7,9 +7,9 @@ if not ModConfigMenu then
 	local mod = RegisterMod("Mod Config Menu Compatibility", 1)
 
 	--require some lua libraries
-	local MCM = require("scripts.modconfig")
-	-- local CallbackHelper = require("scripts.callbackhelper")
-	local InputHelper = require("scripts.inputhelper")
+	local MCM = require("scripts/modconfig")
+	-- local CallbackHelper = require("scripts/callbackhelper")
+	local InputHelper = require("scripts/inputhelper")
 
 	-------------------------
 	--OLD MOD COMPATIBILITY--
@@ -60,7 +60,7 @@ if not ModConfigMenu then
 
 	ModConfigMenu.Config = MCM.Config
 	
-	ModConfigMenuController = InputHelper.Controller
+	ModConfigMenuController = Controller
 	ModConfigMenuKeyboardToString = InputHelper.KeyboardToString
 	ModConfigMenuControllerToString = InputHelper.ControllerToString
 
