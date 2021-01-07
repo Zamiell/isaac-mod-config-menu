@@ -4,17 +4,11 @@
 --create the mod
 local mod = RegisterMod("Mod Config Menu Compatibility", 1)
 
---require some lua libraries
-local MCM = require("scripts/modconfig")
--- local CallbackHelper = require("scripts/callbackhelper")
-local InputHelper = require("scripts/inputhelper")
-
 -------------------------
 --OLD MOD COMPATIBILITY--
 -------------------------
 
-ModConfigMenu = {}
-ModConfigMenu.Version = 13
+ModConfigMenu.CompatibilityMode = true
 
 ModConfigMenu.VECTOR_ZERO = Vector(0,0)
 ModConfigMenu.VECTOR_ONE = Vector(1,1)
@@ -56,52 +50,35 @@ setmetatable(ModConfigMenu, {
 
 })
 
-ModConfigMenu.Config = MCM.Config
+if InputHelper then
 
-ModConfigMenuController = Controller
-ModConfigMenuKeyboardToString = InputHelper.KeyboardToString
-ModConfigMenuControllerToString = InputHelper.ControllerToString
-
-ModConfigMenuPopupGfx = MCM.PopupGfx
-ModConfigMenuOptionType = MCM.OptionType
-
-ModConfigMenuData = MCM.MenuData
-
-ModConfigMenu.SetOldCategoryInfo = function(category)
-	MCM.UpdateCategory(category, {
-		Info = {
-			"This mod adds settings through an older method and may not work right"
-		},
-		IsOld = true
-	})
+	ModConfigMenuController = Controller
+	ModConfigMenuKeyboardToString = InputHelper.KeyboardToString
+	ModConfigMenuControllerToString = InputHelper.ControllerToString
+	
 end
 
-ModConfigMenu.AddSetting = function(category, subcategory, settingTable)
-	ModConfigMenu.SetOldCategoryInfo(category)
-	return MCM.AddSetting(category, subcategory, settingTable)
-end
-ModConfigMenu.AddText = function(category, subcategory, text, color)
-	ModConfigMenu.SetOldCategoryInfo(category)
-	return MCM.AddText(category, subcategory, text, color)
-end
-ModConfigMenu.AddTitle = function(category, subcategory, text, color)
-	ModConfigMenu.SetOldCategoryInfo(category)
-	return MCM.AddTitle(category, subcategory, text, color)
-end
-ModConfigMenu.AddSpace = function(category, subcategory)
-	ModConfigMenu.SetOldCategoryInfo(category)
-	return MCM.AddSpace(category, subcategory)
-end
+ModConfigMenuPopupGfx = ModConfigMenu.PopupGfx
+ModConfigMenuOptionType = ModConfigMenu.OptionType
 
-ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
-	-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
-end
-ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
-	-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
-end
-ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
-	-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
-end
-ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
-	-- CallbackHelper.AddCallback(mod, CallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
+ModConfigMenuData = ModConfigMenu.MenuData
+
+if CallbackHelper then
+
+	ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
+		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
+	end
+	
+	ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
+		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
+	end
+	
+	ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
+		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
+	end
+	
+	ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
+		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
+	end
+	
 end

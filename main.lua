@@ -36,13 +36,13 @@ mod:AddCustomCallback(CustomCallbacks.SH_POST_MOD_LOAD, function(_, modRef, save
 	ModConfigMenu.LoadSave(saveData.ModConfigSave)
 		
 	--OLD VERSION COMPATIBILITY
-	-- if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
-		-- dofile("scripts/modconfigoldcompatibility")
-	-- end
+	if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer and not ModConfigMenu.CompatibilityMode then
+		dofile("scripts/modconfigoldcompatibility")
+	end
 	
 end, mod.Name)
 
 --OLD VERSION COMPATIBILITY
--- if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
-	-- dofile("scripts/modconfigoldcompatibility")
--- end
+if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer and not ModConfigMenu.CompatibilityMode then
+	dofile("scripts/modconfigoldcompatibility")
+end

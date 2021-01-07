@@ -73,7 +73,15 @@ if not ScreenHelper then
 	
 end
 
-local SaveHelper = require("scripts/savehelper")
+if not SaveHelper then
+
+	pcall(loadScript, "scripts/savehelper")
+	
+	if not SaveHelper then
+		error("Mod Config Menu requires Save Helper to function", 2)
+	end
+	
+end
 
 --create the mod
 ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
