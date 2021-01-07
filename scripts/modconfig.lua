@@ -30,6 +30,8 @@ end
 -----------
 Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 
+local vecZero = Vector(0,0)
+
 --load some lua scripts
 local json = require("json")
 
@@ -85,12 +87,6 @@ end
 
 --create the mod
 ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
-
---cached values
-local vecZero = Vector(0,0)
-
-local colorDefault = Color(1,1,1,1,0,0,0)
-local colorHalf = Color(1,1,1,0.5,0,0,0)
 
 
 ----------
@@ -157,7 +153,9 @@ function ModConfigMenu.LoadSave(fromData)
 		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
 		
 		--make sure ScreenHelper's offset matches MCM's offset
-		ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+		if ScreenHelper then
+			ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+		end
 		
 		return saveData
 		
@@ -264,6 +262,10 @@ local PopupSprite = ModConfigMenu.GetMenuAnm2Sprite("Popup", 0)
 local CursorSpriteRight = ModConfigMenu.GetMenuAnm2Sprite("Cursor", 0)
 local CursorSpriteUp = ModConfigMenu.GetMenuAnm2Sprite("Cursor", 1)
 local CursorSpriteDown = ModConfigMenu.GetMenuAnm2Sprite("Cursor", 2)
+
+--colors
+local colorDefault = Color(1,1,1,1,0,0,0)
+local colorHalf = Color(1,1,1,0.5,0,0,0)
 
 --subcategory pane cursors
 local SubcategoryCursorSpriteLeft = ModConfigMenu.GetMenuAnm2Sprite("Cursor", 3, colorHalf)
@@ -895,30 +897,8 @@ local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
 	"How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
 
---set up screen corner display for hud offset
-local HudOffsetVisualTopLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 0)
-local HudOffsetVisualTopRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 1)
-local HudOffsetVisualBottomRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 2)
-local HudOffsetVisualBottomLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 3)
-
 hudOffsetSetting.HideControls = true -- hide controls so the screen corner graphics are easier to see
-
-local oldHudOffsetDisplay = hudOffsetSetting.Display
-hudOffsetSetting.Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-
-	if cursorIsAtThisOption and ScreenHelper then
-	
-		--render the visual
-		HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
-		HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vecZero, vecZero)
-		HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vecZero, vecZero)
-		HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vecZero, vecZero)
-		
-	end
-
-	return oldHudOffsetDisplay(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-	
-end
+hudOffsetSetting.ShowOffset = true -- shows screen offset
 
 --set up callback
 local oldHudOffsetOnChange = hudOffsetSetting.OnChange
@@ -1383,6 +1363,12 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 	return textTableDisplayAfterWordLength
 	
 end
+
+--set up screen corner display for hud offset
+local HudOffsetVisualTopLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 0)
+local HudOffsetVisualTopRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 1)
+local HudOffsetVisualBottomRight = ModConfigMenu.GetMenuAnm2Sprite("Offset", 2)
+local HudOffsetVisualBottomLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 3)
 
 --render the menu
 local leftCurrentOffset = 0
@@ -2648,6 +2634,20 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				lastInfoPos = lastInfoPos + Vector(0,10)
 				
 			end
+			
+		end
+		
+		--hud offset
+		if configMenuInOptions
+		and currentMenuOption
+		and currentMenuOption.ShowOffset
+		and ScreenHelper then
+		
+			--render the visual
+			HudOffsetVisualBottomRight:Render(ScreenHelper.GetScreenBottomRight(), vecZero, vecZero)
+			HudOffsetVisualBottomLeft:Render(ScreenHelper.GetScreenBottomLeft(), vecZero, vecZero)
+			HudOffsetVisualTopRight:Render(ScreenHelper.GetScreenTopRight(), vecZero, vecZero)
+			HudOffsetVisualTopLeft:Render(ScreenHelper.GetScreenTopLeft(), vecZero, vecZero)
 			
 		end
 		
