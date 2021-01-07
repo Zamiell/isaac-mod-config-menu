@@ -1447,12 +1447,17 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		
 	end
 
-	if revel and revel.data and revel.data.controllerToggle then
-		if openMenuController == Controller.STICK_RIGHT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 3 or revel.data.controllerToggle == 4) then
-			revel.data.controllerToggle = 2 --force revelations' menu to only use the left stick
-		elseif openMenuController == Controller.STICK_LEFT and (revel.data.controllerToggle == 1 or revel.data.controllerToggle == 2 or revel.data.controllerToggle == 4) then
-			revel.data.controllerToggle = 3 --force revelations' menu to only use the right stick
+	--replace dead sea scrolls' controller setting to not conflict with mcm's
+	if DeadSeaScrollsMenu then
+	
+		local dssControllerToggle = DeadSeaScrollsMenu.GetGamepadToggleSetting()
+	
+		if openMenuController == Controller.STICK_RIGHT and (dssControllerToggle == 1 or dssControllerToggle == 3 or dssControllerToggle == 4) then
+			DeadSeaScrollsMenu.SaveGamepadToggleSetting(2) --force revelations' menu to only use the left stick
+		elseif openMenuController == Controller.STICK_LEFT and (dssControllerToggle == 1 or dssControllerToggle == 2 or dssControllerToggle == 4) then
+			DeadSeaScrollsMenu.SaveGamepadToggleSetting(3) --force revelations' menu to only use the right stick
 		end
+		
 	end
 	
 	if ModConfigMenu.IsVisible then
