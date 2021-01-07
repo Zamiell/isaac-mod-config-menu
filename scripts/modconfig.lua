@@ -1112,7 +1112,7 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 -----------------
 --COMPATIBILITY--
 -----------------
-ModConfigMenu.AddBooleanSetting(
+local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"CompatibilityLayer", --attribute in table
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].CompatibilityLayer, --default value
@@ -1123,628 +1123,7 @@ ModConfigMenu.AddBooleanSetting(
 	},
 	"Enable this if you have some old mods which only work with old versions of Mod Config Menu.$newlineThere's a chance this will make it work."
 )
-
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this", --display text
-	"l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l l"
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 2", "Yep its a test", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 2", "Yep its a test", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 3", "test 1", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 3", "test 2", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 2", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 3", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 4", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 3", "test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 3", "test 6", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-
-ModConfigMenu.AddText("This is a test 4", "subcat", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 5", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 6", "whee what am i doing this is wacky")
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddBooleanSetting(
-	"This is a test 7", --category
-	"eeee", --attribute in table
-	false, --default value
-	"what is this" --display text
-)
-ModConfigMenu.AddText("This is a test 8", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 9", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 10", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 11", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 12", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 13", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 14", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 15", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 16", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 17", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 18", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 19", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 20", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 21", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 22", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 23", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 24", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 25", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 26", "whee what am i doing this is wacky")
-ModConfigMenu.AddText("This is a test 27", "whee what am i doing this is wacky")
+compatibilitySetting.Restart = true
 
 local configMenuSubcategoriesCanShow = 3
 
@@ -1796,7 +1175,7 @@ function ModConfigMenu.EnterPopup()
 		if currentMenuOption
 		and currentMenuOption.Type
 		and currentMenuOption.Type ~= ModConfigMenu.OptionType.SPACE
-		and currentMenuOption.Popup then
+		and (currentMenuOption.Popup or currentMenuOption.Restart or currentMenuOption.Rerun) then
 			foundValidPopup = true
 		end
 		if foundValidPopup then
@@ -2183,6 +1562,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		local enterPopup = false
 		local leavePopup = false
 		
+		local optionChanged = false
+		local optionRequiresRestart = false
+		local optionRequiresRerun = false
+		
 		local enterOptions = false
 		local leaveOptions = false
 		
@@ -2196,7 +1579,9 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 				local optionCurrent = currentMenuOption.CurrentSetting
 				local optionOnChange = currentMenuOption.OnChange
 
-				if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER or currentMenuOption.OnSelect then
+				if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD
+				or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER
+				or currentMenuOption.OnSelect then
 
 					if not isPaused then
 
@@ -2277,6 +1662,20 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						end
 					end
 				end
+			end
+			
+			if currentMenuOption.Restart or currentMenuOption.Rerun then
+			
+				--confirmed left press
+				if pressingButton == "RIGHT" then
+					leavePopup = true
+				end
+				
+				--confirmed back press
+				if pressingButton == "SELECT" then
+					leavePopup = true
+				end
+				
 			end
 			
 			--confirmed left press
@@ -2364,8 +1763,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							if optionOnChange then
 								optionOnChange(numberToChange)
 							end
+							optionChanged = true
 						elseif type(optionCurrent) == "number" then
 							currentMenuOption.CurrentSetting = numberToChange
+							optionChanged = true
 						end
 						
 						local sound = currentMenuOption.Sound
@@ -2397,8 +1798,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							if optionOnChange then
 								optionOnChange(boolToChange)
 							end
+							optionChanged = true
 						elseif type(optionCurrent) == "boolean" then
 							currentMenuOption.CurrentSetting = boolToChange
+							optionChanged = true
 						end
 						
 						local sound = currentMenuOption.Sound
@@ -2424,8 +1827,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							if optionOnChange then
 								optionOnChange(numberToChange)
 							end
+							optionChanged = true
 						elseif type(optionCurrent) == "number" then
 							currentMenuOption.CurrentSetting = numberToChange
+							optionChanged = true
 						end
 						
 						local sound = currentMenuOption.Sound
@@ -2458,6 +1863,18 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 					elseif currentMenuOption.OnSelect then
 						currentMenuOption.OnSelect()
 					end
+				end
+			end
+			
+			--reset command
+			if optionChanged then
+				if currentMenuOption.Restart then
+					enterPopup = true
+					optionRequiresRestart = true
+				end
+				if currentMenuOption.Rerun then
+					enterPopup = true
+					optionRequiresRerun = true
 				end
 			end
 		elseif configMenuInSubcategory then
@@ -3215,11 +2632,27 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		--popup
 		if configMenuInPopup
 		and currentMenuOption
-		and currentMenuOption.Popup then
+		and (currentMenuOption.Popup or currentMenuOption.Restart or currentMenuOption.Rerun) then
 		
 			PopupSprite:Render(centerPos, vecZero, vecZero)
 			
 			local popupTable = currentMenuOption.Popup
+			
+			if not popupTable then
+			
+				if currentMenuOption.Restart then
+				
+					popupTable = "Restart the game for this setting to take effect"
+				
+				end
+			
+				if currentMenuOption.Rerun then
+				
+					popupTable = "Start a new run for this setting to take effect"
+				
+				end
+				
+			end
 			
 			if popupTable then
 				
