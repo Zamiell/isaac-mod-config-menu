@@ -63,7 +63,16 @@ if not InputHelper then
 	
 end
 
-local ScreenHelper = require("scripts/screenhelper")
+if not ScreenHelper then
+
+	pcall(loadScript, "scripts/screenhelper")
+	
+	if not ScreenHelper then
+		error("Mod Config Menu requires Screen Helper to function", 2)
+	end
+	
+end
+
 local SaveHelper = require("scripts/savehelper")
 
 --create the mod
