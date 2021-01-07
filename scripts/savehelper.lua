@@ -45,10 +45,19 @@ SaveHelper.Mod = SaveHelper.Mod or RegisterMod("Save Helper", 1)
 --require some lua libraries
 local json = require("json")
 
-if FilepathHelper then
-	pcall(dofile, "scripts/customcallbacks")
-else
-	pcall(require, "scripts/customcallbacks")
+--load custom callback helper
+if not CustomCallbackHelper then
+
+	if FilepathHelper then
+		pcall(dofile, "scripts/customcallbacks")
+	else
+		pcall(require, "scripts/customcallbacks")
+	end
+	
+	if not CustomCallbackHelper then
+		error("Save Helper requires Custom Callback Helper to function", 2)
+	end
+	
 end
 
 
