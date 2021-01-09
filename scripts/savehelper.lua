@@ -225,11 +225,13 @@ function SaveHelper.DefaultGameSave(modRef, saveTable)
 	
 	if type(saveTable) == "table" then
 	
-		modRef.SaveHelper_DefaultSaveData = saveTable
+		modRef.SaveHelper_DefaultSaveData = modRef.SaveHelper_DefaultSaveData or saveTable
 		
 		modRef.SaveHelper_DefaultSaveData.Run = modRef.SaveHelper_DefaultSaveData.Run or {}
 		modRef.SaveHelper_DefaultSaveData.Run.Level = modRef.SaveHelper_DefaultSaveData.Run.Level or {}
 		modRef.SaveHelper_DefaultSaveData.Run.Level.Room = modRef.SaveHelper_DefaultSaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_DefaultSaveData, saveTable)
 		
 	end
 	
@@ -243,10 +245,12 @@ function SaveHelper.DefaultRunSave(modRef, saveTable)
 	
 		modRef.SaveHelper_DefaultSaveData = modRef.SaveHelper_DefaultSaveData or {}
 		
-		modRef.SaveHelper_DefaultSaveData.Run = saveTable
+		modRef.SaveHelper_DefaultSaveData.Run = modRef.SaveHelper_DefaultSaveData.Run or saveTable
 		
 		modRef.SaveHelper_DefaultSaveData.Run.Level = modRef.SaveHelper_DefaultSaveData.Run.Level or {}
 		modRef.SaveHelper_DefaultSaveData.Run.Level.Room = modRef.SaveHelper_DefaultSaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_DefaultSaveData.Run, saveTable)
 		
 	end
 	
@@ -261,9 +265,11 @@ function SaveHelper.DefaultLevelSave(modRef, saveTable)
 		modRef.SaveHelper_DefaultSaveData = modRef.SaveHelper_DefaultSaveData or {}
 		modRef.SaveHelper_DefaultSaveData.Run = modRef.SaveHelper_DefaultSaveData.Run or {}
 		
-		modRef.SaveHelper_DefaultSaveData.Run.Level = saveTable
+		modRef.SaveHelper_DefaultSaveData.Run.Level = modRef.SaveHelper_DefaultSaveData.Run.Level or saveTable
 		
 		modRef.SaveHelper_DefaultSaveData.Run.Level.Room = modRef.SaveHelper_DefaultSaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_DefaultSaveData.Run.Level, saveTable)
 		
 	end
 	
@@ -279,7 +285,9 @@ function SaveHelper.DefaultRoomSave(modRef, saveTable)
 		modRef.SaveHelper_DefaultSaveData.Run = modRef.SaveHelper_DefaultSaveData.Run or {}
 		modRef.SaveHelper_DefaultSaveData.Run.Level = modRef.SaveHelper_DefaultSaveData.Run.Level or {}
 		
-		modRef.SaveHelper_DefaultSaveData.Run.Level.Room = saveTable
+		modRef.SaveHelper_DefaultSaveData.Run.Level.Room = modRef.SaveHelper_DefaultSaveData.Run.Level.Room or saveTable
+		
+		SaveHelper.FillTable(modRef.SaveHelper_DefaultSaveData.Run.Level.Room, saveTable)
 		
 	end
 	
@@ -295,11 +303,13 @@ function SaveHelper.GameSave(modRef, saveTable)
 	
 	if type(saveTable) == "table" then
 	
-		modRef.SaveHelper_SaveData = saveTable
+		modRef.SaveHelper_SaveData = modRef.SaveHelper_SaveData or saveTable
 		
 		modRef.SaveHelper_SaveData.Run = modRef.SaveHelper_SaveData.Run or {}
 		modRef.SaveHelper_SaveData.Run.Level = modRef.SaveHelper_SaveData.Run.Level or {}
 		modRef.SaveHelper_SaveData.Run.Level.Room = modRef.SaveHelper_SaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_SaveData, saveTable)
 		
 	end
 	
@@ -313,10 +323,12 @@ function SaveHelper.RunSave(modRef, saveTable)
 		
 		modRef.SaveHelper_SaveData = modRef.SaveHelper_SaveData or {}
 		
-		modRef.SaveHelper_SaveData.Run = saveTable
+		modRef.SaveHelper_SaveData.Run = modRef.SaveHelper_SaveData.Run or saveTable
 		
 		modRef.SaveHelper_SaveData.Run.Level = modRef.SaveHelper_SaveData.Run.Level or {}
 		modRef.SaveHelper_SaveData.Run.Level.Room = modRef.SaveHelper_SaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_SaveData.Run, saveTable)
 		
 	end
 	
@@ -331,9 +343,11 @@ function SaveHelper.LevelSave(modRef, saveTable)
 		modRef.SaveHelper_SaveData = modRef.SaveHelper_SaveData or {}
 		modRef.SaveHelper_SaveData.Run = modRef.SaveHelper_SaveData.Run or {}
 	
-		modRef.SaveHelper_SaveData.Run.Level = saveTable
+		modRef.SaveHelper_SaveData.Run.Level = modRef.SaveHelper_SaveData.Run.Level or saveTable
 		
 		modRef.SaveHelper_SaveData.Run.Level.Room = modRef.SaveHelper_SaveData.Run.Level.Room or {}
+		
+		SaveHelper.FillTable(modRef.SaveHelper_SaveData.Run.Level, saveTable)
 		
 	end
 	
@@ -349,7 +363,9 @@ function SaveHelper.RoomSave(modRef, saveTable)
 		modRef.SaveHelper_SaveData.Run = modRef.SaveHelper_SaveData.Run or {}
 		modRef.SaveHelper_SaveData.Run.Level = modRef.SaveHelper_SaveData.Run.Level or {}
 		
-		modRef.SaveHelper_SaveData.Run.Level.Room = saveTable
+		modRef.SaveHelper_SaveData.Run.Level.Room = modRef.SaveHelper_SaveData.Run.Level.Room or saveTable
+		
+		SaveHelper.FillTable(modRef.SaveHelper_SaveData.Run.Level.Room, saveTable)
 		
 	end
 	
@@ -389,8 +405,7 @@ function SaveHelper.ResetGameSave(modRef)
 		SaveHelper.ResetLevelSave(modRef)
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
-		local resetSave = SaveHelper.GameSave(modRef, defaultSave)
+		modRef.SaveHelper_SaveData = SaveHelper.CopyTable(SaveHelper.DefaultGameSave(modRef))
 		
 		--SH_POST_RESET_GAME
 		CustomCallbackHelper.CallCallbacks
@@ -401,7 +416,7 @@ function SaveHelper.ResetGameSave(modRef)
 			modRef.Name --extra variable
 		)
 		
-		return resetSave
+		return modRef.SaveHelper_SaveData
 		
 	end
 	
@@ -436,8 +451,7 @@ function SaveHelper.ResetRunSave(modRef)
 		SaveHelper.ResetLevelSave(modRef)
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
-		local resetSave = SaveHelper.RunSave(modRef, defaultSave)
+		modRef.SaveHelper_SaveData.Run = SaveHelper.CopyTable(SaveHelper.DefaultRunSave(modRef))
 		
 		--SH_POST_RESET_RUN
 		CustomCallbackHelper.CallCallbacks
@@ -448,7 +462,7 @@ function SaveHelper.ResetRunSave(modRef)
 			modRef.Name --extra variable
 		)
 		
-		return resetSave
+		return modRef.SaveHelper_SaveData.Run
 		
 	end
 	
@@ -482,8 +496,7 @@ function SaveHelper.ResetLevelSave(modRef)
 	
 		SaveHelper.ResetRoomSave(modRef)
 	
-		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
-		local resetSave = SaveHelper.LevelSave(modRef, defaultSave)
+		modRef.SaveHelper_SaveData.Run.Level = SaveHelper.CopyTable(SaveHelper.DefaultLevelSave(modRef))
 		
 		--SH_POST_RESET_LEVEL
 		CustomCallbackHelper.CallCallbacks
@@ -494,7 +507,7 @@ function SaveHelper.ResetLevelSave(modRef)
 			modRef.Name --extra variable
 		)
 		
-		return resetSave
+		return modRef.SaveHelper_SaveData.Run.Level
 		
 	end
 	
@@ -526,8 +539,7 @@ function SaveHelper.ResetRoomSave(modRef)
 	
 	if doReset then
 	
-		local defaultSave = SaveHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
-		local resetSave = SaveHelper.RoomSave(modRef, defaultSave)
+		modRef.SaveHelper_SaveData.Run.Level.Room = SaveHelper.CopyTable(SaveHelper.DefaultRoomSave(modRef))
 		
 		--SH_POST_RESET_ROOM
 		CustomCallbackHelper.CallCallbacks
@@ -538,7 +550,7 @@ function SaveHelper.ResetRoomSave(modRef)
 			modRef.Name --extra variable
 		)
 		
-		return resetSave
+		return modRef.SaveHelper_SaveData.Run.Level.Room
 		
 	end
 	
