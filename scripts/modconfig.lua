@@ -20,6 +20,41 @@ elseif ModConfigMenu.Version < fileVersion then
 	local oldVersion = ModConfigMenu.Version
 	
 	--handle old versions
+	if ModConfigMenu.MenuData then
+	
+		for i=#ModConfigMenu.MenuData, 1, -1 do
+		
+			if ModConfigMenu.MenuData[i].Name == "General" or ModConfigMenu.MenuData[i].Name == "Mod Config Menu" then
+				ModConfigMenu.MenuData[i] = nil
+			end
+			
+		end
+		
+	end
+	
+	if ModConfigMenu.PostGameStarted then
+		if ModConfigMenu.Mod.AddCustomCallback then
+			ModConfigMenu.Mod:RemoveCustomCallback(CustomCallbacks.CCH_GAME_STARTED, ModConfigMenu.PostGameStarted)
+		else
+			ModConfigMenu.Mod.RemoveCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.PostGameStarted)
+		end
+	end
+	
+	if ModConfigMenu.PostUpdate then
+		ModConfigMenu.Mod:RemoveCallback(ModCallbacks.MC_POST_UPDATE, ModConfigMenu.PostUpdate)
+	end
+	
+	if ModConfigMenu.PostRender then
+		ModConfigMenu.Mod:RemoveCallback(ModCallbacks.MC_POST_RENDER, ModConfigMenu.PostRender)
+	end
+	
+	if ModConfigMenu.InputAction then
+		ModConfigMenu.Mod:RemoveCallback(ModCallbacks.MC_INPUT_ACTION, ModConfigMenu.InputAction)
+	end
+	
+	if ModConfigMenu.ExecuteCmd then
+		ModConfigMenu.Mod:RemoveCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
+	end
 
 	ModConfigMenu.Version = fileVersion
 
@@ -86,14 +121,15 @@ if not SaveHelper then
 end
 
 --create the mod
-ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
+ModConfigMenu.Mod = ModConfigMenu.Mod or RegisterMod("Mod Config Menu", 1)
 
 
 ----------
 --SAVING--
 ----------
 
-ModConfigMenu.ConfigDefault = {
+ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
+SaveHelper.FillTable(ModConfigMenu.ConfigDefault,{
 
 	["General"] = {
 	
@@ -122,8 +158,9 @@ ModConfigMenu.ConfigDefault = {
 	LastBackPressed = Keyboard.KEY_ESCAPE,
 	LastSelectPressed = Keyboard.KEY_ENTER
 	
-}
-ModConfigMenu.Config = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+})
+ModConfigMenu.Config = ModConfigMenu.Config or {}
+SaveHelper.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
 function ModConfigMenu.GetSave()
 	
@@ -164,42 +201,74 @@ function ModConfigMenu.LoadSave(fromData)
 end
 
 
----------------------------
---startup version display--
----------------------------
-
+--------------
+--game start--
+--------------
 local versionPrintFont = Font()
 versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
 
-if ModConfigMenu.Mod.AddCustomCallback then
+--returns true if the room is clear and there are no active enemies and there are no projectiles
+ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
+function ModConfigMenu.RoomIsSafe()
 
-	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
-
-		if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
-		
-			versionPrintTimer = 120
-			
-		end
-		
-	end)
+	local roomHasDanger = false
 	
-else
-
-	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, player, isSaveGame)
-
-		if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
-		
-			versionPrintTimer = 120
-			
+	for _, entity in pairs(Isaac.GetRoomEntities()) do
+		if entity:IsActiveEnemy() and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+		and (not ModConfigMenu.IgnoreActiveEnemies[entity.Type] or (ModConfigMenu.IgnoreActiveEnemies[entity.Type] and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][-1] and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][entity.Variant])) then
+			roomHasDanger = true
+		elseif entity.Type == EntityType.ENTITY_PROJECTILE and entity:ToProjectile().ProjectileFlags & ProjectileFlags.CANT_HIT_PLAYER ~= 1 then
+			roomHasDanger = true
+		elseif entity.Type == EntityType.ENTITY_BOMBDROP then
+			roomHasDanger = true
 		end
-		
-	end)
+	end
+	
+	local game = Game()
+	local room = game:GetRoom()
+	
+	if room:IsClear() and not roomHasDanger then
+		return true
+	end
+	
+	return false
 	
 end
 
-ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
+ModConfigMenu.IsVisible = false
+function ModConfigMenu.PostGameStarted()
+
+	if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
+	
+		versionPrintTimer = 120
+		
+	end
+	
+	ModConfigMenu.IsVisible = false
+	
+	--add potato dummy to ignore list
+	local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
+	local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
+	
+	if potatoType and potatoType > 0 then
+		ModConfigMenu.IgnoreActiveEnemies[potatoType] = ModConfigMenu.IgnoreActiveEnemies or {}
+		ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
+	end
+	
+end
+if ModConfigMenu.Mod.AddCustomCallback then
+	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, ModConfigMenu.PostGameStarted)
+else
+	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.PostGameStarted)
+end
+
+
+---------------
+--post update--
+---------------
+function ModConfigMenu.PostUpdate()
 
 	if versionPrintTimer > 0 then
 	
@@ -207,37 +276,13 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, function()
 		
 	end
 	
-end)
+end
+ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, ModConfigMenu.PostUpdate)
 
-ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
-
-	if versionPrintTimer > 0 then
-	
-		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
-
-		local openMenuButton = Keyboard.KEY_F10
-		if type(ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard) == "number" and ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard > -1 then
-			openMenuButton = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard
-		end
-
-		local openMenuButtonString = "Unknown Key"
-		if InputHelper.KeyboardToString[openMenuButton] then
-			openMenuButtonString = InputHelper.KeyboardToString[openMenuButton]
-		end
-		
-		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
-		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
-		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
-		
-	end
-	
-end)
 
 ------------------------------------
 --set up the menu sprites and font--
 ------------------------------------
-ModConfigMenu.IsVisible = false
-
 function ModConfigMenu.GetMenuAnm2Sprite(animation, frame, color)
 
 	local sprite = Sprite()
@@ -299,31 +344,29 @@ local Font16Bold = Font()
 Font16Bold:Load("font/teammeatfont16bold.fnt")
 
 --popups
-ModConfigMenu.PopupGfx = {
-	THIN_SMALL = "gfx/ui/modconfig/popup_thin_small.png",
-	THIN_MEDIUM = "gfx/ui/modconfig/popup_thin_medium.png",
-	THIN_LARGE = "gfx/ui/modconfig/popup_thin_large.png",
-	WIDE_SMALL = "gfx/ui/modconfig/popup_wide_small.png",
-	WIDE_MEDIUM = "gfx/ui/modconfig/popup_wide_medium.png",
-	WIDE_LARGE = "gfx/ui/modconfig/popup_wide_large.png"
-}
+ModConfigMenu.PopupGfx = ModConfigMenu.PopupGfx or {}
+ModConfigMenu.PopupGfx.THIN_SMALL = "gfx/ui/modconfig/popup_thin_small.png"
+ModConfigMenu.PopupGfx.THIN_MEDIUM = "gfx/ui/modconfig/popup_thin_medium.png"
+ModConfigMenu.PopupGfx.THIN_LARGE = "gfx/ui/modconfig/popup_thin_large.png"
+ModConfigMenu.PopupGfx.WIDE_SMALL = "gfx/ui/modconfig/popup_wide_small.png"
+ModConfigMenu.PopupGfx.WIDE_MEDIUM = "gfx/ui/modconfig/popup_wide_medium.png"
+ModConfigMenu.PopupGfx.WIDE_LARGE = "gfx/ui/modconfig/popup_wide_large.png"
 
 
 -------------------------
 --add setting functions--
 -------------------------
-ModConfigMenu.OptionType = {
-	TEXT = 1,
-	SPACE = 2,
-	SCROLL = 3,
-	BOOLEAN = 4,
-	NUMBER = 5,
-	KEYBIND_KEYBOARD = 6,
-	KEYBIND_CONTROLLER = 7,
-	TITLE = 8
-}
+ModConfigMenu.OptionType = ModConfigMenu.OptionType or {}
+ModConfigMenu.OptionType.TEXT = 1
+ModConfigMenu.OptionType.SPACE = 2
+ModConfigMenu.OptionType.SCROLL = 3
+ModConfigMenu.OptionType.BOOLEAN = 4
+ModConfigMenu.OptionType.NUMBER = 5
+ModConfigMenu.OptionType.KEYBIND_KEYBOARD = 6
+ModConfigMenu.OptionType.KEYBIND_CONTROLLER = 7
+ModConfigMenu.OptionType.TITLE = 8
 
-ModConfigMenu.MenuData = {}
+ModConfigMenu.MenuData = ModConfigMenu.MenuData or {}
 
 function ModConfigMenu.GetCategoryIDByName(name)
 
@@ -523,6 +566,7 @@ function ModConfigMenu.AddSpace(categoryName, subcategoryName)
 end
 
 --need to check if display device works and add functionality to it
+local altSlider = false
 function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, displayDevice, info, color, functionName)
 	
 	--set default values
@@ -665,6 +709,11 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 		settingTable.Minimum = minValue
 		settingTable.Maximum = maxValue
 		settingTable.ModifyBy = modifyBy
+		
+	elseif settingType == ModConfigMenu.OptionType.SCROLL then
+
+		settingTable.AltSlider = altSlider
+		altSlider = not altSlider
 		
 	elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
 		
@@ -1374,7 +1423,7 @@ local HudOffsetVisualBottomLeft = ModConfigMenu.GetMenuAnm2Sprite("Offset", 3)
 local leftCurrentOffset = 0
 local optionsCurrentOffset = 0
 ModConfigMenu.ControlsEnabled = true
-ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
+function ModConfigMenu.PostRender()
 
 	local game = Game()
 	local isPaused = game:IsPaused()
@@ -1392,6 +1441,28 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 	
 	local takeScreenshot = Keyboard.KEY_F12
 
+	--handle version display on game start
+	if versionPrintTimer > 0 then
+	
+		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
+
+		local openMenuButton = Keyboard.KEY_F10
+		if type(ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard) == "number" and ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard > -1 then
+			openMenuButton = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard
+		end
+
+		local openMenuButtonString = "Unknown Key"
+		if InputHelper.KeyboardToString[openMenuButton] then
+			openMenuButtonString = InputHelper.KeyboardToString[openMenuButton]
+		end
+		
+		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
+		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
+		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
+		
+	end
+
+	--handle toggling the menu
 	if ModConfigMenu.ControlsEnabled and not isPaused then
 	
 		for i=0, 4 do
@@ -2401,8 +2472,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		and currentMenuSubcategory.Options
 		and #currentMenuSubcategory.Options > 0 then
 		
-			local useAltSlider = false
-		
 			for optionIndex=1, #currentMenuSubcategory.Options do
 				
 				local thisOption = currentMenuSubcategory.Options[optionIndex]
@@ -2419,6 +2488,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 						local optionType = thisOption.Type
 						local optionDisplay = thisOption.Display
 						local optionColor = thisOption.Color
+		
+						local useAltSlider = thisOption.AltSlider
 						
 						--get what to draw
 						if optionType == ModConfigMenu.OptionType.TEXT
@@ -2525,8 +2596,6 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 							SliderSprite.Color = scrollColor
 							SliderSprite:SetFrame(sliderString, numberToShow)
 							SliderSprite:Render(lastOptionPos - Vector(scrollOffset, -2), vecZero, vecZero)
-							
-							useAltSlider = not useAltSlider
 							
 						end
 						
@@ -2793,25 +2862,8 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
 		optionsCurrentOffset = 0
 		
 	end
-end)
-
-if ModConfigMenu.Mod.AddCustomCallback then
-
-	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
-	
-		ModConfigMenu.IsVisible = false
-		
-	end)
-	
-else
-
-	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function(_, player, isSaveGame)
-	
-		ModConfigMenu.IsVisible = false
-		
-	end)
-	
 end
+ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, ModConfigMenu.PostRender)
 
 function ModConfigMenu.OpenConfigMenu()
 
@@ -2859,66 +2911,20 @@ function ModConfigMenu.ToggleConfigMenu()
 	end
 end
 
---prevents the pause menu from opening when in the mod config menu
-ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
+function ModConfigMenu.InputAction(_, entity, inputHook, buttonAction)
+
 	if ModConfigMenu.IsVisible and buttonAction ~= ButtonAction.ACTION_FULLSCREEN and buttonAction ~= ButtonAction.ACTION_CONSOLE then
+	
 		if inputHook == InputHook.IS_ACTION_PRESSED or inputHook == InputHook.IS_ACTION_TRIGGERED then 
 			return false
 		else
 			return 0
 		end
+		
 	end
-end)
-
---returns true if the room is clear and there are no active enemies and there are no projectiles
-ModConfigMenu.IgnoreActiveEnemies = {}
-function ModConfigMenu.RoomIsSafe()
-
-	local roomHasDanger = false
-	
-	for _, entity in pairs(Isaac.GetRoomEntities()) do
-		if entity:IsActiveEnemy() and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
-		and (not ModConfigMenu.IgnoreActiveEnemies[entity.Type] or (ModConfigMenu.IgnoreActiveEnemies[entity.Type] and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][-1] and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][entity.Variant])) then
-			roomHasDanger = true
-		elseif entity.Type == EntityType.ENTITY_PROJECTILE and entity:ToProjectile().ProjectileFlags & ProjectileFlags.CANT_HIT_PLAYER ~= 1 then
-			roomHasDanger = true
-		elseif entity.Type == EntityType.ENTITY_BOMBDROP then
-			roomHasDanger = true
-		end
-	end
-	
-	local game = Game()
-	local room = game:GetRoom()
-	
-	if room:IsClear() and not roomHasDanger then
-		return true
-	end
-	
-	return false
 	
 end
-
-function ModConfigMenu.CheckForPotato()
-
-	local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
-	local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
-	
-	if potatoType and potatoType > 0 then
-		ModConfigMenu.IgnoreActiveEnemies[potatoType] = ModConfigMenu.IgnoreActiveEnemies or {}
-		ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
-	end
-
-end
-
-if ModConfigMenu.Mod.AddCustomCallback then
-
-	ModConfigMenu.Mod:AddCustomCallback(CustomCallbacks.CCH_MODS_LOADED, ModConfigMenu.CheckForPotato)
-	
-else
-
-	ModConfigMenu.Mod.AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.CheckForPotato)
-	
-end
+ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, ModConfigMenu.InputAction)
 
 --console commands that toggle the menu
 local toggleCommands = {
@@ -2927,12 +2933,18 @@ local toggleCommands = {
 	["mcm"] = true,
 	["mc"] = true
 }
-ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, function(_, command, args)
+function ModConfigMenu.ExecuteCmd(_, command, args)
+
 	command = command:lower()
+	
 	if toggleCommands[command] then
+	
 		ModConfigMenu.ToggleConfigMenu()
+		
 	end
-end)
+	
+end
+ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
 
 
 ------------
