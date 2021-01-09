@@ -4,10 +4,9 @@
 require("scripts/filepathhelper")
 dofile("scripts/filepathhelper")
 
+--load some scripts
 dofile("scripts/customcallbacks")
-
---require some lua libraries
-local SaveHelper = require("scripts.savehelper")
+dofile("scripts/savehelper")
 
 --create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
@@ -42,7 +41,4 @@ mod:AddCustomCallback(CustomCallbacks.SH_POST_MOD_LOAD, function(_, modRef, save
 	
 end, mod.Name)
 
---OLD VERSION COMPATIBILITY
-if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer and not ModConfigMenu.CompatibilityMode then
-	dofile("scripts/modconfigoldcompatibility")
-end
+SaveHelper.Load(mod)
