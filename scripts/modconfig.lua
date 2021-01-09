@@ -2904,7 +2904,7 @@ function ModConfigMenu.CheckForPotato()
 	local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
 	
 	if potatoType and potatoType > 0 then
-		ModConfigMenu.IgnoreActiveEnemies[potatoType] = {}
+		ModConfigMenu.IgnoreActiveEnemies[potatoType] = ModConfigMenu.IgnoreActiveEnemies or {}
 		ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
 	end
 
