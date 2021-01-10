@@ -1,8 +1,4 @@
 --this script adds globals to the global table that redirect into mod config menu functions, to add support for older mods that made use of these.
---temporary, this script may be removed or disabled in the future.
-
---create the mod
-local mod = RegisterMod("Mod Config Menu Compatibility", 1)
 
 -------------------------
 --OLD MOD COMPATIBILITY--
@@ -63,22 +59,18 @@ ModConfigMenuOptionType = ModConfigMenu.OptionType
 
 ModConfigMenuData = ModConfigMenu.MenuData
 
-if CallbackHelper then
+ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
+	print("ModConfigMenu.AddHudOffsetChangeCallback doesn't work anymore.")
+end
 
-	ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
-		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_HUD_OFFSET, functionToAdd)
-	end
-	
-	ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
-		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_OVERLAYS, functionToAdd)
-	end
-	
-	ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
-		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_CHARGE_BARS, functionToAdd)
-	end
-	
-	ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
-		-- ModConfigMenu.Mod.AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_BIG_BOOKS, functionToAdd)
-	end
-	
+ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
+	print("ModConfigMenu.AddOverlayChangeCallback doesn't work anymore.")
+end
+
+ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
+	print("ModConfigMenu.AddChargeBarChangeCallback doesn't work anymore.")
+end
+
+ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
+	print("ModConfigMenu.AddBigBookChangeCallback doesn't work anymore.")
 end
