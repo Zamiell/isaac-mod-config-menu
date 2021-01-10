@@ -59,12 +59,6 @@ elseif SaveHelper.Version < fileVersion then
 end
 
 
------------
--- setup --
------------
-SaveHelper.Mod = SaveHelper.Mod or RegisterMod("Save Helper", 1)
-
-
 --require some lua libraries
 local json = require("json")
 
@@ -82,6 +76,12 @@ if not CustomCallbackHelper then
 	end
 	
 end
+
+
+-----------
+-- setup --
+-----------
+SaveHelper.Mod = SaveHelper.Mod or RegisterMod("Save Helper", 1)
 
 
 ----------
