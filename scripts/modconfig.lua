@@ -2235,18 +2235,24 @@ function ModConfigMenu.PostRender()
 			
 			numOptions = #currentMenuSubcategory.Options
 		
+			local hasSubcategories = false
 			if currentMenuCategory.Subcategories then
 				for j=1, #currentMenuCategory.Subcategories do
 					if currentMenuCategory.Subcategories[j].Name ~= "Uncategorized" then
 						numOptions = numOptions + 2
+						hasSubcategories = true
 						break
 					end
 				end
 			end
 			
-			optionPos = optionPos + Vector(0, math.min(numOptions-1, 10) * -7)
+			if hasSubcategories then
+				optionPos = optionPos + Vector(0, -70)
+			else
+				optionPos = optionPos + Vector(0, math.min(numOptions-1, 10) * -7)
+			end
 			
-			if numOptions > 11 then
+			if numOptions > 12 then
 			
 				if configMenuPositionCursorOption > 6 and configMenuInOptions then
 				
