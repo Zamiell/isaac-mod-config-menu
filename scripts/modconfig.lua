@@ -128,6 +128,50 @@ ModConfigMenu.Mod = ModConfigMenu.Mod or RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
+local fakeConfigDefaultToReturn = {
+	HudOffset = function() return ModConfigMenu.ConfigDefault["General"].HudOffset end,
+	Overlays = function() return ModConfigMenu.ConfigDefault["General"].Overlays end,
+	ChargeBars = function() return ModConfigMenu.ConfigDefault["General"].ChargeBars end,
+	BigBooks = function() return ModConfigMenu.ConfigDefault["General"].BigBooks end,
+}
+local fakeConfigToReturn = {
+	HudOffset = function() return ModConfigMenu.Config["General"].HudOffset end,
+	Overlays = function() return ModConfigMenu.Config["General"].Overlays end,
+	ChargeBars = function() return ModConfigMenu.Config["General"].ChargeBars end,
+	BigBooks = function() return ModConfigMenu.Config["General"].BigBooks end,
+}
+function ModConfigMenu.SetConfigMetatables()
+
+	setmetatable(ModConfigMenu.ConfigDefault, {
+
+		__index = function(this, key)
+
+			if fakeConfigDefaultToReturn[key] then
+			
+				return fakeConfigDefaultToReturn[key]()
+				
+			end
+
+		end
+
+	})
+
+	setmetatable(ModConfigMenu.Config, {
+
+		__index = function(this, key)
+
+			if fakeConfigToReturn[key] then
+			
+				return fakeConfigToReturn[key]()
+				
+			end
+
+		end
+
+	})
+	
+end
+
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
 SaveHelper.FillTable(ModConfigMenu.ConfigDefault,{
 
@@ -162,6 +206,8 @@ SaveHelper.FillTable(ModConfigMenu.ConfigDefault,{
 ModConfigMenu.Config = ModConfigMenu.Config or {}
 SaveHelper.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
+ModConfigMenu.SetConfigMetatables()
+
 function ModConfigMenu.GetSave()
 	
 	local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
@@ -188,6 +234,7 @@ function ModConfigMenu.LoadSave(fromData)
 		saveData = SaveHelper.FillTable(currentData, saveData)
 		
 		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
+		ModConfigMenu.SetConfigMetatables()
 		
 		--make sure ScreenHelper's offset matches MCM's offset
 		if ScreenHelper then
@@ -2975,48 +3022,6 @@ function ModConfigMenu.ExecuteCmd(_, command, args)
 	
 end
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
-
-
---fake config values
-local fakeConfigDefaultToReturn = {
-	HudOffset = function() return ModConfigMenu.ConfigDefault["General"].HudOffset end,
-	Overlays = function() return ModConfigMenu.ConfigDefault["General"].Overlays end,
-	ChargeBars = function() return ModConfigMenu.ConfigDefault["General"].ChargeBars end,
-	BigBooks = function() return ModConfigMenu.ConfigDefault["General"].BigBooks end,
-}
-setmetatable(ModConfigMenu.ConfigDefault, {
-
-	__index = function(this, key)
-
-		if fakeConfigDefaultToReturn[key] then
-		
-			return fakeConfigDefaultToReturn[key]()
-			
-		end
-
-	end
-
-})
-
-local fakeConfigToReturn = {
-	HudOffset = function() return ModConfigMenu.Config["General"].HudOffset end,
-	Overlays = function() return ModConfigMenu.Config["General"].Overlays end,
-	ChargeBars = function() return ModConfigMenu.Config["General"].ChargeBars end,
-	BigBooks = function() return ModConfigMenu.Config["General"].BigBooks end,
-}
-setmetatable(ModConfigMenu.Config, {
-
-	__index = function(this, key)
-
-		if fakeConfigToReturn[key] then
-		
-			return fakeConfigToReturn[key]()
-			
-		end
-
-	end
-
-})
 
 
 ------------
