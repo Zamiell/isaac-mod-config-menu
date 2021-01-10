@@ -240,6 +240,8 @@ end
 ModConfigMenu.IsVisible = false
 function ModConfigMenu.PostGameStarted()
 
+	rerunWarnMessage = nil
+
 	if ModConfigMenu.Config["Mod Config Menu"].ShowControls then
 	
 		versionPrintTimer = 120
@@ -1285,9 +1287,27 @@ function ModConfigMenu.EnterSubcategory()
 	end
 end
 
+local restartWarnMessage = nil
+local rerunWarnMessage = nil
 function ModConfigMenu.LeavePopup()
 	if configMenuInSubcategory and configMenuInOptions and configMenuInPopup then
+		
+		if currentMenuOption then
+		
+			if currentMenuOption.Restart then
+			
+				restartWarnMessage = "One or more settings require you to restart the game"
+			
+			elseif currentMenuOption.Rerun then
+			
+				rerunWarnMessage = "One or more settings require you to start a new run"
+				
+			end
+			
+		end
+	
 		configMenuInPopup = false
+		
 	end
 end
 
@@ -1459,6 +1479,17 @@ function ModConfigMenu.PostRender()
 		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
 		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
 		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
+		
+	end
+	
+	--on-screen warnings
+	if restartWarnMessage or rerunWarnMessage then
+	
+		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
+	
+		local text = restartWarnMessage or rerunWarnMessage
+		local warningPrintColor = KColor(1, 0, 0, 1)
+		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, warningPrintColor, bottomRight.X, true)
 		
 	end
 
@@ -1642,8 +1673,6 @@ function ModConfigMenu.PostRender()
 		local leavePopup = false
 		
 		local optionChanged = false
-		local optionRequiresRestart = false
-		local optionRequiresRerun = false
 		
 		local enterOptions = false
 		local leaveOptions = false
@@ -1947,13 +1976,8 @@ function ModConfigMenu.PostRender()
 			
 			--reset command
 			if optionChanged then
-				if currentMenuOption.Restart then
+				if currentMenuOption.Restart or currentMenuOption.Rerun then
 					enterPopup = true
-					optionRequiresRestart = true
-				end
-				if currentMenuOption.Rerun then
-					enterPopup = true
-					optionRequiresRerun = true
 				end
 			end
 		elseif configMenuInSubcategory then
