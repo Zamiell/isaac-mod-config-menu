@@ -23,11 +23,13 @@ Both control sticks and the dpad can be used to move around, press B to go back,
 By default you can open the menu by pressing down the right control stick.
 
 
-[h1]Mirrors[/h1]
 
-Modding of Isaac: https://moddingofisaac.com/mod/3585/mod-config-menu
-Google Drive: https://drive.google.com/file/d/1sfd92dYr2IEFSN_3QMxFdwvsjsDDHZGZ/view</description>
-    <version>1.24</version>
+Join my discord server!
+https://discord.com/invite/uJEFFdb
+
+Support me on patreon!
+https://www.patreon.com/piber20</description>
+    <version>1.25</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
