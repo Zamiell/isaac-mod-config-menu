@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 0
+local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if InputHelper and InputHelper.Version >= fileVersion then
@@ -30,6 +30,9 @@ elseif InputHelper.Version < fileVersion then
 	local oldVersion = InputHelper.Version
 	
 	-- handle old versions
+	if InputHelper.HandleForceActionPressed then
+		InputHelper.Mod:RemoveCallback(ModCallbacks.MC_INPUT_ACTION, InputHelper.HandleForceActionPressed)
+	end
 
 	InputHelper.Version = fileVersion
 
@@ -45,30 +48,29 @@ InputHelper.Mod = InputHelper.Mod or RegisterMod("Input Helper", 1)
 ---------
 --enums--
 ---------
-Controller = Controller or {
-	DPAD_LEFT = 0,
-	DPAD_RIGHT = 1,
-	DPAD_UP = 2,
-	DPAD_DOWN = 3,
-	BUTTON_A = 4,
-	BUTTON_B = 5,
-	BUTTON_X = 6,
-	BUTTON_Y = 7,
-	BUMPER_LEFT = 8,
-	TRIGGER_LEFT = 9,
-	STICK_LEFT = 10,
-	BUMPER_RIGHT = 11,
-	TRIGGER_RIGHT = 12,
-	STICK_RIGHT = 13,
-	BUTTON_BACK = 14,
-	BUTTON_START = 15
-}
+Controller = Controller or {}
+Controller.DPAD_LEFT = 0
+Controller.DPAD_RIGHT = 1
+Controller.DPAD_UP = 2
+Controller.DPAD_DOWN = 3
+Controller.BUTTON_A = 4
+Controller.BUTTON_B = 5
+Controller.BUTTON_X = 6
+Controller.BUTTON_Y = 7
+Controller.BUMPER_LEFT = 8
+Controller.TRIGGER_LEFT = 9
+Controller.STICK_LEFT = 10
+Controller.BUMPER_RIGHT = 11
+Controller.TRIGGER_RIGHT = 12
+Controller.STICK_RIGHT = 13
+Controller.BUTTON_BACK = 14
+Controller.BUTTON_START = 15
 
 
 ----------------
 --id to string--
 ----------------
-InputHelper.KeyboardToString = {}
+InputHelper.KeyboardToString = InputHelper.KeyboardToString or {}
 
 for key,num in pairs(Keyboard) do
 
@@ -83,7 +85,7 @@ for key,num in pairs(Keyboard) do
 	
 end
 
-InputHelper.ControllerToString = {}
+InputHelper.ControllerToString = InputHelper.ControllerToString or {}
 
 for button,num in pairs(Controller) do
 	local buttonString = button
@@ -311,7 +313,7 @@ function InputHelper.ForceActionPressed(controllerIndex, buttonAction, value, ti
 	
 end
 
-InputHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, inputHook, buttonAction)
+function InputHelper.HandleForceActionPressed(_, entity, inputHook, buttonAction)
 
 	if entity and entity:ToPlayer() then
 	
@@ -348,7 +350,8 @@ InputHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function(_, entity, in
 		
 	end
 	
-end)
+end
+InputHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, InputHelper.HandleForceActionPressed)
 
 
 return InputHelper

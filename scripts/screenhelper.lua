@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 0
+local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if ScreenHelper and ScreenHelper.Version >= fileVersion then
@@ -39,13 +39,13 @@ end
 ---------------------
 --hud offset helper--
 ---------------------
-local ScreenOffset = 0
+ScreenHelper.CurrentScreenOffset = ScreenHelper.CurrentScreenOffset or 0
 
 function ScreenHelper.SetOffset(num)
 
 	num = math.min(math.max(math.floor(num),0),10)
 
-	ScreenOffset = num
+	ScreenHelper.CurrentScreenOffset = num
 	
 	return num
 
@@ -53,7 +53,7 @@ end
 
 function ScreenHelper.GetOffset()
 
-	return ScreenOffset
+	return ScreenHelper.CurrentScreenOffset
 
 end
 

@@ -33,7 +33,7 @@ elseif ModConfigMenu.Version < fileVersion then
 	end
 	
 	if ModConfigMenu.PostGameStarted then
-		if ModConfigMenu.Mod.AddCustomCallback then
+		if ModConfigMenu.Mod.RemoveCustomCallback then
 			ModConfigMenu.Mod:RemoveCustomCallback(CustomCallbacks.CCH_GAME_STARTED, ModConfigMenu.PostGameStarted)
 		else
 			ModConfigMenu.Mod.RemoveCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.PostGameStarted)

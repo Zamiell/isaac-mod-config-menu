@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 0
+local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if SaveHelper and SaveHelper.Version >= fileVersion then
@@ -30,6 +30,29 @@ elseif SaveHelper.Version < fileVersion then
 	local oldVersion = SaveHelper.Version
 	
 	-- handle old versions
+	if SaveHelper.Mod.RemoveCustomCallback then
+	
+		if SaveHelper.OnModsLoaded then
+			SaveHelper.Mod:RemoveCustomCallback(CustomCallbacks.CCH_MODS_LOADED, SaveHelper.OnModsLoaded)
+		end
+	
+		if SaveHelper.OnGameStarted then
+			SaveHelper.Mod:RemoveCustomCallback(CustomCallbacks.CCH_GAME_STARTED, SaveHelper.OnGameStarted)
+		end
+		
+	end
+	
+	if SaveHelper.PostNewLevel then
+		SaveHelper.Mod:RemoveCallback(ModCallbacks.MC_POST_NEW_LEVEL, SaveHelper.PostNewLevel)
+	end
+	
+	if SaveHelper.PostNewRoom then
+		SaveHelper.Mod:RemoveCallback(ModCallbacks.MC_POST_NEW_ROOM, SaveHelper.PostNewRoom)
+	end
+	
+	if SaveHelper.PreGameExit then
+		SaveHelper.Mod:RemoveCallback(ModCallbacks.MC_PRE_GAME_EXIT, SaveHelper.PreGameExit)
+	end
 
 	SaveHelper.Version = fileVersion
 
@@ -656,7 +679,7 @@ end
 
 local skipNextLevelClear = false
 local skipNextRoomClear = false
-SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_MODS_LOADED, function()
+function SaveHelper.OnModsLoaded()
 	
 	for _, modRef in ipairs(SaveHelper.ModsToSave) do
 
@@ -664,9 +687,10 @@ SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_MODS_LOADED, function()
 	
 	end
 
-end)
+end
+SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_MODS_LOADED, SaveHelper.OnModsLoaded)
 
-SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, player, isSaveGame)
+function SaveHelper.OnGameStarted(_, player, isSaveGame)
 
 	skipNextLevelClear = true
 	skipNextRoomClear = true
@@ -684,9 +708,10 @@ SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, function(_, p
 	
 	end
 
-end)
+end
+SaveHelper.Mod:AddCustomCallback(CustomCallbacks.CCH_GAME_STARTED, SaveHelper.OnGameStarted)
 
-SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
+function SaveHelper.PostNewLevel()
 
 	if not skipNextLevelClear then
 	
@@ -701,9 +726,10 @@ SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function()
 	
 	skipNextLevelClear = false
 	
-end)
+end
+SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, SaveHelper.PostNewLevel)
 
-SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+function SaveHelper.PostNewRoom()
 
 	if not skipNextRoomClear then
 	
@@ -717,9 +743,10 @@ SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
 	
 	skipNextRoomClear = false
 	
-end)
+end
+SaveHelper.Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, SaveHelper.PostNewRoom)
 
-SaveHelper.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
+function SaveHelper.PreGameExit()
 	
 	for _, modRef in ipairs(SaveHelper.ModsToSave) do
 		
@@ -727,6 +754,7 @@ SaveHelper.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave
 		
 	end
 	
-end)
+end
+SaveHelper.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, SaveHelper.PreGameExit)
 
 return SaveHelper

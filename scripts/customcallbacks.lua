@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 0
+local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if CustomCallbackHelper and CustomCallbackHelper.Version >= fileVersion then
@@ -30,6 +30,18 @@ elseif CustomCallbackHelper.Version < fileVersion then
 	local oldVersion = CustomCallbackHelper.Version
 	
 	-- handle old versions
+	if CustomCallbackHelper.HandleGameStartedCallback then
+		CustomCallbackHelper.Mod:RemoveCallback(ModCallbacks.MC_POST_PLAYER_INIT, CustomCallbackHelper.HandleGameStartedCallback)
+	end
+
+	if CustomCallbackHelper.ResetPlayerInited then
+		CustomCallbackHelper.Mod:RemoveCallback(ModCallbacks.MC_POST_GAME_END, CustomCallbackHelper.ResetPlayerInited)
+		CustomCallbackHelper.Mod:RemoveCallback(ModCallbacks.MC_PRE_GAME_EXIT, CustomCallbackHelper.ResetPlayerInited)
+	end
+
+	if CustomCallbackHelper.HandleModsLoadedCallback then
+		CustomCallbackHelper.Mod:RemoveCallback(ModCallbacks.MC_INPUT_ACTION, CustomCallbackHelper.HandleModsLoadedCallback)
+	end
 
 	CustomCallbackHelper.Version = fileVersion
 
@@ -347,7 +359,7 @@ Isaac.RegisterMod = CustomCallbackHelper.RegisterMod
 -- game started --
 ------------------
 local firstPlayerInited = false
-CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(_, player) --player init is the first callback to trigger, before game started, new level, new room, etc
+function CustomCallbackHelper.HandleGameStartedCallback(_, player)
 
 	if not firstPlayerInited then
 	
@@ -370,20 +382,21 @@ CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function(
 		
 	end
 	
-end)
-CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_POST_GAME_END, function(_, gameOver)
+end
+CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, CustomCallbackHelper.HandleGameStartedCallback) --player init is the first callback to trigger, before game started, new level, new room, etc
+
+function CustomCallbackHelper.ResetPlayerInited()
 	firstPlayerInited = false
-end)
-CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function(_, shouldSave)
-	firstPlayerInited = false
-end)
+end
+CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_POST_GAME_END, CustomCallbackHelper.ResetPlayerInited)
+CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, CustomCallbackHelper.ResetPlayerInited)
 
 
 -----------------
 -- mods loaded --
 -----------------
 local firstCallbackTriggered = false
-CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function() --input action can trigger on the main menu, before a run starts
+function CustomCallbackHelper.HandleModsLoadedCallback()
 
 	if not firstCallbackTriggered then
 	
@@ -394,7 +407,8 @@ CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, function() --
 		
 	end
 	
-end)
+end
+CustomCallbackHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, CustomCallbackHelper.HandleModsLoadedCallback) --input action can trigger on the main menu, before a run starts
 
 
 return CustomCallbackHelper
