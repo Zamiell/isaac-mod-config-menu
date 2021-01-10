@@ -2947,6 +2947,48 @@ end
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
 
 
+--fake config values
+local fakeConfigDefaultToReturn = {
+	HudOffset = function() return ModConfigMenu.ConfigDefault["General"].HudOffset end,
+	Overlays = function() return ModConfigMenu.ConfigDefault["General"].Overlays end,
+	ChargeBars = function() return ModConfigMenu.ConfigDefault["General"].ChargeBars end,
+	BigBooks = function() return ModConfigMenu.ConfigDefault["General"].BigBooks end,
+}
+setmetatable(ModConfigMenu.ConfigDefault, {
+
+	__index = function(this, key)
+
+		if fakeConfigDefaultToReturn[key] then
+		
+			return fakeConfigDefaultToReturn[key]()
+			
+		end
+
+	end
+
+})
+
+local fakeConfigToReturn = {
+	HudOffset = function() return ModConfigMenu.Config["General"].HudOffset end,
+	Overlays = function() return ModConfigMenu.Config["General"].Overlays end,
+	ChargeBars = function() return ModConfigMenu.Config["General"].ChargeBars end,
+	BigBooks = function() return ModConfigMenu.Config["General"].BigBooks end,
+}
+setmetatable(ModConfigMenu.Config, {
+
+	__index = function(this, key)
+
+		if fakeConfigToReturn[key] then
+		
+			return fakeConfigToReturn[key]()
+			
+		end
+
+	end
+
+})
+
+
 ------------
 --FINISHED--
 ------------
