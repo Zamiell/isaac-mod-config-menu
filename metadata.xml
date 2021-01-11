@@ -8,6 +8,14 @@
 This mod does not do much on its own, to get into the real action you should download a mod which supports this menu.
 
 
+[h1]My mods dont work![/h1]
+- Make sure you have the latest version of mod config menu, visible in the mod config menu category
+- Some mods may require you have compatibility layer enabled, togglable in the mod config menu category. These mods use outdated methods to add settings.
+- Restart the game!
+
+If you still have issues even after doing all this, please report them to me, and provide any error logs if you have any.
+
+
 [h1]Navigation[/h1]
 
 Keyboard:
@@ -29,7 +37,7 @@ https://discord.com/invite/uJEFFdb
 
 Support me on patreon!
 https://www.patreon.com/piber20</description>
-    <version>1.31</version>
+    <version>1.32</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
