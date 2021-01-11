@@ -1416,11 +1416,12 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 		displayValue = displayValue()
 	end
 	
-	if type(displayValue) ~= "string" and type(displayValue) ~= "table" then
-		textTableDisplay = {tostring(displayValue)}
-	end
 	if type(displayValue) == "string" then
 		textTableDisplay = {displayValue}
+	elseif type(displayValue) == "table" then
+		textTableDisplay = SaveHelper.CopyTable(displayValue)
+	else
+		textTableDisplay = {tostring(displayValue)}
 	end
 	
 	if type(textTableDisplay) == "string" then
