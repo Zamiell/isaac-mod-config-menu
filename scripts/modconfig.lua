@@ -1,7 +1,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 28
+local fileVersion = 29
 
 --prevent older/same version versions of this script from loading
 if ModConfigMenu and ModConfigMenu.Version >= fileVersion then
