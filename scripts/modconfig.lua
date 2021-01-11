@@ -4,7 +4,7 @@
 local fileVersion = 29
 
 --prevent older/same version versions of this script from loading
-if ModConfigMenu and ModConfigMenu.Version >= fileVersion then
+if ModConfigMenu and ModConfigMenu.Version and ModConfigMenu.Version >= fileVersion then
 
 	return ModConfigMenu
 
@@ -13,9 +13,8 @@ end
 if not ModConfigMenu then
 
 	ModConfigMenu = {}
-	ModConfigMenu.Version = fileVersion
 	
-elseif ModConfigMenu.Version < fileVersion then
+elseif ModConfigMenu.Version and ModConfigMenu.Version < fileVersion then
 
 	local oldVersion = ModConfigMenu.Version
 	
@@ -56,9 +55,9 @@ elseif ModConfigMenu.Version < fileVersion then
 		ModConfigMenu.Mod:RemoveCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
 	end
 
-	ModConfigMenu.Version = fileVersion
-
 end
+
+ModConfigMenu.Version = fileVersion
 
 -----------
 -- setup --
@@ -3023,6 +3022,16 @@ function ModConfigMenu.ExecuteCmd(_, command, args)
 	
 end
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
+
+if ModConfigMenu.StandaloneMod then
+
+	SaveHelper.Load(ModConfigMenu.StandaloneMod)
+
+	if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		dofile("scripts/modconfigoldcompatibility")
+	end
+
+end
 
 
 ------------

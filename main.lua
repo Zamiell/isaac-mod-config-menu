@@ -11,12 +11,7 @@ dofile("scripts/savehelper")
 --create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
 
---load mod config menu
-
---we load it like this instead of using dofile because the game caches the require function
-require("scripts.modconfig")
-dofile("scripts/modconfig")
-
+ModConfigMenu = ModConfigMenu or {}
 ModConfigMenu.StandaloneMod = mod
 
 --add MCM's save to savehelper
@@ -37,18 +32,10 @@ mod:AddCustomCallback(CustomCallbacks.SH_POST_MOD_LOAD, function(_, modRef, save
 
 	local mcmSave = ModConfigMenu.LoadSave(saveData.ModConfigSave)
 	
-	--OLD VERSION COMPATIBILITY
-	if mcmSave
-	and mcmSave.Config
-	and mcmSave.Config["Mod Config Menu"]
-	and mcmSave.Config["Mod Config Menu"].CompatibilityLayer then
-		dofile("scripts/modconfigoldcompatibility")
-	end
-	
 end, mod.Name)
 
-SaveHelper.Load(mod)
+--load mod config menu
 
-if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
-	dofile("scripts/modconfigoldcompatibility")
-end
+--we load it like this instead of using dofile because the game caches the require function
+require("scripts.modconfig")
+dofile("scripts/modconfig")
