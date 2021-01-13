@@ -43,7 +43,7 @@ setmetatable(ModConfigMenu, {
 
 		if fakeCachedDataToReturn[key] then
 		
-			local warn = "ModConfigMenu." .. key .. " is not longer used. Please update."
+			local warn = "ModConfigMenu." .. key .. " is no longer used. Please update."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -56,7 +56,7 @@ setmetatable(ModConfigMenu, {
 
 		if cachedVectorsAndColors[key] then
 		
-			local warn = "ModConfigMenu." .. key .. " is not longer used. Please update."
+			local warn = "ModConfigMenu." .. key .. " is no longer used. Please update."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -91,7 +91,7 @@ ModConfigMenu.SetConfigMetatables = function()
 
 			if fakeConfigDefaultToReturn[key] then
 		
-				local warn = "ModConfigMenu.ConfigDefault." .. key .. " is not longer used. Please update to use ModConfigMenu.ConfigDefault.[\"General\"]." .. key .. " instead."
+				local warn = "ModConfigMenu.ConfigDefault." .. key .. " is no longer used. Please update to use ModConfigMenu.ConfigDefault.[\"General\"]." .. key .. " instead."
 			
 				Isaac.DebugString(warn)
 				if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -112,7 +112,7 @@ ModConfigMenu.SetConfigMetatables = function()
 
 			if fakeConfigToReturn[key] then
 		
-				local warn = "ModConfigMenu.Config." .. key .. " is not longer used. Please update to use ModConfigMenu.Config.[\"General\"]." .. key .. " instead."
+				local warn = "ModConfigMenu.Config." .. key .. " is no longer used. Please update to use ModConfigMenu.Config.[\"General\"]." .. key .. " instead."
 			
 				Isaac.DebugString(warn)
 				if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -138,7 +138,7 @@ setmetatable(ModConfigMenuController, {
 
 		if Controller and Controller[key] then
 	
-			local warn = "ModConfigMenuController." .. key .. " is not longer used. Please update to use Controller." .. key .. " instead. This enum is added by InputHelper."
+			local warn = "ModConfigMenuController." .. key .. " is no longer used. Please update to use Controller." .. key .. " instead. This enum is added by InputHelper."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -160,7 +160,7 @@ setmetatable(ModConfigMenuKeyboardToString, {
 
 		if InputHelper and InputHelper.KeyboardToString and InputHelper.KeyboardToString[key] then
 	
-			local warn = "ModConfigMenuKeyboardToString." .. key .. " is not longer used. Please update to use InputHelper.KeyboardToString." .. key .. " instead."
+			local warn = "ModConfigMenuKeyboardToString." .. key .. " is no longer used. Please update to use InputHelper.KeyboardToString." .. key .. " instead."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -182,7 +182,7 @@ setmetatable(ModConfigMenuControllerToString, {
 
 		if InputHelper and InputHelper.ControllerToString and InputHelper.ControllerToString[key] then
 	
-			local warn = "ModConfigMenuControllerToString." .. key .. " is not longer used. Please update to use InputHelper.ControllerToString." .. key .. " instead."
+			local warn = "ModConfigMenuControllerToString." .. key .. " is no longer used. Please update to use InputHelper.ControllerToString." .. key .. " instead."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -204,7 +204,7 @@ setmetatable(ModConfigMenuPopupGfx, {
 
 		if ModConfigMenu.PopupGfx[key] then
 	
-			local warn = "ModConfigMenuPopupGfx." .. key .. " is not longer used. Please update to use ModConfigMenu.PopupGfx." .. key .. " instead."
+			local warn = "ModConfigMenuPopupGfx." .. key .. " is no longer used. Please update to use ModConfigMenu.PopupGfx." .. key .. " instead."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -226,7 +226,7 @@ setmetatable(ModConfigMenuOptionType, {
 
 		if ModConfigMenu.OptionType[key] then
 	
-			local warn = "ModConfigMenuOptionType." .. key .. " is not longer used. Please update to use ModConfigMenu.OptionType." .. key .. " instead."
+			local warn = "ModConfigMenuOptionType." .. key .. " is no longer used. Please update to use ModConfigMenu.OptionType." .. key .. " instead."
 		
 			Isaac.DebugString(warn)
 			if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
@@ -243,18 +243,148 @@ setmetatable(ModConfigMenuOptionType, {
 
 ModConfigMenuData = ModConfigMenu.MenuData
 
+local oldRequire = require
+local function newRequire(string, ...)
+	if string == "scripts.callbackhelper" then
+		return oldRequire("scripts.customcallbacks", ...)
+	elseif string == "scripts/callbackhelper" then
+		return oldRequire("scripts/customcallbacks", ...)
+	else
+		return oldRequire(string, ...)
+	end
+end
+require = newRequire
+
+CustomCallbackHelper.Callbacks = CustomCallbackHelper.Callbacks or {}
+
+CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET = 4300
+ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.CCH_PRE_ADD_CUSTOM_CALLBACK, function(mod, modRef, callbackId, fn, args)
+	
+	local warn = "CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET is no longer used. Please update to use CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"HudOffset\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	modRef:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		fn(modRef, currentSetting)
+	end, "General", "HudOffset")
+	
+	return false
+	
+end, CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET)
+
+CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS = 4301
+ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.CCH_PRE_ADD_CUSTOM_CALLBACK, function(mod, modRef, callbackId, fn, args)
+	
+	local warn = "CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET is no longer used. Please update to use CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"Overlays\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	modRef:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		fn(modRef, currentSetting)
+	end, "General", "Overlays")
+	
+	return false
+	
+end, CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_OVERLAYS)
+
+CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS = 4302
+ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.CCH_PRE_ADD_CUSTOM_CALLBACK, function(mod, modRef, callbackId, fn, args)
+	
+	local warn = "CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET is no longer used. Please update to use CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"ChargeBars\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	modRef:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		fn(modRef, currentSetting)
+	end, "General", "ChargeBars")
+	
+	return false
+	
+end, CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_CHARGE_BARS)
+
+CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS = 4303
+ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.CCH_PRE_ADD_CUSTOM_CALLBACK, function(mod, modRef, callbackId, fn, args)
+	
+	local warn = "CallbackHelper.Callbacks.MCM_POST_MODIFY_HUD_OFFSET is no longer used. Please update to use CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"BigBooks\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	modRef:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		fn(modRef, currentSetting)
+	end, "General", "BigBooks")
+	
+	return false
+	
+end, CustomCallbackHelper.Callbacks.MCM_POST_MODIFY_BIG_BOOKS)
+
 ModConfigMenu.AddHudOffsetChangeCallback = function(functionToAdd)
-	print("ModConfigMenu.AddHudOffsetChangeCallback doesn't work anymore.")
+	
+	local warn = "ModConfigMenu.AddHudOffsetChangeCallback is no longer used. Please update to use mod:AddCustomCallback added by CustomCallbackHelper using CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"HudOffset\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		functionToAdd(currentSetting)
+	end, "General", "HudOffset")
+	
 end
 
 ModConfigMenu.AddOverlayChangeCallback = function(functionToAdd)
-	print("ModConfigMenu.AddOverlayChangeCallback doesn't work anymore.")
+	
+	local warn = "ModConfigMenu.AddOverlayChangeCallback is no longer used. Please update to use mod:AddCustomCallback added by CustomCallbackHelper using CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"Overlays\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		functionToAdd(currentSetting)
+	end, "General", "Overlays")
+	
 end
 
 ModConfigMenu.AddChargeBarChangeCallback = function(functionToAdd)
-	print("ModConfigMenu.AddChargeBarChangeCallback doesn't work anymore.")
+	
+	local warn = "ModConfigMenu.AddChargeBarChangeCallback is no longer used. Please update to use mod:AddCustomCallback added by CustomCallbackHelper using CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"ChargeBars\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		functionToAdd(currentSetting)
+	end, "General", "ChargeBars")
+	
 end
 
 ModConfigMenu.AddBigBookChangeCallback = function(functionToAdd)
-	print("ModConfigMenu.AddBigBookChangeCallback doesn't work anymore.")
+	
+	local warn = "ModConfigMenu.AddBigBookChangeCallback is no longer used. Please update to use mod:AddCustomCallback added by CustomCallbackHelper using CustomCallbacks.MCM_POST_MODIFY_SETTING with extra variables \"General\" and \"BigBooks\"."
+
+	Isaac.DebugString(warn)
+	if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+		print(warn)
+	end
+	
+	ModConfigMenu.StandaloneMod:AddCustomCallback(CustomCallbacks.MCM_POST_MODIFY_SETTING, function(modRef, settingTable, currentSetting)
+		functionToAdd(currentSetting)
+	end, "General", "BigBooks")
+	
 end

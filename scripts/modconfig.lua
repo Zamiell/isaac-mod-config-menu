@@ -137,6 +137,13 @@ end
 ModConfigMenu.Mod = ModConfigMenu.Mod or RegisterMod("Mod Config Menu", 1)
 
 
+--triggered before a mod saves its data
+--function(modref, savedata)
+--extra variable is the desired mod reference to only run your code on
+--return false to prevent the save from being saved
+CustomCallbacks.MCM_POST_MODIFY_SETTING = 4200
+
+
 ----------
 --SAVING--
 ----------
@@ -632,6 +639,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 	--setting
 	local settingTable = {
 		Type = settingType,
+		Attribute = configTableAttribute,
 		CurrentSetting = function()
 			return ModConfigMenu.Config[categoryName][configTableAttribute]
 		end,
@@ -1765,6 +1773,7 @@ function ModConfigMenu.PostRender()
 							
 							if recievedInput then
 								if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+								
 									if type(optionCurrent) == "function" then
 										if optionOnChange then
 											optionOnChange(numberToChange)
@@ -1772,6 +1781,16 @@ function ModConfigMenu.PostRender()
 									elseif type(optionCurrent) == "number" then
 										currentMenuOption.CurrentSetting = numberToChange
 									end
+				
+									--callback
+									CustomCallbackHelper.CallCallbacks
+									(
+										CustomCallbacks.MCM_POST_MODIFY_SETTING, --callback id
+										nil,
+										{currentMenuOption.CurrentSetting, numberToChange}, --args to send
+										{currentMenuCategory.Name, currentMenuOption.Attribute} --extra variables
+									)
+									
 								elseif currentMenuOption.OnSelect and numberToChange then
 									currentMenuOption.OnSelect()
 								end
@@ -1895,6 +1914,15 @@ function ModConfigMenu.PostRender()
 							currentMenuOption.CurrentSetting = numberToChange
 							optionChanged = true
 						end
+	
+						--callback
+						CustomCallbackHelper.CallCallbacks
+						(
+							CustomCallbacks.MCM_POST_MODIFY_SETTING, --callback id
+							nil,
+							{currentMenuOption.CurrentSetting, numberToChange}, --args to send
+							{currentMenuCategory.Name, currentMenuOption.Attribute} --extra variables
+						)
 						
 						local sound = currentMenuOption.Sound
 						if not sound then
@@ -1930,6 +1958,15 @@ function ModConfigMenu.PostRender()
 							currentMenuOption.CurrentSetting = boolToChange
 							optionChanged = true
 						end
+	
+						--callback
+						CustomCallbackHelper.CallCallbacks
+						(
+							CustomCallbacks.MCM_POST_MODIFY_SETTING, --callback id
+							nil,
+							{currentMenuOption.CurrentSetting, boolToChange}, --args to send
+							{currentMenuCategory.Name, currentMenuOption.Attribute} --extra variables
+						)
 						
 						local sound = currentMenuOption.Sound
 						if not sound then
@@ -1959,6 +1996,15 @@ function ModConfigMenu.PostRender()
 							currentMenuOption.CurrentSetting = numberToChange
 							optionChanged = true
 						end
+	
+						--callback
+						CustomCallbackHelper.CallCallbacks
+						(
+							CustomCallbacks.MCM_POST_MODIFY_SETTING, --callback id
+							nil,
+							{currentMenuOption.CurrentSetting, numberToChange}, --args to send
+							{currentMenuCategory.Name, currentMenuOption.Attribute} --extra variables
+						)
 						
 						local sound = currentMenuOption.Sound
 						if not sound then
@@ -2997,8 +3043,14 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.Execute
 
 if ModConfigMenu.StandaloneMod then
 
-	SaveHelper.Load(ModConfigMenu.StandaloneMod)
-	dofile("scripts/modconfigoldcompatibility")
+	if not ModConfigMenu.StandaloneSaveLoaded then
+		SaveHelper.Load(ModConfigMenu.StandaloneMod)
+		ModConfigMenu.StandaloneSaveLoaded = true
+	end
+	
+	if not ModConfigMenu.CompatibilityMode then
+		dofile("scripts/modconfigoldcompatibility")
+	end
 
 end
 

@@ -42,3 +42,12 @@ end, mod.Name)
 --we load it like this instead of using dofile because the game caches the require function
 require("scripts.modconfig")
 dofile("scripts/modconfig")
+
+if not ModConfigMenu.StandaloneSaveLoaded then
+	SaveHelper.Load(ModConfigMenu.StandaloneMod)
+	ModConfigMenu.StandaloneSaveLoaded = true
+end
+
+if not ModConfigMenu.CompatibilityMode then
+	dofile("scripts/modconfigoldcompatibility")
+end
