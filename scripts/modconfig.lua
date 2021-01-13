@@ -137,10 +137,12 @@ end
 ModConfigMenu.Mod = ModConfigMenu.Mod or RegisterMod("Mod Config Menu", 1)
 
 
---triggered before a mod saves its data
---function(modref, savedata)
---extra variable is the desired mod reference to only run your code on
---return false to prevent the save from being saved
+-------------------
+--CUSTOM CALLBACK--
+-------------------
+--triggered after a setting is changed
+--function(settingTable, currentSetting)
+--extra variable 1 is the category of the setting, extra variable 2 is the attribute that gets saved to the config table. these are both optional
 CustomCallbacks.MCM_POST_MODIFY_SETTING = 4200
 
 
