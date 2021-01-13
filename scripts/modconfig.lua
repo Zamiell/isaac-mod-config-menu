@@ -71,27 +71,33 @@ local json = require("json")
 
 --load filepath helper
 if not FilepathHelper then
+
 	pcall(require, "scripts.filepathhelper")
+	
+	if FilepathHelper then
+		pcall(dofile, "scripts/filepathhelper")
+	end
+	
 end
 
 --load other scripts
-local loadScript
-if FilepathHelper then
-	pcall(dofile, "scripts/filepathhelper")
-	loadScript = dofile
-else
-	loadScript = require
-end
-
 if not CustomCallbackHelper then
 
-	pcall(loadScript, "scripts/customcallbacks")
+	pcall(require, "scripts.customcallbacks")
+	
+	if FilepathHelper then
+		pcall(dofile, "scripts/customcallbacks")
+	end
 	
 end
 
 if not InputHelper then
 
-	pcall(loadScript, "scripts/inputhelper")
+	pcall(require, "scripts.inputhelper")
+	
+	if FilepathHelper then
+		pcall(dofile, "scripts/inputhelper")
+	end
 	
 	if not InputHelper then
 		error("Mod Config Menu requires Input Helper to function", 2)
@@ -101,7 +107,11 @@ end
 
 if not ScreenHelper then
 
-	pcall(loadScript, "scripts/screenhelper")
+	pcall(require, "scripts.screenhelper")
+	
+	if FilepathHelper then
+		pcall(dofile, "scripts/screenhelper")
+	end
 	
 	if not ScreenHelper then
 		error("Mod Config Menu requires Screen Helper to function", 2)
@@ -111,7 +121,11 @@ end
 
 if not SaveHelper then
 
-	pcall(loadScript, "scripts/savehelper")
+	pcall(require, "scripts.savehelper")
+	
+	if FilepathHelper then
+		pcall(dofile, "scripts/savehelper")
+	end
 	
 	if not SaveHelper then
 		error("Mod Config Menu requires Save Helper to function", 2)
@@ -127,49 +141,7 @@ ModConfigMenu.Mod = ModConfigMenu.Mod or RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
-local fakeConfigDefaultToReturn = {
-	HudOffset = function() return ModConfigMenu.ConfigDefault["General"].HudOffset end,
-	Overlays = function() return ModConfigMenu.ConfigDefault["General"].Overlays end,
-	ChargeBars = function() return ModConfigMenu.ConfigDefault["General"].ChargeBars end,
-	BigBooks = function() return ModConfigMenu.ConfigDefault["General"].BigBooks end,
-}
-local fakeConfigToReturn = {
-	HudOffset = function() return ModConfigMenu.Config["General"].HudOffset end,
-	Overlays = function() return ModConfigMenu.Config["General"].Overlays end,
-	ChargeBars = function() return ModConfigMenu.Config["General"].ChargeBars end,
-	BigBooks = function() return ModConfigMenu.Config["General"].BigBooks end,
-}
-function ModConfigMenu.SetConfigMetatables()
-
-	setmetatable(ModConfigMenu.ConfigDefault, {
-
-		__index = function(this, key)
-
-			if fakeConfigDefaultToReturn[key] then
-			
-				return fakeConfigDefaultToReturn[key]()
-				
-			end
-
-		end
-
-	})
-
-	setmetatable(ModConfigMenu.Config, {
-
-		__index = function(this, key)
-
-			if fakeConfigToReturn[key] then
-			
-				return fakeConfigToReturn[key]()
-				
-			end
-
-		end
-
-	})
-	
-end
+ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() return end
 
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
 SaveHelper.FillTable(ModConfigMenu.ConfigDefault,{
@@ -1210,12 +1182,12 @@ local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"CompatibilityLayer", --attribute in table
 	ModConfigMenu.ConfigDefault["Mod Config Menu"].CompatibilityLayer, --default value
-	"Compatibility Layer", --display text
+	"Disable Legacy Warnings", --display text
 	{ --value display text
 		[true] = "Yes",
 		[false] = "No"
 	},
-	"Enable this if you have some old mods which only work with old versions of Mod Config Menu.$newlineThere's a chance this will make it work."
+	"Use this setting to prevent warnings from being printed to the console for mods that use outdated features of Mod Config Menu."
 )
 compatibilitySetting.Restart = true
 
@@ -3026,10 +2998,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.Execute
 if ModConfigMenu.StandaloneMod then
 
 	SaveHelper.Load(ModConfigMenu.StandaloneMod)
-
-	if ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
-		dofile("scripts/modconfigoldcompatibility")
-	end
+	dofile("scripts/modconfigoldcompatibility")
 
 end
 

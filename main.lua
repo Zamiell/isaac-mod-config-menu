@@ -1,11 +1,14 @@
 --this script handles saving for the standalone version of mod config menu
 
 --load filepath helper
-require("scripts/filepathhelper")
+require("scripts.filepathhelper")
 dofile("scripts/filepathhelper")
 
 --load some scripts
+require("scripts.customcallbacks")
 dofile("scripts/customcallbacks")
+
+require("scripts.savehelper")
 dofile("scripts/savehelper")
 
 --create the mod
