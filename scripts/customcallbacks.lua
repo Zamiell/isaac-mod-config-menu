@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 1
+local fileVersion = 2
 
 --prevent older/same version versions of this script from loading
 if CustomCallbackHelper and CustomCallbackHelper.Version >= fileVersion then
@@ -254,16 +254,20 @@ function CustomCallbackHelper.RemoveAllCallbacks(mod)
 	--remove the callback from the callbacks table
 	for _,callbacks in pairs(CustomCallbackHelper.Callbacks) do
 	
-		for i=#callbacks, 1, -1 do
+		if type(callbacks) == "table" then
 		
-			local callbackData = callbacks[i]
+			for i=#callbacks, 1, -1 do
 			
-			if callbackData[1] == mod then
-			
-				table.remove(callbacks, i)
-			
+				local callbackData = callbacks[i]
+				
+				if callbackData[1] == mod then
+				
+					table.remove(callbacks, i)
+				
+				end
+				
 			end
-			
+		
 		end
 		
 	end
