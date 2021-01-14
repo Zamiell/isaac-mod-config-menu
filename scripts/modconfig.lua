@@ -1366,7 +1366,7 @@ local actionsBack = {ButtonAction.ACTION_PILLCARD, ButtonAction.ACTION_MAP, Butt
 local actionsSelect = {ButtonAction.ACTION_ITEM, ButtonAction.ACTION_PAUSE, ButtonAction.ACTION_MENUCONFIRM, ButtonAction.ACTION_BOMB}
 
 --ignore these buttons for the above actions
-local ignoreActionButtons = {Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y}
+local ignoreActionButtons = {Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y, Controller.DPAD_LEFT, Controller.DPAD_RIGHT, Controller.DPAD_UP, Controller.DPAD_DOWN}
 
 local currentMenuCategory = nil
 local currentMenuSubcategory = nil
@@ -1826,11 +1826,12 @@ function ModConfigMenu.PostRender()
 			else
 				if InputHelper.MultipleButtonTriggered({Controller.BUTTON_B}) then
 					pressingButton = "BACK"
+					pressingNonRebindableKey = true
 				end
 				if InputHelper.MultipleButtonTriggered({Controller.BUTTON_A}) then
 					pressingButton = "SELECT"
+					pressingNonRebindableKey = true
 				end
-				pressingNonRebindableKey = true
 			end
 			
 			if pressingButton ~= "" then
