@@ -1565,14 +1565,22 @@ function ModConfigMenu.PostRender()
 	end
 
 	--replace dead sea scrolls' controller setting to not conflict with mcm's
-	if DeadSeaScrollsMenu then
+	if DeadSeaScrollsMenu and DeadSeaScrollsMenu.GetGamepadToggleSetting then
 	
 		local dssControllerToggle = DeadSeaScrollsMenu.GetGamepadToggleSetting()
 	
-		if openMenuController == Controller.STICK_RIGHT and (dssControllerToggle == 1 or dssControllerToggle == 3 or dssControllerToggle == 4) then
-			DeadSeaScrollsMenu.SaveGamepadToggleSetting(2) --force revelations' menu to only use the left stick
-		elseif openMenuController == Controller.STICK_LEFT and (dssControllerToggle == 1 or dssControllerToggle == 2 or dssControllerToggle == 4) then
-			DeadSeaScrollsMenu.SaveGamepadToggleSetting(3) --force revelations' menu to only use the right stick
+		if DeadSeaScrollsMenu.SaveGamepadToggleSetting then
+		
+			if openMenuController == Controller.STICK_RIGHT and (dssControllerToggle == 1 or dssControllerToggle == 3 or dssControllerToggle == 4) then
+			
+				DeadSeaScrollsMenu.SaveGamepadToggleSetting(2) --force revelations' menu to only use the left stick
+				
+			elseif openMenuController == Controller.STICK_LEFT and (dssControllerToggle == 1 or dssControllerToggle == 2 or dssControllerToggle == 4) then
+			
+				DeadSeaScrollsMenu.SaveGamepadToggleSetting(3) --force revelations' menu to only use the right stick
+				
+			end
+			
 		end
 		
 	end
