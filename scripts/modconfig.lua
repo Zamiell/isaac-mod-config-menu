@@ -397,12 +397,17 @@ ModConfigMenu.OptionType.TITLE = 8
 
 ModConfigMenu.MenuData = ModConfigMenu.MenuData or {}
 
-function ModConfigMenu.GetCategoryIDByName(name)
+--CATEGORY FUNCTIONS
+function ModConfigMenu.GetCategoryIDByName(categoryName)
 
+	if type(categoryName) ~= "string" then
+		return categoryName
+	end
+	
 	local categoryID = nil
 	
 	for i=1, #ModConfigMenu.MenuData do
-		if name == ModConfigMenu.MenuData[i].Name then
+		if categoryName == ModConfigMenu.MenuData[i].Name then
 			categoryID = i
 			break
 		end
@@ -412,49 +417,36 @@ function ModConfigMenu.GetCategoryIDByName(name)
 	
 end
 
-function ModConfigMenu.GetSubcategoryIDByName(categoryID, name)
-
-	local subcategoryID = nil
-	
-	for i=1, #ModConfigMenu.MenuData[categoryID].Subcategories do
-		if name == ModConfigMenu.MenuData[categoryID].Subcategories[i].Name then
-			subcategoryID = i
-			break
-		end
-	end
-	
-	return subcategoryID
-	
-end
-
 function ModConfigMenu.UpdateCategory(categoryName, dataTable)
 
-	if type(categoryName) ~= "string" then
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.UpdateCategory - No valid category name provided", 2)
 	end
-
-	local categoryToChange = ModConfigMenu.GetCategoryIDByName(categoryName)
-	if categoryToChange == nil then
-		categoryToChange = #ModConfigMenu.MenuData+1
-		ModConfigMenu.MenuData[categoryToChange] = {}
-		ModConfigMenu.MenuData[categoryToChange].Subcategories = {}
+	
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID == nil then
+		categoryID = #ModConfigMenu.MenuData+1
+		ModConfigMenu.MenuData[categoryID] = {}
+		ModConfigMenu.MenuData[categoryID].Subcategories = {}
 	end
 	
-	ModConfigMenu.MenuData[categoryToChange].Name = tostring(categoryName)
+	if type(categoryName) == "string" or dataTable.Name then
+		ModConfigMenu.MenuData[categoryID].Name = dataTable.Name or categoryName
+	end
 	
 	if dataTable.Info then
-		ModConfigMenu.MenuData[categoryToChange].Info = dataTable.Info
+		ModConfigMenu.MenuData[categoryID].Info = dataTable.Info
 	end
 	
 	if dataTable.IsOld then
-		ModConfigMenu.MenuData[categoryToChange].IsOld = dataTable.IsOld
+		ModConfigMenu.MenuData[categoryID].IsOld = dataTable.IsOld
 	end
 	
 end
 
 function ModConfigMenu.SetCategoryInfo(categoryName, info)
 
-	if type(categoryName) ~= "string" then
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.SetCategoryInfo - No valid category name provided", 2)
 	end
 
@@ -464,71 +456,146 @@ function ModConfigMenu.SetCategoryInfo(categoryName, info)
 	
 end
 
+function ModConfigMenu.RemoveCategory(categoryName)
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
+		error("ModConfigMenu.RemoveCategory - No valid category name provided", 2)
+	end
+	
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID then
+	
+		table.remove(ModConfigMenu.MenuData, categoryID)
+		return true
+		
+	end
+	
+	return false
+
+end
+
+--SUBCATEGORY FUNCTIONS
+function ModConfigMenu.GetSubcategoryIDByName(categoryName, subcategoryName)
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
+		error("ModConfigMenu.GetSubcategoryIDByName - No valid category name provided", 2)
+	end
+	
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+
+	if type(subcategoryName) ~= "string" then
+		return subcategoryName
+	end
+	
+	local subcategoryID = nil
+	
+	for i=1, #ModConfigMenu.MenuData[categoryID].Subcategories do
+		if subcategoryName == ModConfigMenu.MenuData[categoryID].Subcategories[i].Name then
+			subcategoryID = i
+			break
+		end
+	end
+	
+	return subcategoryID
+	
+end
+
 function ModConfigMenu.UpdateSubcategory(categoryName, subcategoryName, dataTable)
 
-	if type(categoryName) ~= "string" then
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.UpdateSubcategory - No valid category name provided", 2)
 	end
 
-	if type(subcategoryName) ~= "string" then
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
 		error("ModConfigMenu.UpdateSubcategory - No valid subcategory name provided", 2)
 	end
 	
-	local categoryToChange = ModConfigMenu.GetCategoryIDByName(categoryName)
-	if categoryToChange == nil then
-		categoryToChange = #ModConfigMenu.MenuData+1
-		ModConfigMenu.MenuData[categoryToChange] = {}
-		ModConfigMenu.MenuData[categoryToChange].Name = tostring(categoryName)
-		ModConfigMenu.MenuData[categoryToChange].Subcategories = {}
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID == nil then
+		categoryID = #ModConfigMenu.MenuData+1
+		ModConfigMenu.MenuData[categoryID] = {}
+		ModConfigMenu.MenuData[categoryID].Name = tostring(categoryName)
+		ModConfigMenu.MenuData[categoryID].Subcategories = {}
 	end
 	
-	local subcategoryToChange = ModConfigMenu.GetSubcategoryIDByName(categoryToChange, subcategoryName)
-	if subcategoryToChange == nil then
-		subcategoryToChange = #ModConfigMenu.MenuData[categoryToChange].Subcategories+1
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange] = {}
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options = {}
+	local subcategoryID = ModConfigMenu.GetSubcategoryIDByName(categoryID, subcategoryName)
+	if subcategoryID == nil then
+		subcategoryID = #ModConfigMenu.MenuData[categoryID].Subcategories+1
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID] = {}
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options = {}
 	end
 	
-	ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(subcategoryName)
+	if type(subcategoryName) == "string" or dataTable.Name then
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Name = dataTable.Name or subcategoryName
+	end
 	
 	if dataTable.Info then
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Info = dataTable.Info
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Info = dataTable.Info
 	end
 	
 end
 
+function ModConfigMenu.RemoveSubcategory(categoryName, subcategoryName)
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
+		error("ModConfigMenu.RemoveSubcategory - No valid category name provided", 2)
+	end
+
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.RemoveSubcategory - No valid subcategory name provided", 2)
+	end
+	
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID then
+	
+		local subcategoryID = ModConfigMenu.GetSubcategoryIDByName(categoryID, subcategoryName)
+		if subcategoryID then
+		
+			table.remove(ModConfigMenu.MenuData[categoryID].Subcategories, subcategoryID)
+			return true
+			
+		end
+		
+	end
+	
+	return false
+
+end
+
+--SETTING FUNCTIONS
 function ModConfigMenu.AddSetting(categoryName, subcategoryName, settingTable)
 
 	if settingTable == nil then
 		settingTable = subcategoryName
 		subcategoryName = nil
 	end
-	
-	if categoryName == nil then
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.AddSetting - No valid category name provided", 2)
 	end
 	
-	if subcategoryName == nil then
-		subcategoryName = "Uncategorized"
+	subcategoryName = subcategoryName or "Uncategorized"
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.AddSetting - No valid subcategory name provided", 2)
 	end
 	
-	local categoryToChange = ModConfigMenu.GetCategoryIDByName(categoryName)
-	if categoryToChange == nil then
-		categoryToChange = #ModConfigMenu.MenuData+1
-		ModConfigMenu.MenuData[categoryToChange] = {}
-		ModConfigMenu.MenuData[categoryToChange].Name = tostring(categoryName)
-		ModConfigMenu.MenuData[categoryToChange].Subcategories = {}
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID == nil then
+		categoryID = #ModConfigMenu.MenuData+1
+		ModConfigMenu.MenuData[categoryID] = {}
+		ModConfigMenu.MenuData[categoryID].Name = tostring(categoryName)
+		ModConfigMenu.MenuData[categoryID].Subcategories = {}
 	end
 	
-	local subcategoryToChange = ModConfigMenu.GetSubcategoryIDByName(categoryToChange, subcategoryName)
-	if subcategoryToChange == nil then
-		subcategoryToChange = #ModConfigMenu.MenuData[categoryToChange].Subcategories+1
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange] = {}
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Name = tostring(subcategoryName)
-		ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options = {}
+	local subcategoryID = ModConfigMenu.GetSubcategoryIDByName(categoryID, subcategoryName)
+	if subcategoryID == nil then
+		subcategoryID = #ModConfigMenu.MenuData[categoryID].Subcategories+1
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID] = {}
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Name = tostring(subcategoryName)
+		ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options = {}
 	end
 	
-	ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options[#ModConfigMenu.MenuData[categoryToChange].Subcategories[subcategoryToChange].Options+1] = settingTable
+	ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[#ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options+1] = settingTable
 	
 	return settingTable
 	
@@ -541,9 +608,14 @@ function ModConfigMenu.AddText(categoryName, subcategoryName, text, color)
 		text = subcategoryName
 		subcategoryName = nil
 	end
-	
-	if categoryName == nil then
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.AddText - No valid category name provided", 2)
+	end
+	
+	subcategoryName = subcategoryName or "Uncategorized"
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.AddText - No valid subcategory name provided", 2)
 	end
 	
 	local settingTable = {
@@ -565,8 +637,13 @@ function ModConfigMenu.AddTitle(categoryName, subcategoryName, text, color)
 		subcategoryName = nil
 	end
 	
-	if categoryName == nil then
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.AddTitle - No valid category name provided", 2)
+	end
+	
+	subcategoryName = subcategoryName or "Uncategorized"
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.AddTitle - No valid subcategory name provided", 2)
 	end
 	
 	local settingTable = {
@@ -582,8 +659,13 @@ end
 
 function ModConfigMenu.AddSpace(categoryName, subcategoryName)
 	
-	if categoryName == nil then
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
 		error("ModConfigMenu.AddSpace - No valid category name provided", 2)
+	end
+	
+	subcategoryName = subcategoryName or "Uncategorized"
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.AddSpace - No valid subcategory name provided", 2)
 	end
 
 	local settingTable = {
@@ -594,7 +676,6 @@ function ModConfigMenu.AddSpace(categoryName, subcategoryName)
 	
 end
 
---need to check if display device works and add functionality to it
 local altSlider = false
 function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, displayDevice, info, color, functionName)
 	
@@ -957,6 +1038,64 @@ function ModConfigMenu.AddControllerSetting(categoryName, subcategoryName, confi
 
 	return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.KEYBIND_CONTROLLER, categoryName, subcategoryName, configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color, "AddControllerSetting")
 	
+end
+
+function ModConfigMenu.RemoveSetting(categoryName, subcategoryName, settingAttribute)
+
+	if settingAttribute == nil then
+		settingAttribute = subcategoryName
+		subcategoryName = nil
+	end
+
+	if type(categoryName) ~= "string" and type(categoryName) ~= "number" then
+		error("ModConfigMenu.RemoveSetting - No valid category name provided", 2)
+	end
+
+	subcategoryName = subcategoryName or "Uncategorized"
+	if type(subcategoryName) ~= "string" and type(subcategoryName) ~= "number" then
+		error("ModConfigMenu.RemoveSetting - No valid subcategory name provided", 2)
+	end
+	
+	local categoryID = ModConfigMenu.GetCategoryIDByName(categoryName)
+	if categoryID then
+	
+		local subcategoryID = ModConfigMenu.GetSubcategoryIDByName(categoryID, subcategoryName)
+		if subcategoryID then
+		
+			--loop to find matching attribute
+			for i=#ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options, 1, -1 do
+			
+				if ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i]
+				and ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i].Attribute
+				and ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i].Attribute == settingAttribute then
+				
+					table.remove(ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options, i)
+					return true
+					
+				end
+				
+			end
+		
+			--loop to find matching display
+			for i=#ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options, 1, -1 do
+			
+				if ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i]
+				and ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i].Display
+				and ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options[i].Display == settingAttribute then
+				
+					table.remove(ModConfigMenu.MenuData[categoryID].Subcategories[subcategoryID].Options, i)
+					return true
+					
+				end
+				
+			end
+			
+		end
+		
+	end
+	
+	return false
+
 end
 
 --------------------------
