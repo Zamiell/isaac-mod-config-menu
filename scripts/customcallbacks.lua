@@ -11,7 +11,7 @@
 -------------
 -- version --
 -------------
-local fileVersion = 2
+local fileVersion = 3
 
 --prevent older/same version versions of this script from loading
 if CustomCallbackHelper and CustomCallbackHelper.Version >= fileVersion then
@@ -51,7 +51,7 @@ end
 -----------
 -- setup --
 -----------
-CustomCallbackHelper.Mod = CustomCallbackHelper.Mod or RegisterMod("Callback Merger", 1)
+CustomCallbackHelper.Mod = CustomCallbackHelper.Mod or RegisterMod("Custom Callback Helper", 1)
 
 
 --------------------------
