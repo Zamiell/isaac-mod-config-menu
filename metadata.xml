@@ -18,14 +18,18 @@ If you still have issues even after doing all this, please report them to me, an
 [h1]Navigation[/h1]
 
 Keyboard:
-Use the arrow keys or WASD keys to move around, backspace or Q to go back, E space or enter to select an item.
+Use the arrow keys or WASD keys to move around
+
+Esc, backspace, or Q can be used to go back
+
+E, space, or enter can be used to select an item.
 
 By default you can open the menu by pressing L.
 
 F10 will also always open the menu, this cannot be changed.
 
 Controller:
-Both control sticks and the dpad can be used to move around, press B to go back, A to select an item.
+Both control sticks can be used to move around, press B to go back, A to select an item.
 
 By default you can open the menu by pressing down the right control stick.
 
@@ -36,7 +40,7 @@ https://discord.com/invite/uJEFFdb
 
 Support me on patreon!
 https://www.patreon.com/piber20</description>
-    <version>1.33</version>
+    <version>1.34</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
