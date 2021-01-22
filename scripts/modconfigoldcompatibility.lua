@@ -244,14 +244,22 @@ setmetatable(ModConfigMenuOptionType, {
 ModConfigMenuData = ModConfigMenu.MenuData
 
 local oldRequire = require
-local function newRequire(string, ...)
-	if string == "scripts.callbackhelper" then
-		return oldRequire("scripts.customcallbacks", ...)
-	elseif string == "scripts/callbackhelper" then
-		return oldRequire("scripts/customcallbacks", ...)
-	else
-		return oldRequire(string, ...)
+local function newRequire(toRequire, ...)
+
+	if toRequire == "scripts.callbackhelper" then
+		toRequire = "scripts.customcallbacks"
+	elseif toRequire == "scripts/callbackhelper" then
+		toRequire = "scripts/customcallbacks"
 	end
+	
+	local fileLoaded, returned = pcall(oldRequire, toRequire)
+	
+	if fileLoaded then
+		return returned
+	else
+		error(returned, 2)
+	end
+	
 end
 require = newRequire
 
