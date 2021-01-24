@@ -102,6 +102,23 @@ ModConfigMenu.SetConfigMetatables = function()
 				
 			end
 
+		end,
+
+		__newindex = function(this, key, value)
+
+			if fakeConfigDefaultToReturn[key] then
+		
+				local warn = "ModConfigMenu.ConfigDefault." .. key .. " is no longer used. Please update to use ModConfigMenu.ConfigDefault.[\"General\"]." .. key .. " instead."
+			
+				Isaac.DebugString(warn)
+				if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+					print(warn)
+				end
+			
+				ModConfigMenu.ConfigDefault["General"][key] = value
+				
+			end
+
 		end
 
 	})
@@ -120,6 +137,23 @@ ModConfigMenu.SetConfigMetatables = function()
 				end
 			
 				return fakeConfigToReturn[key]()
+				
+			end
+
+		end,
+
+		__newindex = function(this, key, value)
+
+			if fakeConfigDefaultToReturn[key] then
+		
+				local warn = "ModConfigMenu.Config." .. key .. " is no longer used. Please update to use ModConfigMenu.Config.[\"General\"]." .. key .. " instead."
+			
+				Isaac.DebugString(warn)
+				if not ModConfigMenu.Config["Mod Config Menu"].CompatibilityLayer then
+					print(warn)
+				end
+			
+				ModConfigMenu.Config["General"][key] = value
 				
 			end
 
