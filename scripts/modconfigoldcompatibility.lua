@@ -101,6 +101,8 @@ ModConfigMenu.SetConfigMetatables = function()
 				return fakeConfigDefaultToReturn[key]()
 				
 			end
+			
+			return rawget(this, key)
 
 		end,
 
@@ -115,7 +117,11 @@ ModConfigMenu.SetConfigMetatables = function()
 					print(warn)
 				end
 			
-				ModConfigMenu.ConfigDefault["General"][key] = value
+				rawset(this["General"], key, value)
+				
+			else
+			
+				rawset(this, key, value)
 				
 			end
 
@@ -139,6 +145,8 @@ ModConfigMenu.SetConfigMetatables = function()
 				return fakeConfigToReturn[key]()
 				
 			end
+			
+			return rawget(this, key)
 
 		end,
 
@@ -153,7 +161,11 @@ ModConfigMenu.SetConfigMetatables = function()
 					print(warn)
 				end
 			
-				ModConfigMenu.Config["General"][key] = value
+				rawset(this["General"], key, value)
+				
+			else
+			
+				rawset(this, key, value)
 				
 			end
 
@@ -182,6 +194,8 @@ setmetatable(ModConfigMenuController, {
 			return Controller[key]
 			
 		end
+		
+		return rawget(this, key)
 
 	end
 
@@ -204,6 +218,8 @@ setmetatable(ModConfigMenuKeyboardToString, {
 			return InputHelper.KeyboardToString[key]
 			
 		end
+		
+		return rawget(this, key)
 
 	end
 
@@ -226,6 +242,8 @@ setmetatable(ModConfigMenuControllerToString, {
 			return InputHelper.ControllerToString[key]
 			
 		end
+		
+		return rawget(this, key)
 
 	end
 
@@ -248,6 +266,8 @@ setmetatable(ModConfigMenuPopupGfx, {
 			return ModConfigMenu.PopupGfx[key]
 			
 		end
+		
+		return rawget(this, key)
 
 	end
 
@@ -270,6 +290,8 @@ setmetatable(ModConfigMenuOptionType, {
 			return ModConfigMenu.OptionType[key]
 			
 		end
+		
+		return rawget(this, key)
 
 	end
 

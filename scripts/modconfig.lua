@@ -154,29 +154,6 @@ ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or functio
 
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
 SaveHelper.FillTable(ModConfigMenu.ConfigDefault,{
-
-	["General"] = {
-	
-		HudOffset = 0, -- 0 to 10
-		Overlays = true,
-		ChargeBars = false,
-		BigBooks = true,
-		Announcer = 0 -- 0 = sometimes, 1 = never, 2 = always
-		
-	},
-
-	["Mod Config Menu"] = {
-	
-		OpenMenuKeyboard = Keyboard.KEY_L,
-		OpenMenuController = Controller.STICK_RIGHT,
-		
-		HideHudInMenu = true,
-		ResetToDefault = Keyboard.KEY_R,
-		ShowControls = true,
-		
-		CompatibilityLayer = false
-		
-	},
 	
 	--last button pressed tracker
 	LastBackPressed = Keyboard.KEY_ESCAPE,
@@ -1110,7 +1087,7 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
 	"General", --category
 	"HudOffset", --attribute in table
-	ModConfigMenu.ConfigDefault["General"].HudOffset, --default value
+	0, --default value
 	"Hud Offset", --display text
 	"How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
@@ -1138,7 +1115,7 @@ end
 ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"Overlays", --attribute in table
-	ModConfigMenu.ConfigDefault["General"].Overlays, --default value
+	true, --default value
 	"Overlays", --display text
 	{ --value display text
 		[true] = "On",
@@ -1154,7 +1131,7 @@ ModConfigMenu.AddBooleanSetting(
 ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"ChargeBars", --attribute in table
-	ModConfigMenu.ConfigDefault["General"].ChargeBars, --default value
+	false, --default value
 	"Charge Bars", --display text
 	{ --value display text
 		[true] = "On",
@@ -1170,7 +1147,7 @@ ModConfigMenu.AddBooleanSetting(
 ModConfigMenu.AddBooleanSetting(
 	"General", --category
 	"BigBooks", --attribute in table
-	ModConfigMenu.ConfigDefault["General"].BigBooks, --default value
+	true, --default value
 	"Bigbooks", --display text
 	{ --value display text
 		[true] = "On",
@@ -1188,7 +1165,7 @@ ModConfigMenu.AddNumberSetting(
 	"Announcer", --attribute in table
 	0, --minimum value
 	2, --max value
-	ModConfigMenu.ConfigDefault["General"].Announcer, --default value,
+	0, --default value,
 	"Announcer", --display text
 	{ --value display text
 		[0] = "Sometimes",
@@ -1226,7 +1203,7 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
 	"Mod Config Menu", --category
 	"OpenMenuKeyboard", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuKeyboard, --default value
+	Keyboard.KEY_L, --default value
 	"Open Menu", --display text
 	true, --if (keyboard) is displayed after the key text
 	"Choose what button on your keyboard will open Mod Config Menu."
@@ -1241,7 +1218,7 @@ openMenuKeyboardSetting.IsOpenMenuKeybind = true
 local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
 	"Mod Config Menu", --category
 	"OpenMenuController", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].OpenMenuController, --default value
+	Controller.STICK_RIGHT, --default value
 	"Open Menu", --display text
 	true, --if (controller) is displayed after the key text
 	"Choose what button on your controller will open Mod Config Menu."
@@ -1261,7 +1238,7 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 local hideHudSetting = ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"HideHudInMenu", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].HideHudInMenu, --default value
+	true, --default value
 	"Hide HUD", --display text
 	{ --value display text
 		[true] = "Yes",
@@ -1298,7 +1275,7 @@ end
 local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
 	"Mod Config Menu", --category
 	"ResetToDefault", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].ResetToDefault, --default value
+	Keyboard.KEY_R, --default value
 	"Reset To Default Keybind", --display text
 	"Press this button on your keyboard to reset a setting to its default value."
 )
@@ -1312,7 +1289,7 @@ resetKeybindSetting.IsResetKeybind = true
 ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"ShowControls", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].ShowControls, --default value
+	true, --default value
 	"Show Controls", --display text
 	{ --value display text
 		[true] = "Yes",
@@ -1330,7 +1307,7 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
 	"Mod Config Menu", --category
 	"CompatibilityLayer", --attribute in table
-	ModConfigMenu.ConfigDefault["Mod Config Menu"].CompatibilityLayer, --default value
+	false, --default value
 	"Disable Legacy Warnings", --display text
 	{ --value display text
 		[true] = "Yes",
@@ -1338,7 +1315,7 @@ local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
 	},
 	"Use this setting to prevent warnings from being printed to the console for mods that use outdated features of Mod Config Menu."
 )
-compatibilitySetting.Restart = true
+-- compatibilitySetting.Restart = true
 
 local configMenuSubcategoriesCanShow = 3
 
