@@ -112,11 +112,13 @@ end
 -- basic path handling --
 -------------------------
 FilepathHelper.KnownFilePathsByName = {
-	["resources/scripts/"] = true
+	["resources/scripts/"] = true,
+	["mods"] = true
 }
 
 FilepathHelper.KnownFilePathsByIndex = {
-	"resources/scripts/"
+	"resources/scripts/",
+	"mods"
 }
 
 --returns the path to the current mod

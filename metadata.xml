@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>!!Mod Config Menu</name>
+    <name>!!(REP) Mod Config Menu</name>
     <directory>!!mod config menu</directory>
-    <id>1603631350</id>
-    <description>The Mod Config Menu is a mod that adds a new menu to the game that enables other mods to provide a simple and easy way for the player to configure them.
+    <id>0</id>
+    <description>QUICK PORT TO REPENTANCE
+
+This is a quick update to fix the main issue of the mods list being empty when opening the mod menu. I have not checked for or fix any other issues that may exist.
+
+My fork is available here: https://gitlab.com/Chifilly/bindingofisaac-modconfigmenu if anyone wants to fork it themselves or issue pull requests.
+
+I am NOT well versed in BoI modding, so anyone else feel free to take the reins if you feel you can do a better job.
+
+Original description below
+
+----------
+
+This mod is free for anyone else to reupload and modify as I take a possibly permanent hiatus.
+https://gitlab.com/piber20/bindingofisaac-modconfigmenu
+
+
+
+
+
+
+The Mod Config Menu is a mod that adds a new menu to the game that enables other mods to provide a simple and easy way for the player to configure them.
 
 This mod does not do much on its own, to get into the real action you should download a mod which supports this menu.
 
@@ -40,7 +60,7 @@ https://discord.com/invite/uJEFFdb
 
 Support me on patreon!
 https://www.patreon.com/piber20</description>
-    <version>1.37</version>
+    <version>1.38</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
