@@ -2,7 +2,7 @@
 <metadata>
     <name>!!(REP) Mod Config Menu</name>
     <directory>!!mod config menu</directory>
-    <id>0</id>
+    <id>2487535818</id>
     <description>QUICK PORT TO REPENTANCE
 
 This is a quick update to fix the main issue of the mods list being empty when opening the mod menu. I have not checked for or fix any other issues that may exist.
@@ -60,7 +60,7 @@ https://discord.com/invite/uJEFFdb
 
 Support me on patreon!
 https://www.patreon.com/piber20</description>
-    <version>1.38</version>
+    <version>1.39</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
