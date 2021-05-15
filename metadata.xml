@@ -7,6 +7,8 @@
 
 This is a quick update to fix the main issue of the mods list being empty when opening the mod menu. I have not checked for or fix any other issues that may exist.
 
+MAKE SURE YOU UNSUBSCRIBE FROM THE ORIGINAL BEFORE USING THIS. I don't know what would happen if you don't, but I imagine it won't be very nice.
+
 My fork is available here: https://gitlab.com/Chifilly/bindingofisaac-modconfigmenu if anyone wants to fork it themselves or issue pull requests.
 
 I am NOT well versed in BoI modding, so anyone else feel free to take the reins if you feel you can do a better job.
@@ -60,7 +62,7 @@ https://discord.com/invite/uJEFFdb
 
 Support me on patreon!
 https://www.patreon.com/piber20</description>
-    <version>1.39</version>
+    <version>1.40</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
 </metadata>
