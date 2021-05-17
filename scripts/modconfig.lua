@@ -212,6 +212,7 @@ local versionPrintFont = Font()
 versionPrintFont:Load("font/pftempestasevencondensed.fnt")
 
 local versionPrintTimer = 0
+local versionPrintComplete = false
 
 --returns true if the room is clear and there are no active enemies and there are no projectiles
 ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
@@ -279,7 +280,11 @@ function ModConfigMenu.PostUpdate()
 	if versionPrintTimer > 0 then
 	
 		versionPrintTimer = versionPrintTimer - 1
-		
+
+		if versionPrintTimer == 0 then
+			versionPrintComplete = true
+		end
+
 	end
 	
 end
@@ -1607,7 +1612,7 @@ function ModConfigMenu.PostRender()
 	local takeScreenshot = Keyboard.KEY_F12
 
 	--handle version display on game start
-	if versionPrintTimer > 0 then
+	if versionPrintTimer > 0 and not versionPrintComplete then
 	
 		local bottomRight = ScreenHelper.GetScreenBottomRight(0)
 
@@ -1624,7 +1629,7 @@ function ModConfigMenu.PostRender()
 		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
 		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
 		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
-		
+
 	end
 	
 	--on-screen warnings
