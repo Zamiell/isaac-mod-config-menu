@@ -1,4 +1,2 @@
-*.it
+disable.it
 *.dat
-.vscode
-steam

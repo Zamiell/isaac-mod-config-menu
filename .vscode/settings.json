@@ -1,0 +1,26 @@
+{
+	"Lua.diagnostics.globals": [
+		"ModCallbacks",
+		"RegisterMod",
+		"Isaac",
+		"Game",
+		"Sprite",
+		"Keyboard",
+		"Input",
+		"InputHook",
+		"Vector",
+		"Font",
+		"EntityFlag",
+		"EntityType",
+		"ProjectileFlags",
+		"Color",
+		"SeedEffect",
+		"ButtonAction",
+		"KColor",
+		"SFXManager",
+		"SoundEffect",
+		"DeadSeaScrollsMenu",
+		"boolean",
+		"AwaitingTextInput"
+	]
+}
