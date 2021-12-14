@@ -1,2 +1,4 @@
 *.it
 *.dat
+.vscode
+steam

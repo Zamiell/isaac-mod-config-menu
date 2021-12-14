@@ -353,5 +353,4 @@ function InputHelper.HandleForceActionPressed(_, entity, inputHook, buttonAction
 end
 InputHelper.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, InputHelper.HandleForceActionPressed)
 
-
 return InputHelper

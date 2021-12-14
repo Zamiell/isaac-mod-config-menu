@@ -1,69 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>!!(REP) Mod Config Menu</name>
-    <directory>!!mod config menu</directory>
-    <id>2487535818</id>
-    <description>QUICK PORT TO REPENTANCE
-
-This is a quick update to fix the main issue of the mods list being empty when opening the mod menu. I have not checked for or fix any other issues that may exist.
-
-MAKE SURE YOU UNSUBSCRIBE FROM THE ORIGINAL BEFORE USING THIS. I don't know what would happen if you don't, but I imagine it won't be very nice.
-
-My fork is available here: https://gitlab.com/Chifilly/bindingofisaac-modconfigmenu if anyone wants to fork it themselves or issue pull requests.
-
-I am NOT well versed in BoI modding, so anyone else feel free to take the reins if you feel you can do a better job.
-
-Original mod page: https://steamcommunity.com/sharedfiles/filedetails/?id=1603631350
-Original description below
-
-----------
-
-This mod is free for anyone else to reupload and modify as I take a possibly permanent hiatus.
-https://gitlab.com/piber20/bindingofisaac-modconfigmenu
-
-
-
-
-
-
-The Mod Config Menu is a mod that adds a new menu to the game that enables other mods to provide a simple and easy way for the player to configure them.
-
-This mod does not do much on its own, to get into the real action you should download a mod which supports this menu.
-
-
-[h1]My mods dont work![/h1]
-- Make sure you have the latest version of mod config menu, visible in the mod config menu category
-- Restart the game!
-
-If you still have issues even after doing all this, please report them to me, and provide any error logs if you have any.
-
-
-[h1]Navigation[/h1]
-
-Keyboard:
-Use the arrow keys or WASD keys to move around
-
-Esc, backspace, or Q can be used to go back
-
-E, space, or enter can be used to select an item.
-
-By default you can open the menu by pressing L.
-
-F10 will also always open the menu, this cannot be changed.
-
-Controller:
-Both control sticks can be used to move around, press B to go back, A to select an item.
-
-By default you can open the menu by pressing down the right control stick.
-
-
-
-Join my discord server!
-https://discord.com/invite/uJEFFdb
-
-Support me on patreon!
-https://www.patreon.com/piber20</description>
-    <version>1.40</version>
-    <visibility>Public</visibility>
-    <tag id="Lua"/>
+	<name>!!mod config menu</name>
+	<directory>!!mod config menu</directory>
+	<description/>
+	<version>1.0</version>
+	<visibility/>
 </metadata>
+
