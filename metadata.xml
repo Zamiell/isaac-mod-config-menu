@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>Mod Config Menu - Pure</name>
+    <name>!! Mod Config Menu - Pure</name>
     <directory>!!mod config menu</directory>
     <id>2681875787</id>
     <description>[h1][b]Mod Config Menu - Pure Version[/b][/h1]
@@ -11,9 +11,25 @@ Credit goes to piber20 for originally creating this mod and Chifilly for updatin
 
 This version of Mod Config Menu removes all of the hacky API overrides that piber put into the original, which is a terrible programming practice and causes problems with other things in the Isaac ecosystem.
 
-Note that this version of Mod Config Menu will not work properly if another version exists at the same time. This kind of thing is possible if:
-- you subscribed to this version and another version at the same time
-- you are running a mod that uses a standalone version of Mod Config Menu
+In order to use this mod, do not `require` or `pcall` anything. Rather, simply check to see if the global variable exists:
+
+```lua
+local function setupMyModConfigMenuSettings()
+  if ModConfigMenu == nil then
+    return
+  end
+
+  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
+  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;My Mod&quot; end)
+  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
+  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;Version 1.0&quot; end)
+end
+```
+
+Note that the &quot;Pure&quot; version of Mod Config Menu will not work properly if:
+- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, causing a conflict
+- you are subscribed to a mod that uses a standalone version of Mod Config Menu, causing a conflict
+- a mod uses the `require` or `pcall` functions to initialize or invoke Mod Config Menu
 
 
 
@@ -36,6 +52,6 @@ Both control sticks can be used to move around, press B to go back, A to select 
 By default you can open the menu by pressing down the right control stick.
 
 </description>
-    <version>1.1</version>
+    <version>1.2</version>
     <visibility>Public</visibility>
 </metadata>
