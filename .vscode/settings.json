@@ -1,26 +1,48 @@
+// These are Visual Studio Code settings that should apply to this particular repository
 {
-	"Lua.diagnostics.globals": [
-		"ModCallbacks",
-		"RegisterMod",
-		"Isaac",
-		"Game",
-		"Sprite",
-		"Keyboard",
-		"Input",
-		"InputHook",
-		"Vector",
-		"Font",
-		"EntityFlag",
-		"EntityType",
-		"ProjectileFlags",
-		"Color",
-		"SeedEffect",
-		"ButtonAction",
-		"KColor",
-		"SFXManager",
-		"SoundEffect",
-		"DeadSeaScrollsMenu",
-		"boolean",
-		"AwaitingTextInput"
-	]
+  // ----------------
+  // Vanilla settings
+  // ----------------
+
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+
+  "files.associations": {
+    "*.anm2": "xml", // anm2 files are just XML files
+  },
+
+  // Linux line endings are used in this project
+  "files.eol": "\n",
+
+  // Automatically removing all trailing whitespace when saving a file
+  "files.trimTrailingWhitespace": true,
+
+  // -----------------
+  // Language settings
+  // -----------------
+
+  "Lua.diagnostics.globals": [
+    "ModCallbacks",
+    "RegisterMod",
+    "Isaac",
+    "Game",
+    "Sprite",
+    "Keyboard",
+    "Input",
+    "InputHook",
+    "Vector",
+    "Font",
+    "EntityFlag",
+    "EntityType",
+    "ProjectileFlags",
+    "Color",
+    "SeedEffect",
+    "ButtonAction",
+    "KColor",
+    "SFXManager",
+    "SoundEffect",
+    "DeadSeaScrollsMenu",
+    "boolean",
+    "AwaitingTextInput"
+  ],
 }
