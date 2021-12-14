@@ -7,13 +7,13 @@
 
 Mod Config Menu is a library to that allows other mods to have a settings menu. You should only subscribe to this mod if you have other mods that use it.
 
-Help with the development of this mod by [contributing on GitHub](https://github.com/Zamiell/isaac-mod-config-menu).
+You can help with the development of this mod by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
 This version of Mod Config Menu removes all of the hacky API overrides that piber put into the original, which is a terrible programming practice and causes problems with other things in the Isaac ecosystem.
 
-In order to use this mod, do not `require` or `pcall` anything. Rather, simply check to see if the global variable exists:
+In order to use this mod, do not `require` or `dofile` or `pcall` anything. Rather, simply check to see if the global variable exists:
 
 [code]
 local function setupMyModConfigMenuSettings()
@@ -29,9 +29,9 @@ end
 [/code]
 
 Note that the &quot;Pure&quot; version of Mod Config Menu will not work properly if:
-- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, causing a conflict
-- you are subscribed to a mod that uses a standalone version of Mod Config Menu, causing a conflict
-- a mod uses the `require` or `pcall` functions to initialize or invoke Mod Config Menu
+- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, which will cause a conflict
+- you are subscribed to a mod that uses a standalone version of Mod Config Menu, which will cause a conflict
+- you are subscribed to a mod uses the `require` or `dofile` or `pcall` functions to initialize or invoke Mod Config Menu
 
 
 
