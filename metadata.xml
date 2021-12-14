@@ -1,7 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-	<name>!!mod config menu</name>
-	<directory>!!mod config menu</directory>
-	<description/>
-	<version>1.0</version>
-	<visibility/>
+    <name>!! Mod Config Menu - Pure</name>
+    <directory>!!mod config menu</directory>
+    <id>2681875787</id>
+    <description>[h1][b]Mod Config Menu - Pure Version[/b][/h1]
+
+Mod Config Menu is a mod to that allows other mods to have a settings menu. You should only subscribe to this mod if you have other mods that require it.
+
+Credit goes to piber20 for originally creating this mod and Chifilly for updating it for Repentance.
+
+This version of Mod Config Menu removes all of the hacky API overrides that piber put into the original, which is a terrible programming practice and causes problems with other things in the Isaac ecosystem.
+
+In order to use this mod, do not `require` or `pcall` anything. Rather, simply check to see if the global variable exists:
+
+```lua
+local function setupMyModConfigMenuSettings()
+  if ModConfigMenu == nil then
+    return
+  end
+
+  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
+  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;My Mod&quot; end)
+  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
+  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;Version 1.0&quot; end)
+end
+```
+
+Note that the &quot;Pure&quot; version of Mod Config Menu will not work properly if:
+- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, causing a conflict
+- you are subscribed to a mod that uses a standalone version of Mod Config Menu, causing a conflict
+- a mod uses the `require` or `pcall` functions to initialize or invoke Mod Config Menu
+
+
+
+[h1]Navigation[/h1]
+
+Keyboard:
+Use the arrow keys or WASD keys to move around
+
+Esc, backspace, or Q can be used to go back
+
+E, space, or enter can be used to select an item.
+
+By default you can open the menu by pressing L.
+
+F10 will also always open the menu, this cannot be changed.
+
+Controller:
+Both control sticks can be used to move around, press B to go back, A to select an item.
+
+By default you can open the menu by pressing down the right control stick.
+
+</description>
+    <version>1.2</version>
+    <visibility>Public</visibility>
 </metadata>
