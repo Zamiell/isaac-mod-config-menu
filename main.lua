@@ -3,7 +3,7 @@
 --create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
 
-ModConfigMenu = ModConfigMenu or {}
+ModConfigMenu = {}
 ModConfigMenu.StandaloneMod = mod
 
 --load mod config menu
