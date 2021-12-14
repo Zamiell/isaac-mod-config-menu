@@ -952,7 +952,7 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
 	"General", --category
 	"HudOffset", --attribute in table
-	0, --default value
+	Options.HUDOffset * 10, --default value
 	"Hud Offset", --display text
 	"How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
@@ -1119,15 +1119,15 @@ hideHudSetting.OnChange = function(currentValue)
 	oldHideHudOnChange(currentValue)
 
 	local game = Game()
-	local seeds = game:GetSeeds()
+	local hud = game:GetHUD()
 
 	if currentValue then
-		if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+		if hud:IsVisible() then
+			hud:SetVisible(false)
 		end
 	else
-		if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
-			seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+		if not hud:IsVisible() then
+			hud:SetVisible(true)
 		end
 	end
 
@@ -2967,8 +2967,8 @@ function ModConfigMenu.OpenConfigMenu()
 		if ModConfigMenu.Config["Mod Config Menu"].HideHudInMenu then
 
 			local game = Game()
-			local seeds = game:GetSeeds()
-			seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+			local hud = game:GetHUD()
+			hud:SetVisible(false)
 
 		end
 
@@ -2990,8 +2990,8 @@ function ModConfigMenu.CloseConfigMenu()
 	ModConfigMenu.LeaveSubcategory()
 
 	local game = Game()
-	local seeds = game:GetSeeds()
-	seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+	local hud = game:GetHUD()
+	hud:SetVisible(true)
 
 
 	ModConfigMenu.IsVisible = false
