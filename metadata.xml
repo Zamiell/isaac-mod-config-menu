@@ -1,58 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>!! Mod Config Menu - Pure</name>
+    <name>!! Mod Config Menu Pure</name>
     <directory>!!mod config menu</directory>
     <id>2681875787</id>
-    <description>[h1][b]Mod Config Menu - Pure Version[/b][/h1]
+    <description>[h1][b]Mod Config Menu Pure[/b][/h1]
+
+[h1][b]Before posting a comment, read the FAQ below. Comments asking questions that have already been covered will be deleted.[/b][/h1]
+
+[h2][b]Introduction[/b][/h2]
 
 Mod Config Menu is a library to that allows other mods to have a settings menu. You should only subscribe to this mod if you have other mods that use it.
 
-You can help with the development of this mod by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
+This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the "Pure" version.
+
+This mod is open-source. You can help with development by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
-This version of Mod Config Menu removes all of the hacky API overrides that piber put into the original, which is a terrible programming practice and causes problems with other things in the Isaac ecosystem.
+[h2][b]Using Mod Config Menu[/b][/h2]
 
-In order to use this mod, do not `require` or `dofile` or `pcall` anything. Rather, simply check to see if the global variable exists:
+In order to use Mod Config Menu Pure, do not use the "require" or "dofile" or "pcall" functions. Rather, simply check to see if the global variable of "ModConfigMenu" exists, with something along the lines of:
 
 [code]
+local MOD_NAME = "My Mod"
+local VERSION = "1.0"
+
 local function setupMyModConfigMenuSettings()
   if ModConfigMenu == nil then
     return
   end
 
-  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
-  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;My Mod&quot; end)
-  ModConfigMenu.AddSpace(&quot;My Mod&quot;, &quot;Info&quot;)
-  ModConfigMenu.AddText(&quot;My Mod&quot;, &quot;Info&quot;, function() return &quot;Version 1.0&quot; end)
+  ModConfigMenu.AddSpace(MOD_NAME, "Info")
+  ModConfigMenu.AddText(MOD_NAME, "Info", function() return MOD_NAME end)
+  ModConfigMenu.AddSpace(MOD_NAME, "Info")
+  ModConfigMenu.AddText(MOD_NAME, "Info", function() return "Version " .. VERSION end)
 end
 [/code]
 
-Note that the &quot;Pure&quot; version of Mod Config Menu will not work properly if:
-- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, which will cause a conflict
+[h2][b]Troubleshooting[/b][/h2]
+
+Note that the "Pure" version of Mod Config Menu will not work properly if:
+- you subscribed to the "Pure" version and you subscribed to a different version at the same time, which will cause a conflict
 - you are subscribed to a mod that uses a standalone version of Mod Config Menu, which will cause a conflict
-- you are subscribed to a mod uses the `require` or `dofile` or `pcall` functions to initialize or invoke Mod Config Menu
+- you are subscribed to a mod uses the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu
 
-
-
-[h1]Navigation[/h1]
+[h2]Navigation[/h2]
 
 Keyboard:
-Use the arrow keys or WASD keys to move around
-
-Esc, backspace, or Q can be used to go back
-
-E, space, or enter can be used to select an item.
-
-By default you can open the menu by pressing L.
-
-F10 will also always open the menu, this cannot be changed.
+- Use the arrow keys or WASD keys to move around.
+- Esc, backspace, or Q can be used to go back.
+- E, space, or enter can be used to select an item.
+- By default you can open the menu by pressing L.
+- F10 will also always open the menu; this cannot be changed.
 
 Controller:
-Both control sticks can be used to move around, press B to go back, A to select an item.
+- Both control sticks can be used to move around.
+- Press B to go back.
+- Press A to select an item.
+- You can open the menu by pressing down the right control stick.
 
-By default you can open the menu by pressing down the right control stick.
+[h2]FAQ[/h2]
 
+[b]Q: Does it work with Repentance?[/b]
+A: Yes.
+
+[b]Q: Does it work with Afterbirth+?[/b]
+A: No, because it uses Repentance-only features for getting the HUD offset.
+
+[b]Q: What do I do if Mod Config Menu Pure does not work properly with a particular mod?[/b]
+A: This is probably because the mod is using the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+
+[b]Q: For a typical player, what difference does this version make?[/b]
+A: Nothing. A typical player should use the whatever specific version results in the lowest amount of bugs for the specific combination of mods that they play with. For my mods, that happens to be the Pure version, but for other combinations of mods, it could differ.
+
+[b]Q: As a player, do I need to subscribe to this mod and other versions of Mod Config Menu at the same time?[/b]
+A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
+
+[b]Q: What do I do if saving settings for a mod does not work between game launches?[/b]
+A: Mod Config Menu is not in charge of saving any data. This is purely in the domain of the individual mods that use it. If an individual mod does not properly save its data, then you should contact the author of that mod.
+
+[b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
+A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
+
+[b]Q: What does it mean to "remove API overrides"?[/b]
+A: The original version overwrote some of the Lua and Isaac API functions, such as "pcall" and "RequireMod". This version does not overwrite any API functions.
 </description>
     <version>1.2</version>
     <visibility>Public</visibility>
