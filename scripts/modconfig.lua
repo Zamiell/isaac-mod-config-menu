@@ -65,9 +65,42 @@ ModConfigMenu.Config = ModConfigMenu.Config or {}
 ModConfigMenu.SetConfigMetatables()
 
 function ModConfigMenu.GetSave()
+	
+	local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+	saveData = SaveHelper.FillTable(saveData, ModConfigMenu.Config)
+	
+	saveData = json.encode(saveData)
+	
+	return saveData
+	
 end
 
 function ModConfigMenu.LoadSave(fromData)
+
+	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
+	
+		local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+		
+		if type(fromData) == "string" then
+			fromData = json.decode(fromData)
+		end
+		saveData = SaveHelper.FillTable(saveData, fromData)
+		
+		local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+		saveData = SaveHelper.FillTable(currentData, saveData)
+		
+		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
+		ModConfigMenu.SetConfigMetatables()
+		
+		--make sure ScreenHelper's offset matches MCM's offset
+		if ScreenHelper then
+			ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+		end
+		
+		return saveData
+		
+	end
+	
 end
 
 
