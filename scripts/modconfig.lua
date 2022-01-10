@@ -13,61 +13,40 @@ ModConfigMenu.Version = fileVersion
 -------------------------
 
 function ModConfigMenu.CopyTable(tableToCopy)
-
 	local table2 = {}
-
 	for i, value in pairs(tableToCopy) do
-
 		if type(value) == "table" then
 			table2[i] = ModConfigMenu.CopyTable(value)
 		else
 			table2[i] = value
 		end
-
 	end
-
 	return table2
-
 end
 
 function ModConfigMenu.FillTable(tableToFill, tableToFillFrom)
-
 	for i, value in pairs(tableToFillFrom) do
-	
 		if tableToFill[i] ~= nil then
-		
 			if type(value) == "table" then
-				
 				if type(tableToFill[i]) ~= "table" then
 					tableToFill[i] = {}
 				end
-				
 				tableToFill[i] = ModConfigMenu.FillTable(tableToFill[i], value)
-				
 			else
 				tableToFill[i] = value
 			end
-			
 		else
-		
 			if type(value) == "table" then
-				
 				if type(tableToFill[i]) ~= "table" then
 					tableToFill[i] = {}
 				end
-				
 				tableToFill[i] = ModConfigMenu.FillTable({}, value)
-				
 			else
 				tableToFill[i] = value
 			end
-			
 		end
-		
 	end
-	
 	return tableToFill
-	
 end
 
 -----------
