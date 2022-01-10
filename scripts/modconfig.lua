@@ -1,3 +1,5 @@
+local json = require("json")
+
 -------------
 -- version --
 -------------
@@ -6,14 +8,20 @@ local fileVersion = 100 -- Arbitrarily setting this to 100, the original version
 ModConfigMenu = {}
 ModConfigMenu.Version = fileVersion
 
-function ModConfigMenu.CopyTable(tableToCopy)
+-------------------------
+--SAVE HELPER FUNCTIONS--
+-------------------------
+
+local SaveHelper = {}
+
+function SaveHelper.CopyTable(tableToCopy)
 
 	local table2 = {}
 
 	for i, value in pairs(tableToCopy) do
 
 		if type(value) == "table" then
-			table2[i] = ModConfigMenu.CopyTable(value)
+			table2[i] = SaveHelper.CopyTable(value)
 		else
 			table2[i] = value
 		end
@@ -150,7 +158,7 @@ function ModConfigMenu.LoadSave(fromData)
 		return saveData
 		
 	end
-	
+
 end
 
 
@@ -1445,7 +1453,7 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 	if type(displayValue) == "string" then
 		textTableDisplay = {displayValue}
 	elseif type(displayValue) == "table" then
-		textTableDisplay = ModConfigMenu.CopyTable(displayValue)
+		textTableDisplay = SaveHelper.CopyTable(displayValue)
 	else
 		textTableDisplay = {tostring(displayValue)}
 	end
@@ -3116,7 +3124,6 @@ if ModConfigMenu.StandaloneMod then
 	end
 
 end
-
 
 ------------
 --FINISHED--
