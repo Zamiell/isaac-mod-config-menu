@@ -12,41 +12,64 @@ ModConfigMenu.Version = fileVersion
 --SAVE HELPER FUNCTIONS--
 -------------------------
 
-function ModConfigMenu.CopyTable(tableToCopy)
+local SaveHelper = {}
+
+function SaveHelper.CopyTable(tableToCopy)
+
 	local table2 = {}
+
 	for i, value in pairs(tableToCopy) do
+
 		if type(value) == "table" then
-			table2[i] = ModConfigMenu.CopyTable(value)
+			table2[i] = SaveHelper.CopyTable(value)
 		else
 			table2[i] = value
 		end
+
 	end
+
 	return table2
+
 end
 
-function ModConfigMenu.FillTable(tableToFill, tableToFillFrom)
+function SaveHelper.FillTable(tableToFill, tableToFillFrom)
+
 	for i, value in pairs(tableToFillFrom) do
+
 		if tableToFill[i] ~= nil then
+
 			if type(value) == "table" then
+
 				if type(tableToFill[i]) ~= "table" then
 					tableToFill[i] = {}
 				end
-				tableToFill[i] = ModConfigMenu.FillTable(tableToFill[i], value)
+
+				tableToFill[i] = SaveHelper.FillTable(tableToFill[i], value)
+
 			else
 				tableToFill[i] = value
 			end
+
 		else
+
 			if type(value) == "table" then
+
 				if type(tableToFill[i]) ~= "table" then
 					tableToFill[i] = {}
 				end
-				tableToFill[i] = ModConfigMenu.FillTable({}, value)
+
+				tableToFill[i] = SaveHelper.FillTable({}, value)
+
 			else
 				tableToFill[i] = value
 			end
+
 		end
+
 	end
+
 	return tableToFill
+
 end
 
 -----------
@@ -85,24 +108,43 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() return end
 
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
-ModConfigMenu.FillTable(ModConfigMenu.ConfigDefault,{
-	
-	--last button pressed tracker
-	LastBackPressed = Keyboard.KEY_ESCAPE,
-	LastSelectPressed = Keyboard.KEY_ENTER
-	
-})
 ModConfigMenu.Config = ModConfigMenu.Config or {}
-ModConfigMenu.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
 ModConfigMenu.SetConfigMetatables()
 
-function ModConfigMenu.GetSave()	
+function ModConfigMenu.GetSave()
+	local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+	saveData = SaveHelper.FillTable(saveData, ModConfigMenu.Config)
+
+	saveData = json.encode(saveData)
+
+	return saveData
 end
 
 function ModConfigMenu.LoadSave(fromData)
-end
+	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
 
+		local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+
+		if type(fromData) == "string" then
+			fromData = json.decode(fromData)
+		end
+		saveData = SaveHelper.FillTable(saveData, fromData)
+
+		local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+		saveData = SaveHelper.FillTable(currentData, saveData)
+
+		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
+		ModConfigMenu.SetConfigMetatables()
+
+		--make sure ScreenHelper's offset matches MCM's offset
+		if ScreenHelper then
+			ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+		end
+
+		return saveData
+	end
+end
 
 
 --------------
@@ -1064,7 +1106,7 @@ ModConfigMenu.AddNumberSetting(
 	"Announcer", --attribute in table
 	0, --minimum value
 	2, --max value
-	Options.AnnouncerVoiceMode, --default value,
+	0, --default value,
 	"Announcer", --display text
 	{ --value display text
 		[0] = "Sometimes",
@@ -1415,7 +1457,7 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 	if type(displayValue) == "string" then
 		textTableDisplay = {displayValue}
 	elseif type(displayValue) == "table" then
-		textTableDisplay = ModConfigMenu.CopyTable(displayValue)
+		textTableDisplay = SaveHelper.CopyTable(displayValue)
 	else
 		textTableDisplay = {tostring(displayValue)}
 	end
