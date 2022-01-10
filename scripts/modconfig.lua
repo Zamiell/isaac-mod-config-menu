@@ -1,3 +1,5 @@
+local json = require("json")
+
 -------------
 -- version --
 -------------
@@ -6,14 +8,20 @@ local fileVersion = 100 -- Arbitrarily setting this to 100, the original version
 ModConfigMenu = {}
 ModConfigMenu.Version = fileVersion
 
-function ModConfigMenu.CopyTable(tableToCopy)
+-------------------------
+--SAVE HELPER FUNCTIONS--
+-------------------------
+
+local SaveHelper = {}
+
+function SaveHelper.CopyTable(tableToCopy)
 
 	local table2 = {}
 
 	for i, value in pairs(tableToCopy) do
 
 		if type(value) == "table" then
-			table2[i] = ModConfigMenu.CopyTable(value)
+			table2[i] = SaveHelper.CopyTable(value)
 		else
 			table2[i] = value
 		end
@@ -21,6 +29,46 @@ function ModConfigMenu.CopyTable(tableToCopy)
 	end
 
 	return table2
+
+end
+
+function SaveHelper.FillTable(tableToFill, tableToFillFrom)
+
+	for i, value in pairs(tableToFillFrom) do
+
+		if tableToFill[i] ~= nil then
+
+			if type(value) == "table" then
+
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+
+				tableToFill[i] = SaveHelper.FillTable(tableToFill[i], value)
+
+			else
+				tableToFill[i] = value
+			end
+
+		else
+
+			if type(value) == "table" then
+
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+
+				tableToFill[i] = SaveHelper.FillTable({}, value)
+
+			else
+				tableToFill[i] = value
+			end
+
+		end
+
+	end
+
+	return tableToFill
 
 end
 
@@ -65,9 +113,37 @@ ModConfigMenu.Config = ModConfigMenu.Config or {}
 ModConfigMenu.SetConfigMetatables()
 
 function ModConfigMenu.GetSave()
+	local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+	saveData = SaveHelper.FillTable(saveData, ModConfigMenu.Config)
+
+	saveData = json.encode(saveData)
+
+	return saveData
 end
 
 function ModConfigMenu.LoadSave(fromData)
+	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
+
+		local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+
+		if type(fromData) == "string" then
+			fromData = json.decode(fromData)
+		end
+		saveData = SaveHelper.FillTable(saveData, fromData)
+
+		local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+		saveData = SaveHelper.FillTable(currentData, saveData)
+
+		ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
+		ModConfigMenu.SetConfigMetatables()
+
+		--make sure ScreenHelper's offset matches MCM's offset
+		if ScreenHelper then
+			ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+		end
+
+		return saveData
+	end
 end
 
 
@@ -1381,7 +1457,7 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 	if type(displayValue) == "string" then
 		textTableDisplay = {displayValue}
 	elseif type(displayValue) == "table" then
-		textTableDisplay = ModConfigMenu.CopyTable(displayValue)
+		textTableDisplay = SaveHelper.CopyTable(displayValue)
 	else
 		textTableDisplay = {tostring(displayValue)}
 	end
@@ -3052,7 +3128,6 @@ if ModConfigMenu.StandaloneMod then
 	end
 
 end
-
 
 ------------
 --FINISHED--
