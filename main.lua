@@ -1,4 +1,5 @@
 --this script handles saving for the standalone version of mod config menu
+local json = require("json")
 
 --create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
