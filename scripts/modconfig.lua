@@ -118,43 +118,10 @@ ModConfigMenu.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
 ModConfigMenu.SetConfigMetatables()
 
-function ModConfigMenu.GetSave()
-	
-	local saveData = ModConfigMenu.CopyTable(ModConfigMenu.ConfigDefault)
-	saveData = ModConfigMenu.FillTable(saveData, ModConfigMenu.Config)
-	
-	saveData = json.encode(saveData)
-	
-	return saveData
-	
+function ModConfigMenu.GetSave()	
 end
 
 function ModConfigMenu.LoadSave(fromData)
-
-	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
-	
-		local saveData = ModConfigMenu.CopyTable(ModConfigMenu.ConfigDefault)
-		
-		if type(fromData) == "string" then
-			fromData = json.decode(fromData)
-		end
-		saveData = ModConfigMenu.FillTable(saveData, fromData)
-		
-		local currentData = ModConfigMenu.CopyTable(ModConfigMenu.Config)
-		saveData = ModConfigMenu.FillTable(currentData, saveData)
-		
-		ModConfigMenu.Config = ModConfigMenu.CopyTable(saveData)
-		ModConfigMenu.SetConfigMetatables()
-		
-		--make sure ScreenHelper's offset matches MCM's offset
-		if ScreenHelper then
-			ScreenHelper.SetOffset(Options.HUDOffset * 10)
-		end
-		
-		return saveData
-		
-	end
-
 end
 
 
@@ -1108,6 +1075,26 @@ ModConfigMenu.AddBooleanSetting(
 	},
 	"Enable or disable custom bigbook overlays which can appear when an active item is used."
 )
+
+
+---------------------
+--ANNOUNCER SETTING--
+---------------------
+ModConfigMenu.AddNumberSetting(
+	"General", --category
+	"Announcer", --attribute in table
+	0, --minimum value
+	2, --max value
+	Options.AnnouncerVoiceMode, --default value,
+	"Announcer", --display text
+	{ --value display text
+		[0] = "Sometimes",
+		[1] = "Never",
+		[2] = "Always"
+	},
+	"Choose how often a voice-over will play when a pocket item (pill or card) is used."
+)
+
 
 --------------------------
 --GENERAL SETTINGS CLOSE--
