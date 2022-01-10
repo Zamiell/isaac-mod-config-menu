@@ -24,6 +24,46 @@ function ModConfigMenu.CopyTable(tableToCopy)
 
 end
 
+function ModConfigMenu.FillTable(tableToFill, tableToFillFrom)
+
+	for i, value in pairs(tableToFillFrom) do
+	
+		if tableToFill[i] ~= nil then
+		
+			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
+				tableToFill[i] = SaveHelper.FillTable(tableToFill[i], value)
+				
+			else
+				tableToFill[i] = value
+			end
+			
+		else
+		
+			if type(value) == "table" then
+				
+				if type(tableToFill[i]) ~= "table" then
+					tableToFill[i] = {}
+				end
+				
+				tableToFill[i] = SaveHelper.FillTable({}, value)
+				
+			else
+				tableToFill[i] = value
+			end
+			
+		end
+		
+	end
+	
+	return tableToFill
+	
+end
+
 -----------
 -- setup --
 -----------
@@ -57,18 +97,62 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
+
+
 ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() return end
 
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
+ModConfigMenu.FillTable(ModConfigMenu.ConfigDefault,{
+	
+	--last button pressed tracker
+	LastBackPressed = Keyboard.KEY_ESCAPE,
+	LastSelectPressed = Keyboard.KEY_ENTER
+	
+})
 ModConfigMenu.Config = ModConfigMenu.Config or {}
+ModConfigMenu.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
 ModConfigMenu.SetConfigMetatables()
 
 function ModConfigMenu.GetSave()
+	
+	local saveData = ModConfigMenu.CopyTable(ModConfigMenu.ConfigDefault)
+	saveData = ModConfigMenu.FillTable(saveData, ModConfigMenu.Config)
+	
+	saveData = json.encode(saveData)
+	
+	return saveData
+	
 end
 
 function ModConfigMenu.LoadSave(fromData)
+
+	if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
+	
+		local saveData = ModConfigMenu.CopyTable(ModConfigMenu.ConfigDefault)
+		
+		if type(fromData) == "string" then
+			fromData = json.decode(fromData)
+		end
+		saveData = ModConfigMenu.FillTable(saveData, fromData)
+		
+		local currentData = ModConfigMenu.CopyTable(ModConfigMenu.Config)
+		saveData = ModConfigMenu.FillTable(currentData, saveData)
+		
+		ModConfigMenu.Config = ModConfigMenu.CopyTable(saveData)
+		ModConfigMenu.SetConfigMetatables()
+		
+		--make sure ScreenHelper's offset matches MCM's offset
+		if ScreenHelper then
+			ScreenHelper.SetOffset(Options.HUDOffset * 10)
+		end
+		
+		return saveData
+		
+	end
+	
 end
+
 
 
 --------------
@@ -1020,26 +1104,6 @@ ModConfigMenu.AddBooleanSetting(
 	},
 	"Enable or disable custom bigbook overlays which can appear when an active item is used."
 )
-
-
----------------------
---ANNOUNCER SETTING--
----------------------
-ModConfigMenu.AddNumberSetting(
-	"General", --category
-	"Announcer", --attribute in table
-	0, --minimum value
-	2, --max value
-	0, --default value,
-	"Announcer", --display text
-	{ --value display text
-		[0] = "Sometimes",
-		[1] = "Never",
-		[2] = "Always"
-	},
-	"Choose how often a voice-over will play when a pocket item (pill or card) is used."
-)
-
 
 --------------------------
 --GENERAL SETTINGS CLOSE--
