@@ -12,16 +12,14 @@ ModConfigMenu.Version = fileVersion
 --SAVE HELPER FUNCTIONS--
 -------------------------
 
-local SaveHelper = {}
-
-function SaveHelper.CopyTable(tableToCopy)
+function ModConfigMenu.CopyTable(tableToCopy)
 
 	local table2 = {}
 
 	for i, value in pairs(tableToCopy) do
 
 		if type(value) == "table" then
-			table2[i] = SaveHelper.CopyTable(value)
+			table2[i] = ModConfigMenu.CopyTable(value)
 		else
 			table2[i] = value
 		end
@@ -44,7 +42,7 @@ function ModConfigMenu.FillTable(tableToFill, tableToFillFrom)
 					tableToFill[i] = {}
 				end
 				
-				tableToFill[i] = SaveHelper.FillTable(tableToFill[i], value)
+				tableToFill[i] = ModConfigMenu.FillTable(tableToFill[i], value)
 				
 			else
 				tableToFill[i] = value
@@ -58,7 +56,7 @@ function ModConfigMenu.FillTable(tableToFill, tableToFillFrom)
 					tableToFill[i] = {}
 				end
 				
-				tableToFill[i] = SaveHelper.FillTable({}, value)
+				tableToFill[i] = ModConfigMenu.FillTable({}, value)
 				
 			else
 				tableToFill[i] = value
@@ -104,8 +102,6 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 ----------
 --SAVING--
 ----------
-
-
 
 ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() return end
 
@@ -1453,7 +1449,7 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 	if type(displayValue) == "string" then
 		textTableDisplay = {displayValue}
 	elseif type(displayValue) == "table" then
-		textTableDisplay = SaveHelper.CopyTable(displayValue)
+		textTableDisplay = ModConfigMenu.CopyTable(displayValue)
 	else
 		textTableDisplay = {tostring(displayValue)}
 	end
