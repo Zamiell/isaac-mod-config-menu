@@ -1564,7 +1564,7 @@ function ModConfigMenu.PostRender()
 
 		local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
 		local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60)/60) * 0.5)
-		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, bottomRight.X, true)
+		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, math.floor(bottomRight.X), true)
 
 	end
 
@@ -1575,7 +1575,7 @@ function ModConfigMenu.PostRender()
 
 		local text = restartWarnMessage or rerunWarnMessage
 		local warningPrintColor = KColor(1, 0, 0, 1)
-		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, warningPrintColor, bottomRight.X, true)
+		versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, warningPrintColor, math.floor(bottomRight.X), true)
 
 	end
 
