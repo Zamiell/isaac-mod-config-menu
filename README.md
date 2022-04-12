@@ -4,7 +4,7 @@ Mod Config Menu is a library for [The Binding of Isaac: Repentance](https://stor
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
-This is a forked version of Mod Config Menu by Zamiel that removes all of Piber's disgusting hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem.
+This is a forked version of Mod Config Menu by Zamiel that removes all of the hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem.
 
 ---
 
