@@ -186,7 +186,7 @@ end
 
 ### IsaacScript
 
-If you are coding your mod using TypeScript, then the IsaacScript standard library has a save data manager that you should use instead of handling saving and loading yourself manually.
+If you are coding your mod using TypeScript, then the [IsaacScript](https://isaacscript.github.io/) standard library has a save data manager that you should use instead of handling saving and loading yourself manually.
 
 ```ts
 // Config.ts
