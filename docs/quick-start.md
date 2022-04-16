@@ -77,22 +77,31 @@ local settings = {
   myMultipleChoice = choices[1] -- The first choice by default
 }
 
+local function getTableIndex(tbl, val)
+  for i, v in ipairs(tbl) do
+    if v == val then
+      return i
+    end
+  end
+
+  return 0
+end
+
 ModConfigMenu.AddSetting(
   "My Settings Page",
   "Tab 1",
   {
     Type = ModConfigMenu.OptionType.NUMBER,
     CurrentSetting = function()
-      return settings.myMultipleChoice
+      return getTableIndex(choices, settings.myMultipleChoice)
     end,
     Minimum = 1,
     Maximum = #choices,
     Display = function()
-      return "My Multiple Choice: " .. choices[settings.myMultipleChoice]
+      return "My Multiple Choice: " .. settings.myMultipleChoice
     end,
     OnChange = function(n)
-      -- You could also choose to save the string instead of the number
-      settings.myMultipleChoice = n
+      settings.myMultipleChoice = choices[n]
     end,
     -- Text in the "Info" section will automatically word-wrap, unlike in the main section above
     Info = { "Info on 1st line" }
