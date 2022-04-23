@@ -68,11 +68,11 @@ Add a new setting to the supplied category and subcategory with the provided dat
 
 Remove the setting at the provided category, subcategory and attribute
 
-##### AddText([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: rgb table)
+##### AddText([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: RGBArray)
 
 Add text into the mod config menu under the provided category and subcategory.
 
-##### AddTitle([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: rgb table)
+##### AddTitle([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: RGBArray)
 
 Add a title to the mod config menu under the provided category and subcategory.
 
@@ -80,7 +80,7 @@ Add a title to the mod config menu under the provided category and subcategory.
 
 Add a space to the mod config menu under the provided category and subcategory.
 
-##### SimpleAddSetting(settingType: [OptionType](#OptionType), [categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: any, displayText: string, [displayValueProxies](#displayValueProxies), [displayDevice](#displayDevice): boolean, info: string, color: rgb table, functionName: string)
+##### SimpleAddSetting(settingType: [OptionType](#OptionType), [categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: any, displayText: string, [displayValueProxies](#displayValueProxies), [displayDevice](#displayDevice): boolean, info: string, color: RGBArray, functionName: string)
 
 Create a setting without using a table.
 
@@ -91,23 +91,23 @@ Create a setting without using a table.
 _All of the individual `Add*` functions below can be achieved with just `AddSetting` and providing the `Type` parameter in [`settingTable`](#settingTable) to be a [`ModConfigMenu.OptionType`](#OptionType). That is also the way I recommend, because I haven't been able to fully understand the code yet, so I don't know what some of the parameters are for, and how the "overrides" are set up._
 _Any help figuring out what all the parameters and "overrides" are so I can make this readme more accurate would be appreciated._
 
-##### AddBooleanSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: boolean, displayText: string, [displayValueProxies](#displayValueProxies): table, info: string, color: rgb table)
+##### AddBooleanSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: boolean, displayText: string, [displayValueProxies](#displayValueProxies): table, info: string, color: RGBArray)
 
 Add a boolean setting under the provided category and subcategory.
 
-##### AddNumberSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: number, displayText: string, [displayValueProxies](#displayValueProxies), info: string, color: rgb table)
+##### AddNumberSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: number, displayText: string, [displayValueProxies](#displayValueProxies), info: string, color: RGBArray)
 
 Add a number value setting under the provided category and subcategory.
 
-##### AddScrollSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, info: string, color: rgb table)
+##### AddScrollSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, info: string, color: RGBArray)
 
 Add a slider setting under the provided category and subcategory.
 
-##### AddKeyboardSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: rgb table)
+##### AddKeyboardSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: RGBArray)
 
 Add a keyboard keybinding setting.
 
-##### AddControllerSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: rgb table)
+##### AddControllerSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: RGBArray)
 
 Add a controller keybinding setting.
 
