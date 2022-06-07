@@ -11,7 +11,7 @@
 
 Mod Config Menu is a library to that allows other mods to have a settings menu. You should only subscribe to this mod if you have other mods that use it.
 
-This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the "Pure" version.
+This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the &quot;Pure&quot; version.
 
 This mod is open-source. You can help with development by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
 
@@ -19,30 +19,30 @@ Credit goes to piber20 for originally creating this library and Chifilly for upd
 
 [h2][b]Using Mod Config Menu[/b][/h2]
 
-In order to use Mod Config Menu Pure, do not use the "require" or "dofile" or "pcall" functions. Rather, simply check to see if the global variable of "ModConfigMenu" exists, with something along the lines of:
+In order to use Mod Config Menu Pure, do not use the &quot;require&quot; or &quot;dofile&quot; or &quot;pcall&quot; functions. Rather, simply check to see if the global variable of &quot;ModConfigMenu&quot; exists, with something along the lines of:
 
 [code]
-local MOD_NAME = "My Mod"
-local VERSION = "1.0"
+local MOD_NAME = &quot;My Mod&quot;
+local VERSION = &quot;1.0&quot;
 
 local function setupMyModConfigMenuSettings()
   if ModConfigMenu == nil then
     return
   end
 
-  ModConfigMenu.AddSpace(MOD_NAME, "Info")
-  ModConfigMenu.AddText(MOD_NAME, "Info", function() return MOD_NAME end)
-  ModConfigMenu.AddSpace(MOD_NAME, "Info")
-  ModConfigMenu.AddText(MOD_NAME, "Info", function() return "Version " .. VERSION end)
+  ModConfigMenu.AddSpace(MOD_NAME, &quot;Info&quot;)
+  ModConfigMenu.AddText(MOD_NAME, &quot;Info&quot;, function() return MOD_NAME end)
+  ModConfigMenu.AddSpace(MOD_NAME, &quot;Info&quot;)
+  ModConfigMenu.AddText(MOD_NAME, &quot;Info&quot;, function() return &quot;Version &quot; .. VERSION end)
 end
 [/code]
 
 [h2][b]Troubleshooting[/b][/h2]
 
-Note that the "Pure" version of Mod Config Menu will not work properly if:
-- you subscribed to the "Pure" version and you subscribed to a different version at the same time, which will cause a conflict
+Note that the &quot;Pure&quot; version of Mod Config Menu will not work properly if:
+- you subscribed to the &quot;Pure&quot; version and you subscribed to a different version at the same time, which will cause a conflict
 - you are subscribed to a mod that uses a standalone version of Mod Config Menu, which will cause a conflict
-- you are subscribed to a mod uses the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu
+- you are subscribed to a mod uses the &quot;require&quot; or &quot;dofile&quot; or &quot;pcall&quot; functions to initialize or invoke Mod Config Menu
 
 [h2]Navigation[/h2]
 
@@ -68,7 +68,7 @@ A: Yes.
 A: No, because it uses Repentance-only features for getting the HUD offset.
 
 [b]Q: What do I do if Mod Config Menu Pure does not work properly with a particular mod?[/b]
-A: This is probably because the mod is using the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+A: This is probably because the mod is using the &quot;require&quot; or &quot;dofile&quot; or &quot;pcall&quot; functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
 
 [b]Q: For a typical player, what difference does this version make?[/b]
 A: Nothing. A typical player should use the whatever specific version results in the lowest amount of bugs for the specific combination of mods that they play with. For my mods, that happens to be the Pure version, but for other combinations of mods, it could differ.
@@ -80,11 +80,11 @@ A: No. You should only subscribe to one specific version of Mod Config Menu at a
 A: Mod Config Menu is not in charge of saving any data. This is purely in the domain of the individual mods that use it. If an individual mod does not properly save its data, then you should contact the author of that mod.
 
 [b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
-A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
+A: Yes. However, it might not work as a drop-in replacement for mods that use the &quot;require&quot; or &quot;dofile&quot; or &quot;pcall&quot; functions to initialize or invoke Mod Config Menu. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
 
-[b]Q: What does it mean to "remove API overrides"?[/b]
-A: The original version overwrote some of the Lua and Isaac API functions, such as "pcall" and "RequireMod". This version does not overwrite any API functions.
+[b]Q: What does it mean to &quot;remove API overrides&quot;?[/b]
+A: The original version overwrote some of the Lua and Isaac API functions, such as &quot;pcall&quot; and &quot;RequireMod&quot;. This version does not overwrite any API functions.
 </description>
-    <version>1.2</version>
+    <version>1.3</version>
     <visibility>Public</visibility>
 </metadata>
