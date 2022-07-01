@@ -5,63 +5,57 @@
 -- If you need something in this file changed, please let the creator know! --
 ------------------------------------------------------------------------------
 
--- CODE STARTS BELOW --
-
-
 -------------
 -- version --
 -------------
+
 local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if ScreenHelper and ScreenHelper.Version >= fileVersion then
 
-	return ScreenHelper
+  return ScreenHelper
 
 end
 
 if not ScreenHelper then
 
-	ScreenHelper = {}
-	ScreenHelper.Version = fileVersion
+  ScreenHelper = {}
+  ScreenHelper.Version = fileVersion
 
 elseif ScreenHelper.Version < fileVersion then
 
-	local oldVersion = ScreenHelper.Version
+  local oldVersion = ScreenHelper.Version
 
-	-- handle old versions
+  -- handle old versions
 
-	ScreenHelper.Version = fileVersion
+  ScreenHelper.Version = fileVersion
 
 end
-
 
 ---------------------
 --hud offset helper--
 ---------------------
+
 ScreenHelper.CurrentScreenOffset = ScreenHelper.CurrentScreenOffset or 0
 
 function ScreenHelper.SetOffset(num)
+  num = math.min(math.max(math.floor(num), 0), 10)
 
-	num = math.min(math.max(math.floor(num),0),10)
+  ScreenHelper.CurrentScreenOffset = num
 
-	ScreenHelper.CurrentScreenOffset = num
-
-	return num
-
+  return num
 end
 
 function ScreenHelper.GetOffset()
-
-	return ScreenHelper.CurrentScreenOffset
-
+  return ScreenHelper.CurrentScreenOffset
 end
-
 
 ------------------------------------
 --screen size and corner functions--
 ------------------------------------
-local vecZero = Vector(0,0)
+
+local vecZero = Vector(0, 0)
 function ScreenHelper.GetScreenSize()
   local screenWidth = Isaac.GetScreenWidth()
   local screenHeight = Isaac.GetScreenHeight()
@@ -70,58 +64,47 @@ function ScreenHelper.GetScreenSize()
 end
 
 function ScreenHelper.GetScreenCenter()
-
-	return ScreenHelper.GetScreenSize() / 2
-
+  return ScreenHelper.GetScreenSize() / 2
 end
 
 function ScreenHelper.GetScreenBottomRight(offset)
+  offset = offset or ScreenHelper.GetOffset()
 
-	offset = offset or ScreenHelper.GetOffset()
+  local pos = ScreenHelper.GetScreenSize()
+  local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
+  pos = pos + hudOffset
 
-	local pos = ScreenHelper.GetScreenSize()
-	local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
-	pos = pos + hudOffset
-
-	return pos
-
+  return pos
 end
 
 function ScreenHelper.GetScreenBottomLeft(offset)
+  offset = offset or ScreenHelper.GetOffset()
 
-	offset = offset or ScreenHelper.GetOffset()
+  local pos = Vector(0, ScreenHelper.GetScreenBottomRight(0).Y)
+  local hudOffset = Vector(offset * 2.2, -offset * 1.6)
+  pos = pos + hudOffset
 
-	local pos = Vector(0, ScreenHelper.GetScreenBottomRight(0).Y)
-	local hudOffset = Vector(offset * 2.2, -offset * 1.6)
-	pos = pos + hudOffset
-
-	return pos
-
+  return pos
 end
 
 function ScreenHelper.GetScreenTopRight(offset)
+  offset = offset or ScreenHelper.GetOffset()
 
-	offset = offset or ScreenHelper.GetOffset()
+  local pos = Vector(ScreenHelper.GetScreenBottomRight(0).X, 0)
+  local hudOffset = Vector(-offset * 2.2, offset * 1.2)
+  pos = pos + hudOffset
 
-	local pos = Vector(ScreenHelper.GetScreenBottomRight(0).X, 0)
-	local hudOffset = Vector(-offset * 2.2, offset * 1.2)
-	pos = pos + hudOffset
-
-	return pos
-
+  return pos
 end
 
 function ScreenHelper.GetScreenTopLeft(offset)
+  offset = offset or ScreenHelper.GetOffset()
 
-	offset = offset or ScreenHelper.GetOffset()
+  local pos = vecZero
+  local hudOffset = Vector(offset * 2, offset * 1.2)
+  pos = pos + hudOffset
 
-	local pos = vecZero
-	local hudOffset = Vector(offset * 2, offset * 1.2)
-	pos = pos + hudOffset
-
-	return pos
-
+  return pos
 end
-
 
 return ScreenHelper

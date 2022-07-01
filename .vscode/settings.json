@@ -21,6 +21,13 @@
   // Language settings
   // -----------------
 
+  // Automatically run the formatter when certain files are saved.
+  "[lua]": {
+    "editor.defaultFormatter": "sumneko.lua",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+
   // Isaac globals, auto-defined from Filloax's extension.
   "Lua.diagnostics.globals": [
     "ActionTriggers",
