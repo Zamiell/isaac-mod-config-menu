@@ -95,7 +95,6 @@ if not ScreenHelper then
 
 end
 
---create the mod
 ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 
 
@@ -103,7 +102,7 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
-ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() return end
+ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() end
 
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
 ModConfigMenu.Config = ModConfigMenu.Config or {}
