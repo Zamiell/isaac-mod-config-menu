@@ -8,7 +8,7 @@
         "*.anm2",
         "*.pyc",
         "*.wav",
-        ".git/**",
+        ".git/**"
     ],
     "words": [
         "Chifilly",
@@ -17,6 +17,7 @@
         "pcall",
         "piber",
         "Popen",
-        "Zamiel"
+        "Zamiel",
+        "Zamiell"
     ]
 }
