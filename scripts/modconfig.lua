@@ -2253,7 +2253,8 @@ function ModConfigMenu.PostRender()
         if configMenuPositionFirstSubcategory + (configMenuSubcategoriesCanShow - 1) < #
             currentMenuCategory.Subcategories and
             configMenuPositionCursorSubcategory >= 1 + (configMenuSubcategoriesCanShow - 2) then
-          configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory - (configMenuSubcategoriesCanShow - 2
+          configMenuPositionFirstSubcategory = configMenuPositionCursorSubcategory -
+              (configMenuSubcategoriesCanShow - 2
               )
         end
         configMenuPositionFirstSubcategory = math.min(math.max(configMenuPositionFirstSubcategory, 1),
@@ -2741,7 +2742,7 @@ function ModConfigMenu.PostRender()
                       color = optionsFontColorAlpha
                     end
                     if optionColor then
-                      color = KColor(optionColor[1], optionColor[2], optionColor[3], color.A)
+                      color = KColor(optionColor[1], optionColor[2], optionColor[3], color.Alpha)
                     end
 
                     scrollOffset = posOffset
