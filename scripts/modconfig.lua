@@ -3,7 +3,10 @@ local json = require("json")
 -------------
 -- version --
 -------------
-local fileVersion = 100 -- Arbitrarily setting this to 100, the original version was 33
+
+-- The final version of Chifilly's Mod Config Menu fork was 33.
+-- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
+local fileVersion = 101
 
 ModConfigMenu = {}
 ModConfigMenu.Version = fileVersion
@@ -119,28 +122,38 @@ function ModConfigMenu.GetSave()
 end
 
 function ModConfigMenu.LoadSave(fromData)
-  if fromData and ((type(fromData) == "string" and json.decode(fromData)) or type(fromData) == "table") then
-
-    local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-
-    if type(fromData) == "string" then
-      fromData = json.decode(fromData)
-    end
-    saveData = SaveHelper.FillTable(saveData, fromData)
-
-    local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
-    saveData = SaveHelper.FillTable(currentData, saveData)
-
-    ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
-    ModConfigMenu.SetConfigMetatables()
-
-    --make sure ScreenHelper's offset matches MCM's offset
-    if ScreenHelper then
-      ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
-    end
-
-    return saveData
+  if fromData == nil then
+    return
   end
+
+  local fromDataType = type(fromData)
+  if fromDataType == "string" then
+    -- Return early if this is not valid JSON.
+    fromData = json.decode(fromData)
+    if not fromData then
+      return
+    end
+  elseif fromDataType == "table" then
+    -- No validation necessary.
+  else
+    return
+  end
+
+  local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+  saveData = SaveHelper.FillTable(saveData, fromData)
+
+  local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+  saveData = SaveHelper.FillTable(currentData, saveData)
+
+  ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
+  ModConfigMenu.SetConfigMetatables()
+
+  --make sure ScreenHelper's offset matches MCM's offset
+  if ScreenHelper then
+    ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+  end
+
+  return saveData
 end
 
 --------------
@@ -195,24 +208,25 @@ ModConfigMenu.IsVisible = false
 function ModConfigMenu.PostGameStarted()
   rerunWarnMessage = nil
 
+  if not isFirstRun then
+    return
+  end
+  isFirstRun = false
+
   if ModConfigMenu.Config["Mod Config Menu"].ShowControls and isFirstRun then
-
     versionPrintTimer = 120
-
   end
 
   ModConfigMenu.IsVisible = false
 
-  --add potato dummy to ignore list
+  -- Add Potato Dummy to the ignore list.
   local potatoType = Isaac.GetEntityTypeByName("Potato Dummy")
   local potatoVariant = Isaac.GetEntityVariantByName("Potato Dummy")
 
-  if potatoType and potatoType > 0 then
+  if potatoType and potatoVariant > 0 then
     ModConfigMenu.IgnoreActiveEnemies[potatoType] = ModConfigMenu.IgnoreActiveEnemies or {}
     ModConfigMenu.IgnoreActiveEnemies[potatoType][potatoVariant] = true
   end
-
-  isFirstRun = false
 end
 
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.PostGameStarted)
@@ -223,9 +237,7 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, ModConfigMenu.P
 ---------------
 function ModConfigMenu.PostUpdate()
   if versionPrintTimer > 0 then
-
     versionPrintTimer = versionPrintTimer - 1
-
   end
 end
 
