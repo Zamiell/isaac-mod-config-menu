@@ -24,11 +24,11 @@ if not ScreenHelper then
 
 	ScreenHelper = {}
 	ScreenHelper.Version = fileVersion
-	
+
 elseif ScreenHelper.Version < fileVersion then
 
 	local oldVersion = ScreenHelper.Version
-	
+
 	-- handle old versions
 
 	ScreenHelper.Version = fileVersion
@@ -46,7 +46,7 @@ function ScreenHelper.SetOffset(num)
 	num = math.min(math.max(math.floor(num),0),10)
 
 	ScreenHelper.CurrentScreenOffset = num
-	
+
 	return num
 
 end
@@ -79,55 +79,55 @@ end
 function ScreenHelper.GetScreenCenter()
 
 	return ScreenHelper.GetScreenSize() / 2
-	
+
 end
 
 function ScreenHelper.GetScreenBottomRight(offset)
 
 	offset = offset or ScreenHelper.GetOffset()
-	
+
 	local pos = ScreenHelper.GetScreenSize()
 	local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
 	pos = pos + hudOffset
 
 	return pos
-	
+
 end
 
 function ScreenHelper.GetScreenBottomLeft(offset)
 
 	offset = offset or ScreenHelper.GetOffset()
-	
+
 	local pos = Vector(0, ScreenHelper.GetScreenBottomRight(0).Y)
 	local hudOffset = Vector(offset * 2.2, -offset * 1.6)
 	pos = pos + hudOffset
-	
+
 	return pos
-	
+
 end
 
 function ScreenHelper.GetScreenTopRight(offset)
 
 	offset = offset or ScreenHelper.GetOffset()
-	
+
 	local pos = Vector(ScreenHelper.GetScreenBottomRight(0).X, 0)
 	local hudOffset = Vector(-offset * 2.2, offset * 1.2)
 	pos = pos + hudOffset
 
 	return pos
-	
+
 end
 
 function ScreenHelper.GetScreenTopLeft(offset)
 
 	offset = offset or ScreenHelper.GetOffset()
-	
+
 	local pos = vecZero
 	local hudOffset = Vector(offset * 2, offset * 1.2)
 	pos = pos + hudOffset
-	
+
 	return pos
-	
+
 end
 
 
