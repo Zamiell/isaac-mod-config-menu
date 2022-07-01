@@ -78,6 +78,8 @@ end
 Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
 
 local vecZero = Vector(0,0)
+local restartWarnMessage = nil
+local rerunWarnMessage = nil
 
 if not InputHelper then
 
@@ -1078,7 +1080,7 @@ ModConfigMenu.AddBooleanSetting(
 		[true] = "On",
 		[false] = "Off"
 	},
-	"Enable or disable custom charge bar visuals for mod effects, like those from chargable items."
+	"Enable or disable custom charge bar visuals for mod effects, like those from chargeable items."
 )
 
 
@@ -1094,7 +1096,7 @@ ModConfigMenu.AddBooleanSetting(
 		[true] = "On",
 		[false] = "Off"
 	},
-	"Enable or disable custom bigbook overlays which can appear when an active item is used."
+	"Enable or disable custom big-book overlays which can appear when an active item is used."
 )
 
 
@@ -1372,8 +1374,6 @@ function ModConfigMenu.EnterSubcategory()
 	end
 end
 
-local restartWarnMessage = nil
-local rerunWarnMessage = nil
 function ModConfigMenu.LeavePopup()
 	if configMenuInSubcategory and configMenuInOptions and configMenuInPopup then
 
@@ -1486,7 +1486,7 @@ function ModConfigMenu.ConvertDisplayToTextTable(displayValue, lineWidth, font)
 
 	end
 
-	--dynamic string new line creation, based on code by wofsauge
+	--dynamic string new line creation, based on code by Wofsauge
 	local textTableDisplayAfterWordLength = {}
 	for lineIndex=1, #textTableDisplayAfterNewlines do
 
@@ -1797,7 +1797,7 @@ function ModConfigMenu.PostRender()
 							sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
 						else
 							local numberToChange = nil
-							local recievedInput = false
+							local receivedInput = false
 							if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
 								numberToChange = optionCurrent
 
@@ -1807,14 +1807,14 @@ function ModConfigMenu.PostRender()
 
 								if pressingButton == "BACK" or pressingButton == "LEFT" then
 									numberToChange = nil
-									recievedInput = true
+									receivedInput = true
 								else
 									for i=0, 4 do
 										if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD then
 											for j=32, 400 do
 												if InputHelper.KeyboardTriggered(j, i) then
 													numberToChange = j
-													recievedInput = true
+													receivedInput = true
 													break
 												end
 											end
@@ -1822,7 +1822,7 @@ function ModConfigMenu.PostRender()
 											for j=0, 31 do
 												if Input.IsButtonTriggered(j, i) then
 													numberToChange = j
-													recievedInput = true
+													receivedInput = true
 													break
 												end
 											end
@@ -1831,15 +1831,15 @@ function ModConfigMenu.PostRender()
 								end
 							elseif currentMenuOption.OnSelect then
 								if pressingButton == "BACK" or pressingButton == "LEFT" then
-									recievedInput = true
+									receivedInput = true
 								end
 								if pressingButton == "SELECT" or pressingButton == "RIGHT" then
 									numberToChange = true
-									recievedInput = true
+									receivedInput = true
 								end
 							end
 
-							if recievedInput then
+							if receivedInput then
 								if optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
 
 									if type(optionCurrent) == "function" then
@@ -2594,11 +2594,11 @@ function ModConfigMenu.PostRender()
 							if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
 
 								--render scroll arrows
-								if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasnt the first in the list
+								if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasn't the first in the list
 									SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125,0), vecZero, vecZero)
 								end
 
-								if subcategoryIndex < #currentMenuCategory.Subcategories then --if this isnt the last thing
+								if subcategoryIndex < #currentMenuCategory.Subcategories then --if this is not the last thing
 									SubcategoryCursorSpriteRight:Render(lastOptionPos + Vector(125,0), vecZero, vecZero)
 								end
 
@@ -3130,6 +3130,5 @@ end
 ------------
 Isaac.DebugString("Mod Config Menu v" .. ModConfigMenu.Version .. " loaded!")
 print("Mod Config Menu v" .. ModConfigMenu.Version .. " loaded!")
-
 
 return ModConfigMenu
