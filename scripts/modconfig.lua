@@ -100,7 +100,6 @@ end
 
 ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 
-
 ----------
 --SAVING--
 ----------
@@ -155,6 +154,48 @@ function ModConfigMenu.LoadSave(fromData)
 
   return saveData
 end
+
+---------------------------------
+-- Saving and loading MCM data --
+---------------------------------
+
+local function save()
+  local mod = ModConfigMenu.Mod
+
+  local jsonString = json.encode(ModConfigMenu.Config["Mod Config Menu"])
+  mod:SaveData(jsonString)
+end
+
+local function load()
+  local mod = ModConfigMenu.Mod
+
+  if not mod:HasData() then
+    return
+  end
+
+  local jsonString = mod:LoadData()
+  if jsonString == nil or jsonString == "" then
+    return
+  end
+
+  local table = json.decode(jsonString)
+  if table == nil then
+    return
+  end
+
+  ModConfigMenu.Config["Mod Config Menu"] = table
+end
+
+local function vanillaMCMOptionRegisterSave(mcmOption)
+  local oldOnChange = mcmOption.OnChange
+  mcmOption.OnChange = function(currentValue)
+    local value = oldOnChange(currentValue)
+    save()
+    return value
+  end
+end
+
+load();
 
 --------------
 --game start--
@@ -1018,7 +1059,6 @@ end
 --------------------------
 ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of mods")
 
-
 ----------------------
 --HUD OFFSET SETTING--
 ----------------------
@@ -1032,6 +1072,7 @@ local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
 
 hudOffsetSetting.HideControls = true -- hide controls so the screen corner graphics are easier to see
 hudOffsetSetting.ShowOffset = true -- shows screen offset
+vanillaMCMOptionRegisterSave(hudOffsetSetting)
 
 --set up callback
 local oldHudOffsetOnChange = hudOffsetSetting.OnChange
@@ -1044,11 +1085,10 @@ hudOffsetSetting.OnChange = function(currentValue)
   return oldHudOffsetOnChange(currentValue)
 end
 
-
 --------------------
 --OVERLAYS SETTING--
 --------------------
-ModConfigMenu.AddBooleanSetting(
+local overlays = ModConfigMenu.AddBooleanSetting(
   "General", --category
   "Overlays", --attribute in table
   true, --default value
@@ -1059,12 +1099,12 @@ ModConfigMenu.AddBooleanSetting(
   },
   "Enable or disable custom visual overlays, like screen-wide fog."
 )
-
+vanillaMCMOptionRegisterSave(overlays)
 
 -----------------------
 --CHARGE BARS SETTING--
 -----------------------
-ModConfigMenu.AddBooleanSetting(
+local chargeBars = ModConfigMenu.AddBooleanSetting(
   "General", --category
   "ChargeBars", --attribute in table
   false, --default value
@@ -1075,12 +1115,12 @@ ModConfigMenu.AddBooleanSetting(
   },
   "Enable or disable custom charge bar visuals for mod effects, like those from chargeable items."
 )
-
+vanillaMCMOptionRegisterSave(chargeBars)
 
 ---------------------
 --BIG BOOKS SETTING--
 ---------------------
-ModConfigMenu.AddBooleanSetting(
+local bigBooks = ModConfigMenu.AddBooleanSetting(
   "General", --category
   "BigBooks", --attribute in table
   true, --default value
@@ -1091,12 +1131,13 @@ ModConfigMenu.AddBooleanSetting(
   },
   "Enable or disable custom big-book overlays which can appear when an active item is used."
 )
-
+vanillaMCMOptionRegisterSave(bigBooks)
 
 ---------------------
 --ANNOUNCER SETTING--
 ---------------------
-ModConfigMenu.AddNumberSetting(
+
+local announcer = ModConfigMenu.AddNumberSetting(
   "General", --category
   "Announcer", --attribute in table
   0, --minimum value
@@ -1110,7 +1151,7 @@ ModConfigMenu.AddNumberSetting(
   },
   "Choose how often a voice-over will play when a pocket item (pill or card) is used."
 )
-
+vanillaMCMOptionRegisterSave(announcer)
 
 --------------------------
 --GENERAL SETTINGS CLOSE--
@@ -1120,7 +1161,6 @@ ModConfigMenu.AddSpace("General") --SPACE
 
 ModConfigMenu.AddText("General", "These settings apply to")
 ModConfigMenu.AddText("General", "all mods which support them")
-
 
 ----------------------------------
 --MOD CONFIG MENU SETTINGS SETUP--
@@ -1133,10 +1173,10 @@ ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.V
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
-
 ----------------------
 --OPEN MENU KEYBOARD--
 ----------------------
+
 local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
   "Mod Config Menu", --category
   "OpenMenuKeyboard", --attribute in table
@@ -1147,11 +1187,12 @@ local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
 )
 
 openMenuKeyboardSetting.IsOpenMenuKeybind = true
-
+vanillaMCMOptionRegisterSave(openMenuKeyboardSetting)
 
 ------------------------
 --OPEN MENU CONTROLLER--
 ------------------------
+
 local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
   "Mod Config Menu", --category
   "OpenMenuController", --attribute in table
@@ -1160,18 +1201,18 @@ local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
   true, --if (controller) is displayed after the key text
   "Choose what button on your controller will open Mod Config Menu."
 )
-
 openMenuControllerSetting.IsOpenMenuKeybind = true
+vanillaMCMOptionRegisterSave(openMenuControllerSetting)
 
 --f10 note
 ModConfigMenu.AddText("Mod Config Menu", "F10 will always open this menu.")
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
-
 ------------
 --HIDE HUD--
 ------------
+
 local hideHudSetting = ModConfigMenu.AddBooleanSetting(
   "Mod Config Menu", --category
   "HideHudInMenu", --attribute in table
@@ -1183,6 +1224,7 @@ local hideHudSetting = ModConfigMenu.AddBooleanSetting(
   },
   "Enable or disable the hud when this menu is open."
 )
+vanillaMCMOptionRegisterSave(hideHudSetting)
 
 --actively modify the hud visibility as this setting changes
 local oldHideHudOnChange = hideHudSetting.OnChange
@@ -1203,10 +1245,10 @@ hideHudSetting.OnChange = function(currentValue)
   end
 end
 
-
 ----------------------------
 --RESET TO DEFAULT KEYBIND--
 ----------------------------
+
 local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
   "Mod Config Menu", --category
   "ResetToDefault", --attribute in table
@@ -1214,14 +1256,14 @@ local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
   "Reset To Default Keybind", --display text
   "Press this button on your keyboard to reset a setting to its default value."
 )
-
 resetKeybindSetting.IsResetKeybind = true
-
+vanillaMCMOptionRegisterSave(resetKeybindSetting)
 
 -----------------
 --SHOW CONTROLS--
 -----------------
-ModConfigMenu.AddBooleanSetting(
+
+local showControls = ModConfigMenu.AddBooleanSetting(
   "Mod Config Menu", --category
   "ShowControls", --attribute in table
   true, --default value
@@ -1232,13 +1274,14 @@ ModConfigMenu.AddBooleanSetting(
   },
   "Disable this to remove the back and select widgets at the lower corners of the screen and remove the bottom start-up message."
 )
+vanillaMCMOptionRegisterSave(showControls)
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
-
 
 -----------------
 --COMPATIBILITY--
 -----------------
+
 local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
   "Mod Config Menu", --category
   "CompatibilityLayer", --attribute in table
@@ -1250,7 +1293,7 @@ local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
   },
   "Use this setting to prevent warnings from being printed to the console for mods that use outdated features of Mod Config Menu."
 )
--- compatibilitySetting.Restart = true
+vanillaMCMOptionRegisterSave(compatibilitySetting)
 
 local configMenuSubcategoriesCanShow = 3
 
@@ -3062,11 +3105,9 @@ function ModConfigMenu.OpenConfigMenu()
   if ModConfigMenu.RoomIsSafe() then
 
     if ModConfigMenu.Config["Mod Config Menu"].HideHudInMenu then
-
       local game = Game()
       local hud = game:GetHUD()
       hud:SetVisible(false)
-
     end
 
     ModConfigMenu.IsVisible = true
@@ -3109,7 +3150,6 @@ function ModConfigMenu.InputAction(_, entity, inputHook, buttonAction)
     else
       return 0
     end
-
   end
 end
 
@@ -3126,20 +3166,16 @@ function ModConfigMenu.ExecuteCmd(_, command, args)
   command = command:lower()
 
   if toggleCommands[command] then
-
     ModConfigMenu.ToggleConfigMenu()
-
   end
 end
 
 ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ModConfigMenu.ExecuteCmd)
 
 if ModConfigMenu.StandaloneMod then
-
   if not ModConfigMenu.StandaloneSaveLoaded then
     ModConfigMenu.StandaloneSaveLoaded = true
   end
-
 end
 
 ------------
