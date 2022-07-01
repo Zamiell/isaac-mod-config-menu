@@ -1,10 +1,8 @@
---this script handles saving for the standalone version of mod config menu
+-- This script handles saving for the standalone version of Mod Config Menu.
 
---create the mod
 local mod = RegisterMod("Mod Config Menu Standalone", 1)
 
 ModConfigMenu = {}
 ModConfigMenu.StandaloneMod = mod
 
---load mod config menu
 require("scripts.modconfig")

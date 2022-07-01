@@ -8,7 +8,7 @@
   "editor.tabSize": 2,
 
   "files.associations": {
-    "*.anm2": "xml", // anm2 files are just XML files
+    "*.anm2": "xml"
   },
 
   // Linux line endings are used in this project
@@ -16,33 +16,4 @@
 
   // Automatically removing all trailing whitespace when saving a file
   "files.trimTrailingWhitespace": true,
-
-  // -----------------
-  // Language settings
-  // -----------------
-
-  "Lua.diagnostics.globals": [
-    "ModCallbacks",
-    "RegisterMod",
-    "Isaac",
-    "Game",
-    "Sprite",
-    "Keyboard",
-    "Input",
-    "InputHook",
-    "Vector",
-    "Font",
-    "EntityFlag",
-    "EntityType",
-    "ProjectileFlags",
-    "Color",
-    "SeedEffect",
-    "ButtonAction",
-    "KColor",
-    "SFXManager",
-    "SoundEffect",
-    "DeadSeaScrollsMenu",
-    "boolean",
-    "AwaitingTextInput"
-  ],
 }
