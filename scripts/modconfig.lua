@@ -2463,7 +2463,7 @@ function ModConfigMenu.PostRender()
 		end
 
 		--info pos handling
-		local infoPos = centerPos + Vector(-4,106)
+		local infoPos = centerPos + Vector(-4, 106)
 
 		MenuSprite:Render(centerPos, vecZero, vecZero)
 
@@ -2771,7 +2771,7 @@ function ModConfigMenu.PostRender()
 						end
 
 						local showStrikeout = thisOption.ShowStrikeout
-						if posOffset > 0 and (type(showStrikeout) == boolean and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
+						if posOffset > 0 and (type(showStrikeout) == "boolean" and showStrikeout == true) or (type(showStrikeout) == "function" and showStrikeout() == true) then
 							if configMenuInOptions then
 								StrikeOutSprite.Color = colorDefault
 							else
@@ -3121,10 +3121,6 @@ if ModConfigMenu.StandaloneMod then
 
 	if not ModConfigMenu.StandaloneSaveLoaded then
 		ModConfigMenu.StandaloneSaveLoaded = true
-	end
-
-	if not ModConfigMenu.CompatibilityMode then
-		dofile("scripts/modconfigoldcompatibility")
 	end
 
 end
