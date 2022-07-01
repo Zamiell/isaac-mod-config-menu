@@ -1,8 +1,19 @@
 {
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
     "version": "0.2",
+    "files": [
+        "**"
+    ],
+    "ignorePaths": [
+        "*.anm2",
+        "*.pyc",
+        "*.wav",
+        ".git/**",
+    ],
     "words": [
         "Chifilly",
         "keybind",
+        "modconfig",
         "pcall",
         "piber",
         "Popen",
