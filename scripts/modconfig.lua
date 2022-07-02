@@ -170,6 +170,7 @@ local function load()
   local mod = ModConfigMenu.Mod
 
   if not mod:HasData() then
+    save()
     return
   end
 
@@ -194,8 +195,6 @@ local function vanillaMCMOptionRegisterSave(mcmOption)
     return value
   end
 end
-
-load();
 
 --------------
 --game start--
@@ -248,6 +247,8 @@ end
 ModConfigMenu.IsVisible = false
 function ModConfigMenu.PostGameStarted()
   rerunWarnMessage = nil
+
+  load()
 
   if not isFirstRun then
     return
