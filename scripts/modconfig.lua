@@ -6,7 +6,7 @@ local json = require("json")
 
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
-local fileVersion = 101
+local fileVersion = 102
 
 ModConfigMenu = {}
 ModConfigMenu.Version = fileVersion
@@ -1580,8 +1580,8 @@ function ModConfigMenu.PostRender()
   local pressedToggleMenu = false
 
   local openMenuGlobal = Keyboard.KEY_F10
-  local openMenuKeyboard = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard or -1
-  local openMenuController = ModConfigMenu.Config["Mod Config Menu"].OpenMenuController or -1
+  local openMenuKeyboard = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard or Keyboard.KEY_L
+  local openMenuController = ModConfigMenu.Config["Mod Config Menu"].OpenMenuController or Controller.STICK_RIGHT
 
   local takeScreenshot = Keyboard.KEY_F12
 
