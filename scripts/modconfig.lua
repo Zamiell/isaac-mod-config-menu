@@ -132,15 +132,18 @@ local function load()
     return
   end
 
-  local table = json.decode(jsonString)
-  if table == nil then
+  local data = json.decode(jsonString)
+  if data == nil then
     return
   end
 
-  ModConfigMenu.Config["Mod Config Menu"] = table
+  ModConfigMenu.Config["Mod Config Menu"] = data
 
-  --make sure ScreenHelper's offset matches MCM's offset
-  if ScreenHelper then
+  -- Make sure ScreenHelper's offset matches MCM's offset.
+  if ScreenHelper
+      and ModConfigMenu.Config["General"] ~= nil
+      and ModConfigMenu.Config["General"].HudOffset ~= nil
+  then
     ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
   end
 end

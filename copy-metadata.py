@@ -11,3 +11,6 @@ TARGET_METADATA_XML = os.path.join(TARGET_MOD_DIRECTORY, METADATA_XML)
 
 # Copy back the "metadata.xml" file, since it will have an incremented version number.
 shutil.copyfile(TARGET_METADATA_XML, SOURCE_METADATA_XML)
+
+# Clean up the target mod directory.
+shutil.rmtree(TARGET_MOD_DIRECTORY)
