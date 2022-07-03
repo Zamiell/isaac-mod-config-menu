@@ -6,7 +6,7 @@ local json = require("json")
 
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
-local fileVersion = 103
+local fileVersion = 104
 
 ModConfigMenu = {}
 ModConfigMenu.Version = fileVersion
@@ -104,56 +104,9 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
-ModConfigMenu.SetConfigMetatables = ModConfigMenu.SetConfigMetatables or function() end
-
 ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
 ModConfigMenu.Config = ModConfigMenu.Config or {}
-
-ModConfigMenu.SetConfigMetatables()
-
-function ModConfigMenu.GetSave()
-  local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData = SaveHelper.FillTable(saveData, ModConfigMenu.Config)
-
-  saveData = json.encode(saveData)
-
-  return saveData
-end
-
-function ModConfigMenu.LoadSave(fromData)
-  if fromData == nil then
-    return
-  end
-
-  local fromDataType = type(fromData)
-  if fromDataType == "string" then
-    -- Return early if this is not valid JSON.
-    fromData = json.decode(fromData)
-    if not fromData then
-      return
-    end
-  elseif fromDataType == "table" then
-    -- No validation necessary.
-  else
-    return
-  end
-
-  local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData = SaveHelper.FillTable(saveData, fromData)
-
-  local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
-  saveData = SaveHelper.FillTable(currentData, saveData)
-
-  ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
-  ModConfigMenu.SetConfigMetatables()
-
-  --make sure ScreenHelper's offset matches MCM's offset
-  if ScreenHelper then
-    ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
-  end
-
-  return saveData
-end
+ModConfigMenu.Config = SaveHelper.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
 
 ---------------------------------
 -- Saving and loading MCM data --
@@ -185,6 +138,11 @@ local function load()
   end
 
   ModConfigMenu.Config["Mod Config Menu"] = table
+
+  --make sure ScreenHelper's offset matches MCM's offset
+  if ScreenHelper then
+    ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
+  end
 end
 
 local function vanillaMCMOptionRegisterSave(mcmOption)
@@ -1580,8 +1538,8 @@ function ModConfigMenu.PostRender()
   local pressedToggleMenu = false
 
   local openMenuGlobal = Keyboard.KEY_F10
-  local openMenuKeyboard = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard or Keyboard.KEY_L
-  local openMenuController = ModConfigMenu.Config["Mod Config Menu"].OpenMenuController or Controller.STICK_RIGHT
+  local openMenuKeyboard = ModConfigMenu.Config["Mod Config Menu"].OpenMenuKeyboard
+  local openMenuController = ModConfigMenu.Config["Mod Config Menu"].OpenMenuController
 
   local takeScreenshot = Keyboard.KEY_F12
 
