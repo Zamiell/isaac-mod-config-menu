@@ -1,3 +1,4 @@
+-- Imports
 local json = require("json")
 
 -------------
@@ -6,10 +7,11 @@ local json = require("json")
 
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
-local fileVersion = 104
+local VERSION = 105
+local IS_DEV = false
 
 ModConfigMenu = {}
-ModConfigMenu.Version = fileVersion
+ModConfigMenu.Version = VERSION
 
 -------------------------
 --SAVE HELPER FUNCTIONS--
@@ -104,9 +106,8 @@ ModConfigMenu.Mod = RegisterMod("Mod Config Menu", 1)
 --SAVING--
 ----------
 
-ModConfigMenu.ConfigDefault = ModConfigMenu.ConfigDefault or {}
-ModConfigMenu.Config = ModConfigMenu.Config or {}
-ModConfigMenu.Config = SaveHelper.FillTable(ModConfigMenu.Config, ModConfigMenu.ConfigDefault)
+ModConfigMenu.ConfigDefault = {}
+ModConfigMenu.Config = {}
 
 ---------------------------------
 -- Saving and loading MCM data --
@@ -115,12 +116,24 @@ ModConfigMenu.Config = SaveHelper.FillTable(ModConfigMenu.Config, ModConfigMenu.
 local function save()
   local mod = ModConfigMenu.Mod
 
+  if IS_DEV then
+    Isaac.DebugString("MCM is saving data.")
+  end
+
   local jsonString = json.encode(ModConfigMenu.Config["Mod Config Menu"])
+  if jsonString == nil or jsonString == "" then
+    return
+  end
+
   mod:SaveData(jsonString)
 end
 
 local function load()
   local mod = ModConfigMenu.Mod
+
+  if IS_DEV then
+    Isaac.DebugString("MCM is loading data.")
+  end
 
   if not mod:HasData() then
     save()
@@ -129,21 +142,41 @@ local function load()
 
   local jsonString = mod:LoadData()
   if jsonString == nil or jsonString == "" then
+    save()
     return
   end
 
-  local data = json.decode(jsonString)
-  if data == nil then
+  ModConfigMenu.LoadSave(jsonString)
+end
+
+function ModConfigMenu.LoadSave(fromData)
+  if fromData == nil then
     return
   end
 
-  ModConfigMenu.Config["Mod Config Menu"] = data
+  local fromDataType = type(fromData)
+  if fromDataType == "string" then
+    -- Return early if this is not valid JSON.
+    fromData = json.decode(fromData)
+    if not fromData then
+      return
+    end
+  elseif fromDataType == "table" then
+    -- No validation necessary.
+  else
+    return
+  end
 
-  -- Make sure ScreenHelper's offset matches MCM's offset.
-  if ScreenHelper
-      and ModConfigMenu.Config["General"] ~= nil
-      and ModConfigMenu.Config["General"].HudOffset ~= nil
-  then
+  local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
+  saveData = SaveHelper.FillTable(saveData, fromData)
+
+  local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
+  saveData = SaveHelper.FillTable(currentData, saveData)
+
+  ModConfigMenu.Config["Mod Config Menu"] = SaveHelper.CopyTable(saveData)
+
+  --make sure ScreenHelper's offset matches MCM's offset
+  if ScreenHelper then
     ScreenHelper.SetOffset(ModConfigMenu.Config["General"].HudOffset)
   end
 end
