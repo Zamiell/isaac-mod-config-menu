@@ -85,6 +85,6 @@ A: Yes. However, it might not work as a drop-in replacement for mods that use th
 [b]Q: What does it mean to &quot;remove API overrides&quot;?[/b]
 A: The original version overwrote some of the Lua and Isaac API functions, such as &quot;pcall&quot; and &quot;RequireMod&quot;. This version does not overwrite any API functions.
 </description>
-    <version>2.1</version>
+    <version>2.2</version>
     <visibility>Public</visibility>
 </metadata>
