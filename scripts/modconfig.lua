@@ -7,8 +7,17 @@ local json = require("json")
 
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
-local VERSION = 105
+local VERSION = 106
 local IS_DEV = false
+
+local DEFAULT_SAVE_KEYS = {
+  "OpenMenuKeyboard",
+  "OpenMenuController",
+  "HideHudInMenu",
+  "ResetToDefault",
+  "ShowControls",
+  "CompatibilityLayer",
+}
 
 ModConfigMenu = {}
 ModConfigMenu.Version = VERSION
@@ -76,7 +85,8 @@ end
 -----------
 -- setup --
 -----------
-Isaac.DebugString("Loading Mod Config Menu v" .. ModConfigMenu.Version)
+
+Isaac.DebugString("Mod Config Menu v" .. tostring(ModConfigMenu.Version) .. " - Loading...")
 
 local vecZero = Vector(0, 0)
 local restartWarnMessage = nil
@@ -141,39 +151,45 @@ local function load()
   end
 
   local jsonString = mod:LoadData()
-  if jsonString == nil or jsonString == "" then
+  if jsonString == nil or jsonString == "" or jsonString == "[]" or jsonString == "{}" then
     save()
     return
   end
 
-  ModConfigMenu.LoadSave(jsonString)
-end
+  local data = nil
+  local function loadJSON()
+    data = json.decode(jsonString)
+  end
 
-function ModConfigMenu.LoadSave(fromData)
-  if fromData == nil then
+  if not pcall(loadJSON) or data == nil then
+    Isaac.DebugString("Error: Failed to load Mod Config Menu data from the \"save#.dat\" file.")
     return
   end
 
-  local fromDataType = type(fromData)
-  if fromDataType == "string" then
-    -- Return early if this is not valid JSON.
-    fromData = json.decode(fromData)
-    if not fromData then
+  ModConfigMenu.LoadSave(data)
+end
+
+function ModConfigMenu.LoadSave(data)
+  for _, key in ipairs(DEFAULT_SAVE_KEYS) do
+    local value = data[key]
+    if value == nil then
+      Isaac.DebugString("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
+      print("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
       return
     end
-  elseif fromDataType == "table" then
-    -- No validation necessary.
-  else
-    return
   end
 
   local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData = SaveHelper.FillTable(saveData, fromData)
+  saveData = SaveHelper.FillTable(saveData, data)
 
   local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
   saveData = SaveHelper.FillTable(currentData, saveData)
 
   ModConfigMenu.Config["Mod Config Menu"] = SaveHelper.CopyTable(saveData)
+
+  if IS_DEV then
+    Isaac.DebugString("Successfully loaded data from the \"save#.dat\" file.")
+  end
 
   --make sure ScreenHelper's offset matches MCM's offset
   if ScreenHelper then
@@ -240,6 +256,10 @@ end
 
 ModConfigMenu.IsVisible = false
 function ModConfigMenu.PostGameStarted()
+  if IS_DEV then
+    Isaac.DebugString("POST_GAME_STARTED")
+  end
+
   rerunWarnMessage = nil
 
   load()
@@ -3176,7 +3196,7 @@ end
 ------------
 --FINISHED--
 ------------
-Isaac.DebugString("Mod Config Menu v" .. ModConfigMenu.Version .. " loaded!")
-print("Mod Config Menu v" .. ModConfigMenu.Version .. " loaded!")
+Isaac.DebugString("Mod Config Menu v" .. tostring(ModConfigMenu.Version) .. " - Loaded.")
+print("Mod Config Menu v" .. tostring(ModConfigMenu.Version) .. " - Loaded.")
 
 return ModConfigMenu

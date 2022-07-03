@@ -77,13 +77,22 @@ A: Nothing. A typical player should use the whatever specific version results in
 A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
 
 [b]Q: What do I do if saving settings for a mod does not work between game launches?[/b]
-A: Mod Config Menu is not in charge of saving any data. This is purely in the domain of the individual mods that use it. If an individual mod does not properly save its data, then you should contact the author of that mod.
+A: Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.
 
 [b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
 A: Yes. However, it might not work as a drop-in replacement for mods that use the &quot;require&quot; or &quot;dofile&quot; or &quot;pcall&quot; functions to initialize or invoke Mod Config Menu. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
 
 [b]Q: What does it mean to &quot;remove API overrides&quot;?[/b]
 A: The original version overwrote some of the Lua and Isaac API functions, such as &quot;pcall&quot; and &quot;RequireMod&quot;. This version does not overwrite any API functions.
+
+[b]Q: How do I tell what version of Mod Config Menu Pure I have?[/b]
+A: There are 3 ways. First, you can see the version in the console. Second, you can see the version in the game's "log.txt" file. Third, you can see the version at the top of the "C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\mods\!!mod config menu_2681875787\scripts\modconfig.lua" file.
+
+[b]Q: Where is the game's "log.txt" file located?[/b]
+A: By default, it is located at the following path: C:\Users\james\Documents\My Games\Binding of Isaac Repentance\log.txt
+
+[b]Q: Where is the save data for Mod Config Menu located?[/b]
+A: By default, it is located at the following path: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save#.dat
 </description>
     <version>2.2</version>
     <visibility>Public</visibility>
