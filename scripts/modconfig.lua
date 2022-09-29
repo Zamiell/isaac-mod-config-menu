@@ -1337,8 +1337,7 @@ local actionsSelect = { ButtonAction.ACTION_ITEM, ButtonAction.ACTION_PAUSE, But
   ButtonAction.ACTION_BOMB }
 
 --ignore these buttons for the above actions
-local ignoreActionButtons = { Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y,
-  Controller.DPAD_LEFT, Controller.DPAD_RIGHT, Controller.DPAD_UP, Controller.DPAD_DOWN }
+local ignoreActionButtons = { Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y }
 
 local currentMenuCategory = nil
 local currentMenuSubcategory = nil
