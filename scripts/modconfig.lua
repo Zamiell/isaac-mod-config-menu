@@ -10,15 +10,6 @@ local json = require("json")
 local VERSION = 106
 local IS_DEV = false
 
-local DEFAULT_SAVE_KEYS = {
-  "OpenMenuKeyboard",
-  "OpenMenuController",
-  "HideHudInMenu",
-  "ResetToDefault",
-  "ShowControls",
-  "CompatibilityLayer",
-}
-
 ModConfigMenu = {}
 ModConfigMenu.Version = VERSION
 
@@ -130,7 +121,7 @@ local function save()
     Isaac.DebugString("MCM is saving data.")
   end
 
-  local jsonString = json.encode(ModConfigMenu.Config["Mod Config Menu"])
+  local jsonString = json.encode(ModConfigMenu.Config)
   if jsonString == nil or jsonString == "" then
     return
   end
@@ -170,22 +161,13 @@ local function load()
 end
 
 function ModConfigMenu.LoadSave(data)
-  for _, key in ipairs(DEFAULT_SAVE_KEYS) do
-    local value = data[key]
-    if value == nil then
-      Isaac.DebugString("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
-      print("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
-      return
-    end
-  end
-
   local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
   saveData = SaveHelper.FillTable(saveData, data)
 
   local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
   saveData = SaveHelper.FillTable(currentData, saveData)
 
-  ModConfigMenu.Config["Mod Config Menu"] = SaveHelper.CopyTable(saveData)
+  ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
 
   if IS_DEV then
     Isaac.DebugString("Successfully loaded data from the \"save#.dat\" file.")
