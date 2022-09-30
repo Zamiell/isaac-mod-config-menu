@@ -57,10 +57,22 @@ end
 
 local vecZero = Vector(0, 0)
 function ScreenHelper.GetScreenSize()
-  local screenWidth = Isaac.GetScreenWidth()
-  local screenHeight = Isaac.GetScreenHeight()
+  if REPENTANCE then
+    local screenWidth = Isaac.GetScreenWidth()
+    local screenHeight = Isaac.GetScreenHeight()
 
-  return Vector(screenWidth, screenHeight)
+    return Vector(screenWidth, screenHeight)
+  else --based off of code from kilburn
+    local game = Game()
+    local room = game:GetRoom()
+
+    local pos = room:WorldToScreenPosition(vecZero) - room:GetRenderScrollOffset() - game.ScreenShakeOffset
+
+    local rx = pos.X + 60 * 26 / 40
+    local ry = pos.Y + 140 * (26 / 40)
+
+    return Vector(rx*2 + 13*26, ry*2 + 7*26)
+  end
 end
 
 function ScreenHelper.GetScreenCenter()
