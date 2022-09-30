@@ -162,7 +162,8 @@ end
 
 function ModConfigMenu.LoadSave(data)
   local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData = SaveHelper.FillTable(saveData, data)
+  saveData["General"] = SaveHelper.FillTable(saveData["General"], data["General"] or {})
+  saveData["Mod Config Menu"] = SaveHelper.FillTable(saveData["Mod Config Menu"], data["Mod Config Menu"] or data or {})
 
   local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
   saveData = SaveHelper.FillTable(currentData, saveData)
