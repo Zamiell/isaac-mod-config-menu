@@ -10,15 +10,6 @@ local json = require("json")
 local VERSION = 106
 local IS_DEV = false
 
-local DEFAULT_SAVE_KEYS = {
-  "OpenMenuKeyboard",
-  "OpenMenuController",
-  "HideHudInMenu",
-  "ResetToDefault",
-  "ShowControls",
-  "CompatibilityLayer",
-}
-
 ModConfigMenu = {}
 ModConfigMenu.Version = VERSION
 
@@ -130,7 +121,7 @@ local function save()
     Isaac.DebugString("MCM is saving data.")
   end
 
-  local jsonString = json.encode(ModConfigMenu.Config["Mod Config Menu"])
+  local jsonString = json.encode(ModConfigMenu.Config)
   if jsonString == nil or jsonString == "" then
     return
   end
@@ -170,22 +161,14 @@ local function load()
 end
 
 function ModConfigMenu.LoadSave(data)
-  for _, key in ipairs(DEFAULT_SAVE_KEYS) do
-    local value = data[key]
-    if value == nil then
-      Isaac.DebugString("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
-      print("Error: Corrupted data detected. Delete your save data file, which is located by default at: C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\data\\!!mod config menu\\save#.dat")
-      return
-    end
-  end
-
   local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData = SaveHelper.FillTable(saveData, data)
+  saveData["General"] = SaveHelper.FillTable(saveData["General"], data["General"] or {})
+  saveData["Mod Config Menu"] = SaveHelper.FillTable(saveData["Mod Config Menu"], data["Mod Config Menu"] or data or {})
 
   local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
   saveData = SaveHelper.FillTable(currentData, saveData)
 
-  ModConfigMenu.Config["Mod Config Menu"] = SaveHelper.CopyTable(saveData)
+  ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
 
   if IS_DEV then
     Isaac.DebugString("Successfully loaded data from the \"save#.dat\" file.")
@@ -1080,7 +1063,7 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
   "General", --category
   "HudOffset", --attribute in table
-  Options.HUDOffset * 10, --default value
+  Options and Options.HUDOffset * 10 or 0, --default value
   "Hud Offset", --display text
   "How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
@@ -1247,15 +1230,29 @@ hideHudSetting.OnChange = function(currentValue)
   oldHideHudOnChange(currentValue)
 
   local game = Game()
-  local hud = game:GetHUD()
+  if REPENTANCE then
+    local hud = game:GetHUD()
 
-  if currentValue then
-    if hud:IsVisible() then
-      hud:SetVisible(false)
+    if currentValue then
+      if hud:IsVisible() then
+        hud:SetVisible(false)
+      end
+    else
+      if not hud:IsVisible() then
+        hud:SetVisible(true)
+      end
     end
   else
-    if not hud:IsVisible() then
-      hud:SetVisible(true)
+    local seeds = game:GetSeeds()
+    
+    if currentValue then
+      if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+        seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
+    else
+      if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+        seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
     end
   end
 end
@@ -3120,8 +3117,13 @@ function ModConfigMenu.OpenConfigMenu()
 
     if ModConfigMenu.Config["Mod Config Menu"].HideHudInMenu then
       local game = Game()
-      local hud = game:GetHUD()
-      hud:SetVisible(false)
+      if REPENTANCE then
+        local hud = game:GetHUD()
+        hud:SetVisible(false)
+      else
+        local seeds = game:GetSeeds()
+        seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
     end
 
     ModConfigMenu.IsVisible = true
@@ -3140,8 +3142,13 @@ function ModConfigMenu.CloseConfigMenu()
   ModConfigMenu.LeaveSubcategory()
 
   local game = Game()
-  local hud = game:GetHUD()
-  hud:SetVisible(true)
+  if REPENTANCE then
+    local hud = game:GetHUD()
+    hud:SetVisible(true)
+  else
+    local seeds = game:GetSeeds()
+    seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+  end
 
 
   ModConfigMenu.IsVisible = false
