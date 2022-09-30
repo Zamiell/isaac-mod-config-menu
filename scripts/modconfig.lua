@@ -1080,7 +1080,7 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
   "General", --category
   "HudOffset", --attribute in table
-  Options.HUDOffset * 10, --default value
+  Options and Options.HUDOffset * 10 or 0, --default value
   "Hud Offset", --display text
   "How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
@@ -1247,15 +1247,29 @@ hideHudSetting.OnChange = function(currentValue)
   oldHideHudOnChange(currentValue)
 
   local game = Game()
-  local hud = game:GetHUD()
+  if REPENTANCE then
+    local hud = game:GetHUD()
 
-  if currentValue then
-    if hud:IsVisible() then
-      hud:SetVisible(false)
+    if currentValue then
+      if hud:IsVisible() then
+        hud:SetVisible(false)
+      end
+    else
+      if not hud:IsVisible() then
+        hud:SetVisible(true)
+      end
     end
   else
-    if not hud:IsVisible() then
-      hud:SetVisible(true)
+    local seeds = game:GetSeeds()
+    
+    if currentValue then
+      if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+        seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
+    else
+      if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
+        seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
     end
   end
 end
@@ -3120,8 +3134,13 @@ function ModConfigMenu.OpenConfigMenu()
 
     if ModConfigMenu.Config["Mod Config Menu"].HideHudInMenu then
       local game = Game()
-      local hud = game:GetHUD()
-      hud:SetVisible(false)
+      if REPENTANCE then
+        local hud = game:GetHUD()
+        hud:SetVisible(false)
+      else
+        local seeds = game:GetSeeds()
+        seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
+      end
     end
 
     ModConfigMenu.IsVisible = true
@@ -3140,8 +3159,13 @@ function ModConfigMenu.CloseConfigMenu()
   ModConfigMenu.LeaveSubcategory()
 
   local game = Game()
-  local hud = game:GetHUD()
-  hud:SetVisible(true)
+  if REPENTANCE then
+    local hud = game:GetHUD()
+    hud:SetVisible(true)
+  else
+    local seeds = game:GetSeeds()
+    seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
+  end
 
 
   ModConfigMenu.IsVisible = false
