@@ -162,17 +162,18 @@ end
 
 function ModConfigMenu.LoadSave(data)
   local saveData = SaveHelper.CopyTable(ModConfigMenu.ConfigDefault)
-  saveData["General"] = SaveHelper.FillTable(saveData["General"], data["General"] or {})
-  saveData["Mod Config Menu"] = SaveHelper.FillTable(saveData["Mod Config Menu"], data["Mod Config Menu"] or data or {})
+  if type(data) == "table" then
+    saveData["General"] = SaveHelper.FillTable(saveData["General"], data["General"] or {})
+    saveData["Mod Config Menu"] = SaveHelper.FillTable(saveData["Mod Config Menu"], data["Mod Config Menu"] or data or {})
+    if IS_DEV then
+      Isaac.DebugString("Successfully loaded data from the \"save#.dat\" file.")
+    end
+  end
 
   local currentData = SaveHelper.CopyTable(ModConfigMenu.Config)
   saveData = SaveHelper.FillTable(currentData, saveData)
 
   ModConfigMenu.Config = SaveHelper.CopyTable(saveData)
-
-  if IS_DEV then
-    Isaac.DebugString("Successfully loaded data from the \"save#.dat\" file.")
-  end
 
   --make sure ScreenHelper's offset matches MCM's offset
   if ScreenHelper then
