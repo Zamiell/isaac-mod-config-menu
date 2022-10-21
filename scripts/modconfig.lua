@@ -1722,7 +1722,7 @@ function ModConfigMenu.PostRender()
 
       end
 
-      if not InputHelper.MultipleButtonTriggered(ignoreActionButtons) then
+      if not InputHelper.MultipleButtonPressed(ignoreActionButtons) then
         --pressing buttons
         local downButtonPressed = InputHelper.MultipleActionTriggered(actionsDown)
         if downButtonPressed then
