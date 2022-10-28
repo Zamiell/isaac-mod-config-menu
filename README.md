@@ -86,6 +86,8 @@ Create a setting without using a table.
 
 `functionName` = The name of the function it was called from (only used in error messages, and _really_ only used internally).
 
+Any `Add` functions that take `categoryName` and `configTableAttribute` will store its data in `ModConfigMenu.Config[categoryName][configTableAttribute]`. Other versions of Mod Config Menu may auto-save this data to file. However, this version of Mod Config Menu does not. Make sure you save and load your data as appropriate.
+
 ---
 
 _All of the individual `Add*` functions below can be achieved with just `AddSetting` and providing the `Type` parameter in [`settingTable`](#settingTable) to be a [`ModConfigMenu.OptionType`](#OptionType). That is also the way I recommend, because I haven't been able to fully understand the code yet, so I don't know what some of the parameters are for, and how the "overrides" are set up._
