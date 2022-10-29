@@ -223,4 +223,4 @@ function modConfigMenuInit() {
 
 See the [Mod Reference](https://wofsauge.github.io/IsaacDocs/rep/ModReference.html) documentation for related saving and loading information.
 
-For more options, check out the Mod Config Menu [README](README.md).
+For more options, check out the Mod Config Menu [README](../README.md).
