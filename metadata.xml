@@ -83,7 +83,7 @@ A: No. You should only subscribe to one specific version of Mod Config Menu at a
 A: Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.
 
 [b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
-A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
+A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Another common issue is using deprecated properties like "ModConfigMenuOptionType.BOOLEAN" instead of "ModConfigMenu.OptionType.BOOLEAN". If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
 
 [b]Q: What does it mean to "remove API overrides"?[/b]
 A: The original version overwrote some of the Lua and Isaac API functions, such as "pcall" and "RequireMod". This version does not overwrite any API functions.
