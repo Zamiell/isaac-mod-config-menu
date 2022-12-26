@@ -1245,7 +1245,7 @@ hideHudSetting.OnChange = function(currentValue)
     end
   else
     local seeds = game:GetSeeds()
-    
+
     if currentValue then
       if not seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then
         seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD)
