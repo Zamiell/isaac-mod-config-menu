@@ -13,9 +13,15 @@ Mod Config Menu is a library to that allows other mods to have a settings menu. 
 
 This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the "Pure" version.
 
+As of [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]patch v1.7.9b[/url], other version of Mod Config Menu will not work anymore, like [Mod Config Menu Continued](https://steamcommunity.com/workshop/filedetails/?id=2487535818), so it is recommended to use this version instead.
+
 This mod is open-source. You can help with development by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
+
+[h2][b]Installing[/b][/h2]
+
+Click on the green "Subscribe" button above, which will cause Steam to automatically download the mod. Then, the next time you open the game, the mod will appear in the "Mods" submenu. For advanced users, you could also try manually installing the mod from the source code [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
 
 [h2][b]Using Mod Config Menu[/b][/h2]
 
@@ -65,7 +71,7 @@ Controller:
 A: Yes.
 
 [b]Q: Does it work with Afterbirth+?[/b]
-A: No, because it uses Repentance-only features for getting the HUD offset.
+A: No, because it uses the Repentance-only API for getting the HUD offset.
 
 [b]Q: What do I do if Mod Config Menu Pure does not work properly with a particular mod?[/b]
 A: This is probably because the mod is using the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
