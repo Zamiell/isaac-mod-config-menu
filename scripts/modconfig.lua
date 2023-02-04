@@ -7,7 +7,7 @@ local json = require("json")
 
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
-local VERSION = 107
+local VERSION = 108
 local IS_DEV = false
 
 ModConfigMenu = {}

@@ -107,7 +107,7 @@ A: By default, it is located at the following path: C:\Program Files (x86)\Steam
 A: It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. For more information on where the various game files are located, see [url=https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md]my directories and save files explanation[/url].
 
 [b]Q: What changed in the last update?[/b]
-A: Like any other open source piece of software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
+A: Like most other open source piece of software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
 </description>
     <version>2.3</version>
     <visibility>Public</visibility>
