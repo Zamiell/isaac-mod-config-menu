@@ -19,4 +19,4 @@ fi
 
 python "$DIR/release.py"
 
-git add --all && git commit --message "chore: release" && git push
+git add --all && git commit --message "chore: release" && git push --set-upstream origin main
