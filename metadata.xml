@@ -21,11 +21,17 @@ Credit goes to piber20 for originally creating this library and Chifilly for upd
 
 [h2][b]Installing[/b][/h2]
 
-Click on the green "Subscribe" button above, which will cause Steam to automatically download the mod. Then, the next time you open the game, the mod will appear in the "Mods" submenu. For advanced users, you could also try manually installing the mod from the source code [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
+Click on the green "Subscribe" button above, which will cause Steam to automatically download the mod. Then, the next time you open the game, the mod will appear in the "Mods" submenu.
 
-[h2][b]Using Mod Config Menu[/b][/h2]
+For advanced users, you could also try manually installing the mod from the source code [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
 
-In order to use Mod Config Menu Pure, do not use the "require" or "dofile" or "pcall" functions. Rather, simply check to see if the global variable of "ModConfigMenu" exists, with something along the lines of:
+[h2][b]Using Mod Config Menu for End-Users[/b][/h2]
+
+If you are a player of Isaac mods, then using Mod Config Menu is simple. Just press "l" on your keyboard to open the menu. You can press the same key again to close it. By default, there will be two sub-menus installed: "General" and "Mod Config Menu". If you have other mods installed, they may add additional menus.
+
+[h2][b]Using Mod Config Menu as a Mod Developer[/b][/h2]
+
+In order to use Mod Config Menu Pure inside of your mod, do not use the "require" or "dofile" or "pcall" functions. Rather, simply check to see if the global variable of "ModConfigMenu" exists, with something along the lines of:
 
 [code]
 local MOD_NAME = "My Mod"
@@ -70,17 +76,22 @@ Controller:
 [b]Q: Does it work with Repentance?[/b]
 A: Yes.
 
+[b]Q: Does it work with the latest version of Repentance?[/b]
+A: Yes. In [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]version 1.7.9b[/url], the "loadfile" function was removed from the game. But unlike other versions of Mod Config Menu, Mod Config Menu Pure does not use "loadfile" or any other hacks, so this version continues to work as it did before.
+
 [b]Q: Does it work with Afterbirth+?[/b]
 A: No, because it uses the Repentance-only API for getting the HUD offset.
 
 [b]Q: What do I do if Mod Config Menu Pure does not work properly with a particular mod?[/b]
-A: This is probably because the mod is using the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+A: This is probably because the mod is using the "require" or "dofile" or "pcall" or "loadfile" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
 
 [b]Q: What is Mod Config Menu Continued?[/b]
 A: The original version of Mod Config Menu was made by piber20. Mod Config Menu Continued is an updated version made by Chifilly with the goal of making it work with the Repentance DLC and fixing some bugs. Mod Config Menu Pure is an updated version of Mod Config Menu Continued with the goal of fixing yet more bugs. Thus, Mod Config Menu Continued is not the same thing as Mod Config Menu Pure.
 
+As of December 8, 2022, Mod Config Menu Continued no longer works with the latest version of the game, so you should use Mod Config Menu Pure instead.
+
 [b]Q: What are the differences between the original Mod Config Menu and Mod Config Menu Continued and Mod Config Menu Pure?[/b]
-A: There are some small technical differences. But as a normal player, there are no differences that you would ever be able to notice, besides the fact that some versions will work with some mods, and others won't. Thus, you should use whichever version will result in the lowest amount of bugs for the specific combination of mods that you want to play with. (Or contact the authors of the other mods you play with to make them work with Mod Config Menu Pure, if they don't already.)
+A: There are some small technical differences. But as a normal player, there are no differences that you would ever be able to notice, besides the fact that some versions will work with some mods, and others won't. Thus, you should use whichever version will result in the lowest amount of bugs for the specific combination of mods that you want to play with. If you want to use Mod Config Menu Pure, then contact the authors of the other mods you play with to make them work with Mod Config Menu Pure, if they don't already.
 
 [b]Q: As a player, do I need to subscribe to this mod and other versions of Mod Config Menu at the same time?[/b]
 A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
@@ -89,7 +100,7 @@ A: No. You should only subscribe to one specific version of Mod Config Menu at a
 A: Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.
 
 [b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
-A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu. Another common issue is using deprecated properties like "ModConfigMenuOptionType.BOOLEAN" instead of "ModConfigMenu.OptionType.BOOLEAN". If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
+A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" or "loadfile" functions to initialize or invoke Mod Config Menu. Another common issue is using deprecated properties like "ModConfigMenuOptionType.BOOLEAN" instead of "ModConfigMenu.OptionType.BOOLEAN". If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
 
 [b]Q: What does it mean to "remove API overrides"?[/b]
 A: The original version overwrote some of the Lua and Isaac API functions, such as "pcall" and "RequireMod". This version does not overwrite any API functions.
@@ -104,11 +115,11 @@ A: By default, it is located at the following path: C:\Users\james\Documents\My 
 A: By default, it is located at the following path: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save#.dat
 
 [b]Q: Why doesn't Mod Config Menu work for me?[/b]
-A: It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. For more information on where the various game files are located, see [url=https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md]my directories and save files explanation[/url].
+A: It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. At this point, you will probably have no errors, so you can then start to introduce other things piece by piece until you find the thing that is causing the problem. For more information on where the various game files are located, see [url=https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md]my directories and save files explanation[/url].
 
-[b]Q: What changed in the last update?[/b]
-A: Like most other open source piece of software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
+[b]Q: What was changed in the last update?[/b]
+A: Like most other open source software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url] by looking through the past commits.
 </description>
-    <version>2.3</version>
+    <version>109</version>
     <visibility>Public</visibility>
 </metadata>

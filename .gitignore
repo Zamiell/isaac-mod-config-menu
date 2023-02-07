@@ -1,2 +1,7 @@
+# OS-specific artifacts
+.DS_Store
+thumbs.db
+
+# Isaac-related files
 disable.it
 *.dat
