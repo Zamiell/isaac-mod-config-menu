@@ -6,7 +6,6 @@ import sys
 
 SCRIPT_PATH = os.path.realpath(__file__)
 SOURCE_MOD_DIRECTORY = os.path.dirname(SCRIPT_PATH)
-TARGET_MOD_DIRECTORY = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\mods\\!!mod config menu"
 LUA_FILE_PATH = os.path.join(SOURCE_MOD_DIRECTORY, "scripts", "modconfig.lua")
 METADATA_XML_PATH = os.path.join(SOURCE_MOD_DIRECTORY, "metadata.xml")
 
