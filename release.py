@@ -17,7 +17,7 @@ def main():
 
     subprocess.run(["git", "add", "--all"])
     subprocess.run(["git", "commit", "--message", f"chore: release {new_version}"])
-    subprocess.run(["git", "push"])
+    subprocess.run(["git", "push", "--set-upstream", "origin", "main"])
 
     printf(f"Released version: {new_version}")
 
