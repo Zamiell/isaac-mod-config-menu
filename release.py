@@ -12,6 +12,17 @@ METADATA_XML_PATH = os.path.join(SOURCE_MOD_DIRECTORY, "metadata.xml")
 
 
 def main():
+    if not is_git_clean():
+        printf(
+            "Error: The current working directory must be clean before releasing a new version. Please push your changes to Git."
+        )
+        sys.exit(1)
+
+    # Validate that we can push and pull to the repository and that all commits are remotely synced.
+    subprocess.run(["git", "branch", "--set-upstream-to=origin/main", "main"])
+    subprocess.run(["git", "pull", "--rebase"])
+    subprocess.run(["git", "push", "--set-upstream origin", "main"])
+
     new_version = increment_lua_version()
     set_metadata_xml_version(new_version)
 
@@ -20,6 +31,13 @@ def main():
     subprocess.run(["git", "push", "--set-upstream", "origin", "main"])
 
     printf(f"Released version: {new_version}")
+
+
+def is_git_clean():
+    stdout_bytes = subprocess.check_output(["git", "status", "--short"])
+    stdout = stdout_bytes.decode("utf-8")
+    trimmed_stdout = stdout.strip()
+    return len(trimmed_stdout) == 0
 
 
 def increment_lua_version():
