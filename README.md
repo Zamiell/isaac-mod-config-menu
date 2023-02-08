@@ -1,12 +1,16 @@
 # Mod Config Menu
 
+<!-- markdownlint-disable MD051 -->
+
 Mod Config Menu is a library for [The Binding of Isaac: Repentance](https://store.steampowered.com/app/1426300/The_Binding_of_Isaac_Repentance/) that allows other mods to have a settings menu.
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
 This is a forked version of Mod Config Menu by Zamiel that removes all of the hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem.
 
----
+## Quick Start
+
+See [the quick start guide](docs/quick-start.md).
 
 ## Mod Developer API
 
@@ -181,7 +185,7 @@ A table of data for the setting.
     -- a table of strings that's used as the information for the setting
     Info = { string },
 
-    -- the colour of the setting (values are floats between 0 and 1)
+    -- the color of the setting (values are floats between 0 and 1)
     Color = { r, g, b },
 }
 ```

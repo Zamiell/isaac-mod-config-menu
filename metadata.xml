@@ -27,7 +27,21 @@ For advanced users, you could also try manually installing the mod from the sour
 
 [h2][b]Using Mod Config Menu for End-Users[/b][/h2]
 
-If you are a player of Isaac mods, then using Mod Config Menu is simple. Just press "l" on your keyboard to open the menu. You can press the same key again to close it. By default, there will be two sub-menus installed: "General" and "Mod Config Menu". If you have other mods installed, they may add additional menus.
+If you are a player of Isaac mods, then using Mod Config Menu should be straightforward. The controls are as follows:
+
+[b]Keyboard:[/b]
+[*] By default, you can open the menu by pressing L. (This keyboard binding is customizable from the "Mod Config Menu" sub-menu.) F10 will also always open the menu, which cannot be changed.
+[*] Use the arrow keys or WASD keys to move around.
+[*] E, space, or enter can be used to select an item.
+[*] Esc, backspace, or Q can be used to go back.
+
+[b]Controller:[/b]
+[*] By default, you can open the menu by pressing down the right control stick (i.e. R3). (This controller binding is customizable from the "Mod Config Menu" sub-menu.)
+[*] Both control sticks can be used to move around.
+[*] The "a" button can be used to select an item.
+[*] The "b" button can be used to go back.
+
+By default, there will be two sub-menus installed: "General" and "Mod Config Menu". If you have other mods installed, they may add additional menus.
 
 [h2][b]Using Mod Config Menu as a Mod Developer[/b][/h2]
 
@@ -95,6 +109,9 @@ A: There are some small technical differences. But as a normal player, there are
 
 [b]Q: As a player, do I need to subscribe to this mod and other versions of Mod Config Menu at the same time?[/b]
 A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
+
+[b]Q: How do I open Mod Config Menu?
+A: See the section above entitled "Using Mod Config Menu for End-Users". If the default keyboard/controller bindings do not work, then it is possible you have previously remapped them to something else. In this case, you can use the F10 button on the keyboard, which will always open the menu. Then, you can configure the keyboard/controller bindings to the exact thing that you want.
 
 [b]Q: What do I do if saving settings for a mod does not work between game launches?[/b]
 A: Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.

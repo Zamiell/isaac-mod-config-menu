@@ -10,22 +10,16 @@ TARGET_MOD_DIRECTORY = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The B
 LUA_FILE_PATH = os.path.join(SOURCE_MOD_DIRECTORY, "scripts", "modconfig.lua")
 METADATA_XML_PATH = os.path.join(SOURCE_MOD_DIRECTORY, "metadata.xml")
 
-"""
-        ignore=shutil.ignore_patterns(
-            ".git",
-            ".vscode",
-            ".gitattributes",
-            ".gitignore",
-            "cspell.json",
-            "release.py",
-            "steam",
-        ),
-"""
-
 
 def main():
     new_version = increment_lua_version()
     set_metadata_xml_version(new_version)
+
+    subprocess.run(["git", "add", "--all"])
+    subprocess.run(["git", "commit", "--message", f"chore: release {new_version}"])
+    subprocess.run(["git", "push"])
+
+    printf(f"Released version: {new_version}")
 
 
 def increment_lua_version():
@@ -50,7 +44,7 @@ def increment_lua_version():
     )
     text = re.sub("local IS_DEV = true", "local IS_DEV = false", text)
 
-    with open(LUA_FILE_PATH, "w") as f:
+    with open(LUA_FILE_PATH, "w", newline="\n") as f:
         f.write(text)
 
     return new_version
@@ -69,7 +63,7 @@ def set_metadata_xml_version(new_version: str):
         text,
     )
 
-    with open(METADATA_XML_PATH, "w") as f:
+    with open(METADATA_XML_PATH, "w", newline="\n") as f:
         f.write(text)
 
 

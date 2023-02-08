@@ -20,6 +20,7 @@
         "FULLSCREEN",
         "Gamepad",
         "inputhelper",
+        "ipairs",
         "keybind",
         "MCM",
         "MENUBACK",
