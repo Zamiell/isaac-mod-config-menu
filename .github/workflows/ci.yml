@@ -9,12 +9,14 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      # https://github.com/IsaacScript/isaac-steam-workshop-upload
       - name: Upload the mod to Steam Workshop (if this is a release commit)
         uses: IsaacScript/isaac-steam-workshop-upload@v2
         if: "contains(github.event.head_commit.message, 'chore: release') && github.event_name != 'pull_request'"
         with:
           mod_path: .
           ignore_files: cspell.json,release.py,release.sh,steam
+          change_note: "Version: {VERSION}\n\nChanges for this mod are [url=https://github.com/Zamiell/isaac-mod-config-menu]tracked on GitHub[/url]."
         env:
           CONFIG_VDF_CONTENTS: ${{ secrets.CONFIG_VDF_CONTENTS }}
 
