@@ -8,6 +8,8 @@ Credit goes to piber20 for originally creating this library and Chifilly for upd
 
 This is a forked version of Mod Config Menu by Zamiel that removes all of the hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem.
 
+You can find this version of Mod Config Menu [on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787).
+
 ## Quick Start
 
 See [the quick start guide](docs/quick-start.md).
