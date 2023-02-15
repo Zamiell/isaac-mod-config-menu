@@ -144,6 +144,6 @@ A: It works for everyone else, so it has to be something wrong with you. Start b
 [b]Q: What was changed in the last update?[/b]
 A: Like most other open source software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url] by looking through the past commits.
 </description>
-    <version>110</version>
+    <version>111</version>
     <visibility>Public</visibility>
 </metadata>
