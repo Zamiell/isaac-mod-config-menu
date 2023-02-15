@@ -20,7 +20,7 @@ def main():
     # Validate that we can push and pull to the repository and that all commits are remotely synced.
     subprocess.run(["git", "branch", "--set-upstream-to=origin/main", "main"])
     subprocess.run(["git", "pull", "--rebase"])
-    subprocess.run(["git", "push", "--set-upstream origin", "main"])
+    subprocess.run(["git", "push", "--set-upstream", "origin", "main"])
 
     new_version = increment_lua_version()
     set_metadata_xml_version(new_version)
