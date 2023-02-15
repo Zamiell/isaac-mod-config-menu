@@ -13,7 +13,7 @@ Mod Config Menu is a library to that allows other mods to have a settings menu. 
 
 This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the "Pure" version.
 
-As of [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]patch v1.7.9b[/url], other version of Mod Config Menu will not work anymore, like [Mod Config Menu Continued](https://steamcommunity.com/workshop/filedetails/?id=2487535818), so it is recommended to use this version instead.
+As of [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]patch v1.7.9b[/url], other version of Mod Config Menu will not work anymore, like [url=https://steamcommunity.com/workshop/filedetails/?id=2487535818]Mod Config Menu Continued[/url], so it is recommended to use this version instead.
 
 This mod is open-source. You can help with development by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
 
@@ -110,7 +110,7 @@ A: There are some small technical differences. But as a normal player, there are
 [b]Q: As a player, do I need to subscribe to this mod and other versions of Mod Config Menu at the same time?[/b]
 A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
 
-[b]Q: How do I open Mod Config Menu?
+[b]Q: How do I open Mod Config Menu?[/b]
 A: See the section above entitled "Using Mod Config Menu for End-Users". If the default keyboard/controller bindings do not work, then it is possible you have previously remapped them to something else. In this case, you can use the F10 button on the keyboard, which will always open the menu. Then, you can configure the keyboard/controller bindings to the exact thing that you want.
 
 [b]Q: What do I do if saving settings for a mod does not work between game launches?[/b]
@@ -130,6 +130,13 @@ A: By default, it is located at the following path: C:\Users\james\Documents\My 
 
 [b]Q: Where is the save data for Mod Config Menu located?[/b]
 A: By default, it is located at the following path: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save#.dat
+
+[b]Q: How do I reset my Mod Config Menu settings?[/b]
+A: By default, You need to delete the following file: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save1.dat
+
+This file corresponds to save slot 1. For example, if you play on save slot 2, then you would need to delete "save2.dat".
+
+If you have Isaac installed to a different drive or different location, then the path will be different.
 
 [b]Q: Why doesn't Mod Config Menu work for me?[/b]
 A: It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. At this point, you will probably have no errors, so you can then start to introduce other things piece by piece until you find the thing that is causing the problem. For more information on where the various game files are located, see [url=https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md]my directories and save files explanation[/url].
