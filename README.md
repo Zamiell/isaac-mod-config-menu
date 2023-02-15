@@ -1,235 +1,169 @@
-# Mod Config Menu
+# Mod Config Menu Pure
 
+<!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD051 -->
 
-Mod Config Menu is a library for [The Binding of Isaac: Repentance](https://store.steampowered.com/app/1426300/The_Binding_of_Isaac_Repentance/) that allows other mods to have a settings menu.
+## Introduction
+
+Mod Config Menu Pure is a library for [The Binding of Isaac: Repentance](https://store.steampowered.com/app/1426300/The_Binding_of_Isaac_Repentance/) that allows other mods to have a settings menu.
+
+You can find this library [on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787).
 
 Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
-This is a forked version of Mod Config Menu by Zamiel that removes all of the hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem.
+This is a forked version of Mod Config Menu by Zamiel that removes all of the hacks that override internal Lua functionality, which causes problems with other things in the Isaac ecosystem. For this reason, it is called the "Pure" version.
 
-You can find this version of Mod Config Menu [on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787).
+As of [vanilla patch v1.7.9b](https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b), other version of Mod Config Menu will not work anymore, like [Mod Config Menu Continued](https://steamcommunity.com/workshop/filedetails/?id=2487535818), so it is recommended to use this version instead.
 
-## Quick Start
+<br>
 
-See [the quick start guide](docs/quick-start.md).
+## Using Mod Config Menu for Players
 
-## Mod Developer API
+If you are a player of Isaac mods, then using Mod Config Menu should be straightforward. The controls are as follows:
 
-When Mod Config Menu is installed, a global `ModConfigMenu` is available which contains all the following functions.
+### Keyboard
 
-The settings added will show up in the order the functions are called.
+- By default, you can open the menu by pressing L. (This keyboard binding is customizable from the "Mod Config Menu" sub-menu.) F10 will also always open the menu, which cannot be changed.
+- Use the arrow keys or WASD keys to move around.
+- E, space, or enter can be used to select an item.
+- Esc, backspace, or Q can be used to go back.
 
-___Disclaimer__: Some of the following information may be incorrect. I quickly threw this together in a couple of hours, and only did some quick parsing of the code to try and figure out how it works and the flow. Anyone is free to create an issue or pull request with corrections._
+### Controller
 
-### Functions
+- By default, you can open the menu by pressing down the right control stick (i.e. R3). (This controller binding is customizable from the "Mod Config Menu" sub-menu.)
+- Both control sticks can be used to move around.
+- The "a" button can be used to select an item.
+- The "b" button can be used to go back.
 
-#### Category Functions
+By default, there will be two sub-menus installed: "General" and "Mod Config Menu". If you have other mods installed, they may add additional menus.
 
-##### GetCategoryIDByName([categoryName](#categoryName): string): number
+<br>
 
-Returns the category ID based off of the `categoryName` provided.
-Returns `nil` if not a valid category.
-Returns what was provided if `categoryName` is not a `string`.
+## Using Mod Config Menu as a Mod Developer
 
-##### UpdateCategory([categoryName](#categoryName): string, [categoryData](#categoryData): [categoryData](#categoryData))
-
-Updates a category with the supplied data.
-
-##### SetCategoryInfo([categoryName](#categoryName): string, info: string)
-
-Changes category info.
-
-##### RemoveCategory([categoryName](#categoryName): string)
-
-Removes a category entirely.
-
----
-
-#### Subcategory Functions
-
-##### GetSubcategoryIDByName(category: string|number, [subcategoryName](#subcategoryName): string): number
-
-Returns the subcategory ID based off of the `category` (which is either the category name or category ID) and `subcategoryName` provided.
-Returns `nil` if not a valid category or subcategory.
-Returns what was provided if `category` is not a `string` or `number` or `subcategoryName` is not a `string`.
-
-##### UpdateSubcategory([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, [subcategoryData](#subcategoryData): [subcategoryData](#subcategoryData))
-
-Updates a subcategory with the supplied data.
-
-##### RemoveSubcategory([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string)
-
-Removes a subcategory entirely.
-
----
-
-#### Setting Functions
-
-##### AddSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, [settingTable](#settingTable): [settingTable](#settingTable))
-
-Add a new setting to the supplied category and subcategory with the provided data.
-
-##### RemoveSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, settingAttribute: string)
-
-Remove the setting at the provided category, subcategory and attribute
-
-##### AddText([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: RGBArray)
-
-Add text into the mod config menu under the provided category and subcategory.
-
-##### AddTitle([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, text: string, color: RGBArray)
-
-Add a title to the mod config menu under the provided category and subcategory.
-
-##### AddSpace([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string)
-
-Add a space to the mod config menu under the provided category and subcategory.
-
-##### SimpleAddSetting(settingType: [OptionType](#OptionType), [categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: any, displayText: string, [displayValueProxies](#displayValueProxies), [displayDevice](#displayDevice): boolean, info: string, color: RGBArray, functionName: string)
-
-Create a setting without using a table.
-
-`functionName` = The name of the function it was called from (only used in error messages, and _really_ only used internally).
-
-Any `Add` functions that take `categoryName` and `configTableAttribute` will store its data in `ModConfigMenu.Config[categoryName][configTableAttribute]`. Other versions of Mod Config Menu may auto-save this data to file. However, this version of Mod Config Menu does not. Make sure you save and load your data as appropriate.
-
----
-
-_All of the individual `Add*` functions below can be achieved with just `AddSetting` and providing the `Type` parameter in [`settingTable`](#settingTable) to be a [`ModConfigMenu.OptionType`](#OptionType). That is also the way I recommend, because I haven't been able to fully understand the code yet, so I don't know what some of the parameters are for, and how the "overrides" are set up._
-_Any help figuring out what all the parameters and "overrides" are so I can make this readme more accurate would be appreciated._
-
-##### AddBooleanSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: boolean, displayText: string, [displayValueProxies](#displayValueProxies): table, info: string, color: RGBArray)
-
-Add a boolean setting under the provided category and subcategory.
-
-##### AddNumberSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, minValue: number, maxValue: number, modifyBy: number, defaultValue: number, displayText: string, [displayValueProxies](#displayValueProxies), info: string, color: RGBArray)
-
-Add a number value setting under the provided category and subcategory.
-
-##### AddScrollSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, info: string, color: RGBArray)
-
-Add a slider setting under the provided category and subcategory.
-
-##### AddKeyboardSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: RGBArray)
-
-Add a keyboard keybinding setting.
-
-##### AddControllerSetting([categoryName](#categoryName): string, [subcategoryName](#subcategoryName): string, configTableAttribute: ?, defaultValue: number, displayText: string, [displayDevice](#displayDevice): boolean, info: string, color: RGBArray)
-
-Add a controller keybinding setting.
-
----
-
-### Variables and Parameters
-
-#### Common Parameters
-
-##### categoryName
-
-What needs to be chosen on the left to go to your settings menu.
-
-##### subcategoryName
-
-The secondary section within your tab the setting is in. This is a tab list at the top of your menu.
-
-##### categoryData
-
-A table of data for the category.
+In order to use Mod Config Menu Pure inside of your mod, do not use the `require` or `dofile` or `pcall` or `loadfile` functions. Rather, simply check to see if the global variable of `ModConfigMenu` exists, with something along the lines of:
 
 ```lua
-{
-    Name = string -- the name of the category
-    Info = string -- the description of the category
-    IsOld = boolean -- not sure of the purpose, only seems to turn the text red
-}
+local MOD_NAME = "My Mod"
+local VERSION = "1.0.0"
+
+local function setupMyModConfigMenuSettings()
+  if ModConfigMenu == nil then
+    return
+  end
+
+  ModConfigMenu.AddSpace(MOD_NAME, "Info")
+  ModConfigMenu.AddText(MOD_NAME, "Info", function() return MOD_NAME end)
+  ModConfigMenu.AddSpace(MOD_NAME, "Info")
+  ModConfigMenu.AddText(MOD_NAME, "Info", function() return "Version " .. VERSION end)
+end
 ```
 
-##### subcategoryData
+For more information:
 
-A table of data for the subcategory.
+- See [the quick start guide](docs/quick-start.md).
+- Also see [the API documentation](docs/api.md).
 
-```lua
-    Name = string -- the name of the category
-    Info = string -- the description of the category
+<br>
+
+## Troubleshooting
+
+Note that the "Pure" version of Mod Config Menu will not work properly if:
+
+- You have subscribed to the "Pure" version and you subscribed to a different version at the same time, which will cause a conflict.
+- You are subscribed to a mod that uses a standalone version of Mod Config Menu, which will cause a conflict.
+- You are subscribed to a mod uses the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu.
+
+<br>
+
+## FAQ
+
+### Does it work with Repentance?
+
+Yes.
+
+### Does it work with the latest version of Repentance?
+
+Yes. In [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]version 1.7.9b[/url], the `loadfile` function was removed from the game. But unlike other versions of Mod Config Menu, Mod Config Menu Pure does not use `loadfile` (or any other hacks), so this version continues to work as it did before.
+
+### Does it work with Afterbirth+?
+
+No, because it uses the Repentance-only API for getting the HUD offset.
+
+### What do I do if Mod Config Menu Pure does not work properly with a particular mod?
+
+This is probably because the mod is using the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+
+### What is Mod Config Menu Continued?
+
+The original version of Mod Config Menu was made by piber20. [Mod Config Menu Continued](https://steamcommunity.com/sharedfiles/filedetails/?id=2487535818) is an updated version made by Chifilly with the goal of making it work with the Repentance DLC and fixing some bugs. Mod Config Menu Pure is an updated version of Mod Config Menu Continued with the goal of fixing yet more bugs. Thus, Mod Config Menu Continued is not the same thing as Mod Config Menu Pure.
+
+As of December 8, 2022, Mod Config Menu Continued no longer works with the latest version of the game, so you should use Mod Config Menu Pure instead.
+
+### Should I subscribe to multiple versions of Mod Config Menu at the same time?
+
+No. You should only subscribe to one specific version of Mod Config Menu at a time.
+
+### How do I open Mod Config Menu?
+
+See [the "Using Mod Config Menu for Players" section](#using-mod-config-menu-for-players) above.
+
+If the default keyboard/controller bindings do not work, then it is possible you have previously remapped them to something else. In this case, you can use the F10 button on the keyboard, which will always open the menu. Then, you can configure the keyboard/controller bindings to the exact thing that you want.
+
+### What do I do if saving settings for a mod does not work between game launches?
+
+Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.
+
+### Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?
+
+Yes. However, it might not work as a drop-in replacement for mods that use the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu. Another common issue is using deprecated properties like `ModConfigMenuOptionType.BOOLEAN` instead of `ModConfigMenu.OptionType.BOOLEAN`. If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
+
+### What does it mean to "remove API overrides"?
+
+The original version overwrote some of the Lua and Isaac API functions, such as `pcall` and `RequireMod`. This version does not overwrite any API functions.
+
+### How do I tell what version of Mod Config Menu Pure I have?
+
+There are 3 ways:
+
+- You can see the version in the console.
+- You can see the version in the game's "log.txt" file. (See the next section.)
+- You can see the version at the top of the mod's Lua file. (See the next section.)
+
+### Where is the game's "log.txt" file located?
+
+By default, it is located at the following path:
+
+```text
+C:\Users\[username]\Documents\My Games\Binding of Isaac Repentance\log.txt
 ```
 
-##### settingTable
+### Where is the Lua code for the mod located?
 
-A table of data for the setting.
+By default, it is located at the following path:
 
-```lua
-{
-    -- the type of the setting, see OptionType for more information
-    Type = ModConfigMenu.OptionType,
-
-    -- the identifier for the setting
-    Attribute = string,
-
-    -- the default value for the setting
-    Default = any,
-
-    -- a function that returns the current value of the setting
-    CurrentSetting = function(),
-
-    -- the minimum value of numeric settings
-    Minimum = number,
-
-    -- the maximum value of numeric settings
-    Maximum = number,
-
-    -- a function that returns a string of how the setting will display in the settings menu
-    Display = function(),
-
-    -- a function that is called whenever the setting is changed (can be used to save your settings for example)
-    OnChange = function(),
-
-    -- a table of strings that's used as the information for the setting
-    Info = { string },
-
-    -- the color of the setting (values are floats between 0 and 1)
-    Color = { r, g, b },
-}
+```text
+C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\mods\!!mod config menu_2681875787\scripts\modconfig.lua
 ```
 
-##### displayValueProxies
+### Where is the save data for the mod located?
 
-A table that denotes what text will be displayed based on the setting value as the index.
+By default, it is located at the following path:
 
-```lua
--- this will make "true" show as "On" and "false" show as "Off"
-{
-    [true] = "On",
-    [false] = "Off"
-}
-
--- or
-
--- this will make 0 show "Sometimes", 1 show "Never" and 2 show "Always"
-{
-    [0] = "Sometimes",
-    [1] = "Never",
-    [2] = "Always"
-},
+```text
+C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save#.dat
 ```
 
-##### displayDevice
+The `#` corresponds to the number of the save slot that you are playing on.
 
-Whether the display text should be suffixed with the control device (`(keyboard)` or `(controller)`).
+### How do I reset my Mod Config Menu settings?
 
----
+You need to delete the save data file that corresponds to the Isaac save slot that you are on. See the previous section.
 
-#### Enums
+### Why doesn't Mod Config Menu work for me?
 
-##### OptionType
+It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. At this point, you will probably have no errors, so you can then start to introduce other things piece by piece until you find the thing that is causing the problem. For more information on where the various game files are located, see [my directories and save files explanation](https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md).
 
-All these option types are in the `ModConfigMenu.OptionType` enum.
+### What was changed in the last update?
 
-`TEXT` = Plain text.
-`SPACE` = A paragraph-type gap rendered in the menu.
-`SCROLL` = A slider-bar for numeric values.
-`BOOLEAN` = A boolean (true or false).
-`NUMBER` = A numeric value.
-`KEYBIND_KEYBOARD` = A keybind for keyboards.
-`KEYBIND_CONTROLLER` = A keybind for controllers.
-`TITLE` = Heading-style text.
+Look at the [commit history](https://github.com/Zamiell/isaac-mod-config-menu/commits/main).

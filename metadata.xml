@@ -5,141 +5,19 @@
     <id>2681875787</id>
     <description>[h1][b]Mod Config Menu Pure[/b][/h1]
 
-[h1][b]Before posting a comment, read the FAQ below. Comments asking questions that have already been covered will be deleted.[/b][/h1]
-
 [h2][b]Introduction[/b][/h2]
 
 Mod Config Menu is a library to that allows other mods to have a settings menu. You should only subscribe to this mod if you have other mods that use it.
-
-This specific version of Mod Config Menu removes all of the hacky API overrides that the original author used, which is a terrible programming practice and can cause problems with other things in the Isaac ecosystem. For this reason, I call it the "Pure" version.
-
-As of [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]patch v1.7.9b[/url], other version of Mod Config Menu will not work anymore, like [url=https://steamcommunity.com/workshop/filedetails/?id=2487535818]Mod Config Menu Continued[/url], so it is recommended to use this version instead.
-
-This mod is open-source. You can help with development by [url=https://github.com/Zamiell/isaac-mod-config-menu]contributing on GitHub[/url].
-
-Credit goes to piber20 for originally creating this library and Chifilly for updating it for Repentance.
 
 [h2][b]Installing[/b][/h2]
 
 Click on the green "Subscribe" button above, which will cause Steam to automatically download the mod. Then, the next time you open the game, the mod will appear in the "Mods" submenu.
 
-For advanced users, you could also try manually installing the mod from the source code [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url].
+[h2][b]More Info[/b][/h2]
 
-[h2][b]Using Mod Config Menu for End-Users[/b][/h2]
+For more information, read [url=https://github.com/Zamiell/isaac-mod-config-menu/blob/main/README.md]the README file for this mod on GitHub[/url].
 
-If you are a player of Isaac mods, then using Mod Config Menu should be straightforward. The controls are as follows:
-
-[b]Keyboard:[/b]
-[*] By default, you can open the menu by pressing L. (This keyboard binding is customizable from the "Mod Config Menu" sub-menu.) F10 will also always open the menu, which cannot be changed.
-[*] Use the arrow keys or WASD keys to move around.
-[*] E, space, or enter can be used to select an item.
-[*] Esc, backspace, or Q can be used to go back.
-
-[b]Controller:[/b]
-[*] By default, you can open the menu by pressing down the right control stick (i.e. R3). (This controller binding is customizable from the "Mod Config Menu" sub-menu.)
-[*] Both control sticks can be used to move around.
-[*] The "a" button can be used to select an item.
-[*] The "b" button can be used to go back.
-
-By default, there will be two sub-menus installed: "General" and "Mod Config Menu". If you have other mods installed, they may add additional menus.
-
-[h2][b]Using Mod Config Menu as a Mod Developer[/b][/h2]
-
-In order to use Mod Config Menu Pure inside of your mod, do not use the "require" or "dofile" or "pcall" functions. Rather, simply check to see if the global variable of "ModConfigMenu" exists, with something along the lines of:
-
-[code]
-local MOD_NAME = "My Mod"
-local VERSION = "1.0"
-
-local function setupMyModConfigMenuSettings()
-  if ModConfigMenu == nil then
-    return
-  end
-
-  ModConfigMenu.AddSpace(MOD_NAME, "Info")
-  ModConfigMenu.AddText(MOD_NAME, "Info", function() return MOD_NAME end)
-  ModConfigMenu.AddSpace(MOD_NAME, "Info")
-  ModConfigMenu.AddText(MOD_NAME, "Info", function() return "Version " .. VERSION end)
-end
-[/code]
-
-[h2][b]Troubleshooting[/b][/h2]
-
-Note that the "Pure" version of Mod Config Menu will not work properly if:
-- you subscribed to the "Pure" version and you subscribed to a different version at the same time, which will cause a conflict
-- you are subscribed to a mod that uses a standalone version of Mod Config Menu, which will cause a conflict
-- you are subscribed to a mod uses the "require" or "dofile" or "pcall" functions to initialize or invoke Mod Config Menu
-
-[h2]Navigation[/h2]
-
-Keyboard:
-- Use the arrow keys or WASD keys to move around.
-- Esc, backspace, or Q can be used to go back.
-- E, space, or enter can be used to select an item.
-- By default you can open the menu by pressing L.
-- F10 will also always open the menu; this cannot be changed.
-
-Controller:
-- Both control sticks can be used to move around.
-- Press B to go back.
-- Press A to select an item.
-- You can open the menu by pressing down the right control stick.
-
-[h2]FAQ[/h2]
-
-[b]Q: Does it work with Repentance?[/b]
-A: Yes.
-
-[b]Q: Does it work with the latest version of Repentance?[/b]
-A: Yes. In [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]version 1.7.9b[/url], the "loadfile" function was removed from the game. But unlike other versions of Mod Config Menu, Mod Config Menu Pure does not use "loadfile" or any other hacks, so this version continues to work as it did before.
-
-[b]Q: Does it work with Afterbirth+?[/b]
-A: No, because it uses the Repentance-only API for getting the HUD offset.
-
-[b]Q: What do I do if Mod Config Menu Pure does not work properly with a particular mod?[/b]
-A: This is probably because the mod is using the "require" or "dofile" or "pcall" or "loadfile" functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
-
-[b]Q: What is Mod Config Menu Continued?[/b]
-A: The original version of Mod Config Menu was made by piber20. [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2487535818]Mod Config Menu Continued[/url] is an updated version made by Chifilly with the goal of making it work with the Repentance DLC and fixing some bugs. Mod Config Menu Pure is an updated version of Mod Config Menu Continued with the goal of fixing yet more bugs. Thus, Mod Config Menu Continued is not the same thing as Mod Config Menu Pure.
-
-As of December 8, 2022, Mod Config Menu Continued no longer works with the latest version of the game, so you should use Mod Config Menu Pure instead.
-
-[b]Q: As a player, do I need to subscribe to this mod and other versions of Mod Config Menu at the same time?[/b]
-A: No. You should only subscribe to one specific version of Mod Config Menu at a time.
-
-[b]Q: How do I open Mod Config Menu?[/b]
-A: See the section above entitled "Using Mod Config Menu for End-Users". If the default keyboard/controller bindings do not work, then it is possible you have previously remapped them to something else. In this case, you can use the F10 button on the keyboard, which will always open the menu. Then, you can configure the keyboard/controller bindings to the exact thing that you want.
-
-[b]Q: What do I do if saving settings for a mod does not work between game launches?[/b]
-A: Mod Config Menu is not in charge of saving any data besides the ones in the "General" and "Mod Config Menu" pages. If an individual mod does not properly save its data, then you should contact the author of that mod.
-
-[b]Q: Does this have the same functionality (i.e. API) as the other versions of Mod Config Menu?[/b]
-A: Yes. However, it might not work as a drop-in replacement for mods that use the "require" or "dofile" or "pcall" or "loadfile" functions to initialize or invoke Mod Config Menu. Another common issue is using deprecated properties like "ModConfigMenuOptionType.BOOLEAN" instead of "ModConfigMenu.OptionType.BOOLEAN". If you are a mod author and you want to switch to the pure version, you should test everything thoroughly.
-
-[b]Q: What does it mean to "remove API overrides"?[/b]
-A: The original version overwrote some of the Lua and Isaac API functions, such as "pcall" and "RequireMod". This version does not overwrite any API functions.
-
-[b]Q: How do I tell what version of Mod Config Menu Pure I have?[/b]
-A: There are 3 ways. First, you can see the version in the console. Second, you can see the version in the game's "log.txt" file. Third, you can see the version at the top of the "C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\mods\!!mod config menu_2681875787\scripts\modconfig.lua" file.
-
-[b]Q: Where is the game's "log.txt" file located?[/b]
-A: By default, it is located at the following path: C:\Users\james\Documents\My Games\Binding of Isaac Repentance\log.txt
-
-[b]Q: Where is the save data for Mod Config Menu located?[/b]
-A: By default, it is located at the following path: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save#.dat
-
-[b]Q: How do I reset my Mod Config Menu settings?[/b]
-A: By default, You need to delete the following file: C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\data\!!mod config menu\save1.dat
-
-This file corresponds to save slot 1. For example, if you play on save slot 2, then you would need to delete "save2.dat".
-
-If you have Isaac installed to a different drive or different location, then the path will be different.
-
-[b]Q: Why doesn't Mod Config Menu work for me?[/b]
-A: It works for everyone else, so it has to be something wrong with you. Start by uninstalling the game, completely removing all leftover game files, reinstalling the game, and then only subscribing to this mod on the workshop and nothing else. At this point, you will probably have no errors, so you can then start to introduce other things piece by piece until you find the thing that is causing the problem. For more information on where the various game files are located, see [url=https://github.com/Zamiell/isaac-faq/blob/main/directories-and-save-files.md]my directories and save files explanation[/url].
-
-[b]Q: What was changed in the last update?[/b]
-A: Like most other open source software, you can find the changes [url=https://github.com/Zamiell/isaac-mod-config-menu]on GitHub[/url] by looking through the past commits.
+[h1][b]Before posting a comment below, read the entire README on GitHub. Comments asking questions that have already been covered in the README will be deleted.[/b][/h1]
 </description>
     <version>111</version>
     <visibility>Public</visibility>

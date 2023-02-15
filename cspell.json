@@ -22,6 +22,7 @@
         "inputhelper",
         "ipairs",
         "keybind",
+        "loadfile",
         "MCM",
         "MENUBACK",
         "MENUCONFIRM",
