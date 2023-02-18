@@ -4,11 +4,6 @@
 
 If you want to add config options to your Binding of Isaac mod, then instead of programming your own menu system from scratch, you can register your mod's configuration options with [Mod Config Menu](https://github.com/Zamiell/isaac-mod-config-menu), or MCM for short. MCM is a mod that provides an extendable in-game menu.
 
-Currently, there are two versions of MCM available on the Steam Workshop. The documentation in this repository should work with either of them:
-
-- [Mod Config Menu Pure](https://steamcommunity.com/sharedfiles/filedetails/?id=2681875787)
-- [Mod Config Menu - Continued](https://steamcommunity.com/sharedfiles/filedetails/?id=2487535818)
-
 <br>
 
 ## The `ModConfigMenu` Global Variable
