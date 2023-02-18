@@ -13,24 +13,18 @@ local fileVersion = 1
 
 --prevent older/same version versions of this script from loading
 if ScreenHelper and ScreenHelper.Version >= fileVersion then
-
   return ScreenHelper
-
 end
 
 if not ScreenHelper then
-
   ScreenHelper = {}
   ScreenHelper.Version = fileVersion
-
 elseif ScreenHelper.Version < fileVersion then
-
   local oldVersion = ScreenHelper.Version
 
   -- handle old versions
 
   ScreenHelper.Version = fileVersion
-
 end
 
 ---------------------
@@ -71,7 +65,7 @@ function ScreenHelper.GetScreenSize()
     local rx = pos.X + 60 * 26 / 40
     local ry = pos.Y + 140 * (26 / 40)
 
-    return Vector(rx*2 + 13*26, ry*2 + 7*26)
+    return Vector(rx * 2 + 13 * 26, ry * 2 + 7 * 26)
   end
 end
 
@@ -83,7 +77,7 @@ function ScreenHelper.GetScreenBottomRight(offset)
   offset = offset or ScreenHelper.GetOffset()
 
   local pos = ScreenHelper.GetScreenSize()
-  local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
+  local hudOffset = Vector( -offset * 2.2, -offset * 1.6)
   pos = pos + hudOffset
 
   return pos
@@ -103,7 +97,7 @@ function ScreenHelper.GetScreenTopRight(offset)
   offset = offset or ScreenHelper.GetOffset()
 
   local pos = Vector(ScreenHelper.GetScreenBottomRight(0).X, 0)
-  local hudOffset = Vector(-offset * 2.2, offset * 1.2)
+  local hudOffset = Vector( -offset * 2.2, offset * 1.2)
   pos = pos + hudOffset
 
   return pos

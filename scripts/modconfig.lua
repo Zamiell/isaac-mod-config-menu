@@ -403,7 +403,7 @@ function ModConfigMenu.SetCategoryInfo(categoryName, info)
   end
 
   ModConfigMenu.UpdateCategory(categoryName, {
-      Info = info
+    Info = info
   })
 end
 
@@ -554,10 +554,10 @@ function ModConfigMenu.AddText(categoryName, subcategoryName, text, color)
   end
 
   local settingTable = {
-      Type = ModConfigMenu.OptionType.TEXT,
-      Display = text,
-      Color = color,
-      NoCursorHere = true
+    Type = ModConfigMenu.OptionType.TEXT,
+    Display = text,
+    Color = color,
+    NoCursorHere = true
   }
 
   return ModConfigMenu.AddSetting(categoryName, subcategoryName, settingTable)
@@ -580,10 +580,10 @@ function ModConfigMenu.AddTitle(categoryName, subcategoryName, text, color)
   end
 
   local settingTable = {
-      Type = ModConfigMenu.OptionType.TITLE,
-      Display = text,
-      Color = color,
-      NoCursorHere = true
+    Type = ModConfigMenu.OptionType.TITLE,
+    Display = text,
+    Color = color,
+    NoCursorHere = true
   }
 
   return ModConfigMenu.AddSetting(categoryName, subcategoryName, settingTable)
@@ -600,7 +600,7 @@ function ModConfigMenu.AddSpace(categoryName, subcategoryName)
   end
 
   local settingTable = {
-      Type = ModConfigMenu.OptionType.SPACE
+    Type = ModConfigMenu.OptionType.SPACE
   }
 
   return ModConfigMenu.AddSetting(categoryName, subcategoryName, settingTable)
@@ -652,75 +652,75 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
 
   --setting
   local settingTable = {
-      Type = settingType,
-      Attribute = configTableAttribute,
-      CurrentSetting = function()
-        return ModConfigMenu.Config[categoryName][configTableAttribute]
-      end,
-      Default = defaultValue,
-      Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
-        local currentValue = ModConfigMenu.Config[categoryName][configTableAttribute]
+    Type = settingType,
+    Attribute = configTableAttribute,
+    CurrentSetting = function()
+      return ModConfigMenu.Config[categoryName][configTableAttribute]
+    end,
+    Default = defaultValue,
+    Display = function(cursorIsAtThisOption, configMenuInOptions, lastOptionPos)
+      local currentValue = ModConfigMenu.Config[categoryName][configTableAttribute]
 
-        local displayString = ""
+      local displayString = ""
 
-        if displayText then
-          displayString = displayText .. ": "
-        end
+      if displayText then
+        displayString = displayText .. ": "
+      end
 
-        if settingType == ModConfigMenu.OptionType.SCROLL then
-          displayString = displayString .. "$scroll" .. tostring(math.floor(currentValue))
-        elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD then
-          local key = "None"
+      if settingType == ModConfigMenu.OptionType.SCROLL then
+        displayString = displayString .. "$scroll" .. tostring(math.floor(currentValue))
+      elseif settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD then
+        local key = "None"
 
-          if currentValue > -1 then
-            key = "Unknown Key"
+        if currentValue > -1 then
+          key = "Unknown Key"
 
-            if InputHelper.KeyboardToString[currentValue] then
-              key = InputHelper.KeyboardToString[currentValue]
-            end
-          end
-
-          displayString = displayString .. key
-
-          if displayDevice then
-            displayString = displayString .. " (keyboard)"
-          end
-        elseif settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
-          local key = "None"
-
-          if currentValue > -1 then
-            key = "Unknown Button"
-
-            if InputHelper.ControllerToString[currentValue] then
-              key = InputHelper.ControllerToString[currentValue]
-            end
-          end
-
-          displayString = displayString .. key
-
-          if displayDevice then
-            displayString = displayString .. " (controller)"
-          end
-        elseif displayValueProxies and displayValueProxies[currentValue] then
-          displayString = displayString .. tostring(displayValueProxies[currentValue])
-        else
-          displayString = displayString .. tostring(currentValue)
-        end
-
-        return displayString
-      end,
-      OnChange = function(currentValue)
-        if not currentValue then
-          if settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or
-              settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
-            currentValue = -1
+          if InputHelper.KeyboardToString[currentValue] then
+            key = InputHelper.KeyboardToString[currentValue]
           end
         end
 
-        ModConfigMenu.Config[categoryName][configTableAttribute] = currentValue
-      end,
-      Info = info,
-      Color = color
+        displayString = displayString .. key
+
+        if displayDevice then
+          displayString = displayString .. " (keyboard)"
+        end
+      elseif settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+        local key = "None"
+
+        if currentValue > -1 then
+          key = "Unknown Button"
+
+          if InputHelper.ControllerToString[currentValue] then
+            key = InputHelper.ControllerToString[currentValue]
+          end
+        end
+
+        displayString = displayString .. key
+
+        if displayDevice then
+          displayString = displayString .. " (controller)"
+        end
+      elseif displayValueProxies and displayValueProxies[currentValue] then
+        displayString = displayString .. tostring(displayValueProxies[currentValue])
+      else
+        displayString = displayString .. tostring(currentValue)
+      end
+
+      return displayString
+    end,
+    OnChange = function(currentValue)
+      if not currentValue then
+        if settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or
+            settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER then
+          currentValue = -1
+        end
+      end
+
+      ModConfigMenu.Config[categoryName][configTableAttribute] = currentValue
+    end,
+    Info = info,
+    Color = color
   }
 
   if settingType == ModConfigMenu.OptionType.NUMBER then
@@ -805,8 +805,8 @@ function ModConfigMenu.AddBooleanSetting(categoryName, subcategoryName, configTa
   end
 
   return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.BOOLEAN, categoryName, subcategoryName,
-          configTableAttribute, nil, nil, nil, defaultValue, displayText, displayValueProxies, nil, info, color,
-          "AddBooleanSetting")
+    configTableAttribute, nil, nil, nil, defaultValue, displayText, displayValueProxies, nil, info, color,
+    "AddBooleanSetting")
 end
 
 function ModConfigMenu.AddNumberSetting(categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy
@@ -847,10 +847,10 @@ function ModConfigMenu.AddNumberSetting(categoryName, subcategoryName, configTab
   modifyBy = modifyBy or 1
 
   return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.NUMBER, categoryName, subcategoryName,
-          configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, nil, info,
-          color
-          ,
-          "AddNumberSetting")
+    configTableAttribute, minValue, maxValue, modifyBy, defaultValue, displayText, displayValueProxies, nil, info,
+    color
+    ,
+    "AddNumberSetting")
 end
 
 function ModConfigMenu.AddScrollSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText,
@@ -876,7 +876,7 @@ function ModConfigMenu.AddScrollSetting(categoryName, subcategoryName, configTab
   defaultValue = defaultValue or 0
 
   return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.SCROLL, categoryName, subcategoryName,
-          configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, nil, info, color, "AddScrollSetting")
+    configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, nil, info, color, "AddScrollSetting")
 end
 
 function ModConfigMenu.AddKeyboardSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText
@@ -909,8 +909,8 @@ function ModConfigMenu.AddKeyboardSetting(categoryName, subcategoryName, configT
   defaultValue = defaultValue or -1
 
   return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.KEYBIND_KEYBOARD, categoryName, subcategoryName,
-          configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color,
-          "AddKeyboardSetting")
+    configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color,
+    "AddKeyboardSetting")
 end
 
 function ModConfigMenu.AddControllerSetting(categoryName, subcategoryName, configTableAttribute, defaultValue,
@@ -943,8 +943,8 @@ function ModConfigMenu.AddControllerSetting(categoryName, subcategoryName, confi
   defaultValue = defaultValue or -1
 
   return ModConfigMenu.SimpleAddSetting(ModConfigMenu.OptionType.KEYBIND_CONTROLLER, categoryName, subcategoryName,
-          configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color,
-          "AddControllerSetting")
+    configTableAttribute, nil, nil, nil, defaultValue, displayText, nil, displayDevice, info, color,
+    "AddControllerSetting")
 end
 
 function ModConfigMenu.RemoveSetting(categoryName, subcategoryName, settingAttribute)
@@ -1000,12 +1000,12 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 --HUD OFFSET SETTING--
 ----------------------
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
-        "General", --category
-        "HudOffset", --attribute in table
-        Options and Options.HUDOffset * 10 or 0, --default value
-        "Hud Offset", --display text
-        "How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
-    )
+  "General", --category
+  "HudOffset", --attribute in table
+  Options and Options.HUDOffset * 10 or 0, --default value
+  "Hud Offset", --display text
+  "How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
+)
 
 hudOffsetSetting.HideControls = true -- hide controls so the screen corner graphics are easier to see
 hudOffsetSetting.ShowOffset = true -- shows screen offset
@@ -1026,51 +1026,51 @@ end
 --OVERLAYS SETTING--
 --------------------
 local overlays = ModConfigMenu.AddBooleanSetting(
-        "General", --category
-        "Overlays", --attribute in table
-        true, --default value
-        "Overlays", --display text
-        {
-            --value display text
-            [true] = "On",
-            [false] = "Off"
-        },
-        "Enable or disable custom visual overlays, like screen-wide fog."
-    )
+  "General", --category
+  "Overlays", --attribute in table
+  true, --default value
+  "Overlays", --display text
+  {
+    --value display text
+    [true] = "On",
+    [false] = "Off"
+  },
+  "Enable or disable custom visual overlays, like screen-wide fog."
+)
 vanillaMCMOptionRegisterSave(overlays)
 
 -----------------------
 --CHARGE BARS SETTING--
 -----------------------
 local chargeBars = ModConfigMenu.AddBooleanSetting(
-        "General", --category
-        "ChargeBars", --attribute in table
-        false, --default value
-        "Charge Bars", --display text
-        {
-            --value display text
-            [true] = "On",
-            [false] = "Off"
-        },
-        "Enable or disable custom charge bar visuals for mod effects, like those from chargeable items."
-    )
+  "General", --category
+  "ChargeBars", --attribute in table
+  false, --default value
+  "Charge Bars", --display text
+  {
+    --value display text
+    [true] = "On",
+    [false] = "Off"
+  },
+  "Enable or disable custom charge bar visuals for mod effects, like those from chargeable items."
+)
 vanillaMCMOptionRegisterSave(chargeBars)
 
 ---------------------
 --BIG BOOKS SETTING--
 ---------------------
 local bigBooks = ModConfigMenu.AddBooleanSetting(
-        "General", --category
-        "BigBooks", --attribute in table
-        true, --default value
-        "Bigbooks", --display text
-        {
-            --value display text
-            [true] = "On",
-            [false] = "Off"
-        },
-        "Enable or disable custom big-book overlays which can appear when an active item is used."
-    )
+  "General", --category
+  "BigBooks", --attribute in table
+  true, --default value
+  "Bigbooks", --display text
+  {
+    --value display text
+    [true] = "On",
+    [false] = "Off"
+  },
+  "Enable or disable custom big-book overlays which can appear when an active item is used."
+)
 vanillaMCMOptionRegisterSave(bigBooks)
 
 ---------------------
@@ -1078,20 +1078,20 @@ vanillaMCMOptionRegisterSave(bigBooks)
 ---------------------
 
 local announcer = ModConfigMenu.AddNumberSetting(
-        "General", --category
-        "Announcer", --attribute in table
-        0, --minimum value
-        2, --max value
-        0, --default value,
-        "Announcer", --display text
-        {
-            --value display text
-            [0] = "Sometimes",
-            [1] = "Never",
-            [2] = "Always"
-        },
-        "Choose how often a voice-over will play when a pocket item (pill or card) is used."
-    )
+  "General", --category
+  "Announcer", --attribute in table
+  0, --minimum value
+  2, --max value
+  0, --default value,
+  "Announcer", --display text
+  {
+    --value display text
+    [0] = "Sometimes",
+    [1] = "Never",
+    [2] = "Always"
+  },
+  "Choose how often a voice-over will play when a pocket item (pill or card) is used."
+)
 vanillaMCMOptionRegisterSave(announcer)
 
 --------------------------
@@ -1108,7 +1108,7 @@ ModConfigMenu.AddText("General", "all mods which support them")
 ----------------------------------
 
 ModConfigMenu.SetCategoryInfo("Mod Config Menu",
-    "Settings specific to Mod Config Menu.$newlineChange keybindings for the menu here.")
+  "Settings specific to Mod Config Menu.$newlineChange keybindings for the menu here.")
 
 ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.Version) .. " !") --VERSION INDICATOR
 
@@ -1119,13 +1119,13 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 ----------------------
 
 local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
-        "Mod Config Menu", --category
-        "OpenMenuKeyboard", --attribute in table
-        Keyboard.KEY_L, --default value
-        "Open Menu", --display text
-        true, --if (keyboard) is displayed after the key text
-        "Choose what button on your keyboard will open Mod Config Menu."
-    )
+  "Mod Config Menu", --category
+  "OpenMenuKeyboard", --attribute in table
+  Keyboard.KEY_L, --default value
+  "Open Menu", --display text
+  true, --if (keyboard) is displayed after the key text
+  "Choose what button on your keyboard will open Mod Config Menu."
+)
 
 openMenuKeyboardSetting.IsOpenMenuKeybind = true
 vanillaMCMOptionRegisterSave(openMenuKeyboardSetting)
@@ -1135,13 +1135,13 @@ vanillaMCMOptionRegisterSave(openMenuKeyboardSetting)
 ------------------------
 
 local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
-        "Mod Config Menu", --category
-        "OpenMenuController", --attribute in table
-        Controller.STICK_RIGHT, --default value
-        "Open Menu", --display text
-        true, --if (controller) is displayed after the key text
-        "Choose what button on your controller will open Mod Config Menu."
-    )
+  "Mod Config Menu", --category
+  "OpenMenuController", --attribute in table
+  Controller.STICK_RIGHT, --default value
+  "Open Menu", --display text
+  true, --if (controller) is displayed after the key text
+  "Choose what button on your controller will open Mod Config Menu."
+)
 openMenuControllerSetting.IsOpenMenuKeybind = true
 vanillaMCMOptionRegisterSave(openMenuControllerSetting)
 
@@ -1155,17 +1155,17 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 ------------
 
 local hideHudSetting = ModConfigMenu.AddBooleanSetting(
-        "Mod Config Menu", --category
-        "HideHudInMenu", --attribute in table
-        true, --default value
-        "Hide HUD", --display text
-        {
-            --value display text
-            [true] = "Yes",
-            [false] = "No"
-        },
-        "Enable or disable the hud when this menu is open."
-    )
+  "Mod Config Menu", --category
+  "HideHudInMenu", --attribute in table
+  true, --default value
+  "Hide HUD", --display text
+  {
+    --value display text
+    [true] = "Yes",
+    [false] = "No"
+  },
+  "Enable or disable the hud when this menu is open."
+)
 vanillaMCMOptionRegisterSave(hideHudSetting)
 
 --actively modify the hud visibility as this setting changes
@@ -1206,12 +1206,12 @@ end
 ----------------------------
 
 local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
-        "Mod Config Menu", --category
-        "ResetToDefault", --attribute in table
-        Keyboard.KEY_R, --default value
-        "Reset To Default Keybind", --display text
-        "Press this button on your keyboard to reset a setting to its default value."
-    )
+  "Mod Config Menu", --category
+  "ResetToDefault", --attribute in table
+  Keyboard.KEY_R, --default value
+  "Reset To Default Keybind", --display text
+  "Press this button on your keyboard to reset a setting to its default value."
+)
 resetKeybindSetting.IsResetKeybind = true
 vanillaMCMOptionRegisterSave(resetKeybindSetting)
 
@@ -1220,17 +1220,17 @@ vanillaMCMOptionRegisterSave(resetKeybindSetting)
 -----------------
 
 local showControls = ModConfigMenu.AddBooleanSetting(
-        "Mod Config Menu", --category
-        "ShowControls", --attribute in table
-        true, --default value
-        "Show Controls", --display text
-        {
-            --value display text
-            [true] = "Yes",
-            [false] = "No"
-        },
-        "Disable this to remove the back and select widgets at the lower corners of the screen and remove the bottom start-up message."
-    )
+  "Mod Config Menu", --category
+  "ShowControls", --attribute in table
+  true, --default value
+  "Show Controls", --display text
+  {
+    --value display text
+    [true] = "Yes",
+    [false] = "No"
+  },
+  "Disable this to remove the back and select widgets at the lower corners of the screen and remove the bottom start-up message."
+)
 vanillaMCMOptionRegisterSave(showControls)
 
 ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
@@ -1240,17 +1240,17 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 -----------------
 
 local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
-        "Mod Config Menu", --category
-        "CompatibilityLayer", --attribute in table
-        false, --default value
-        "Disable Legacy Warnings", --display text
-        {
-            --value display text
-            [true] = "Yes",
-            [false] = "No"
-        },
-        "Use this setting to prevent warnings from being printed to the console for mods that use outdated features of Mod Config Menu."
-    )
+  "Mod Config Menu", --category
+  "CompatibilityLayer", --attribute in table
+  false, --default value
+  "Disable Legacy Warnings", --display text
+  {
+    --value display text
+    [true] = "Yes",
+    [false] = "No"
+  },
+  "Use this setting to prevent warnings from being printed to the console for mods that use outdated features of Mod Config Menu."
+)
 vanillaMCMOptionRegisterSave(compatibilitySetting)
 
 local configMenuSubcategoriesCanShow = 3
@@ -1277,7 +1277,7 @@ local actionsRight = { ButtonAction.ACTION_RIGHT, ButtonAction.ACTION_SHOOTRIGHT
 local actionsLeft = { ButtonAction.ACTION_LEFT, ButtonAction.ACTION_SHOOTLEFT, ButtonAction.ACTION_MENULEFT }
 local actionsBack = { ButtonAction.ACTION_PILLCARD, ButtonAction.ACTION_MAP, ButtonAction.ACTION_MENUBACK }
 local actionsSelect = { ButtonAction.ACTION_ITEM, ButtonAction.ACTION_PAUSE, ButtonAction.ACTION_MENUCONFIRM,
-    ButtonAction.ACTION_BOMB }
+  ButtonAction.ACTION_BOMB }
 
 --ignore these buttons for the above actions
 local ignoreActionButtons = { Controller.BUTTON_A, Controller.BUTTON_B, Controller.BUTTON_X, Controller.BUTTON_Y }
@@ -2206,7 +2206,7 @@ function ModConfigMenu.PostRender()
               )
         end
         configMenuPositionFirstSubcategory = math.min(math.max(configMenuPositionFirstSubcategory, 1),
-                #currentMenuCategory.Subcategories - (configMenuSubcategoriesCanShow - 1))
+          #currentMenuCategory.Subcategories - (configMenuSubcategoriesCanShow - 1))
 
         --make sure option positions are 1
         configMenuPositionCursorOption = 1
@@ -2664,8 +2664,8 @@ function ModConfigMenu.PostRender()
               end
               if optionColor then
                 scrollColor = Color(optionColor[1], optionColor[2], optionColor[3], scrollColor.A, scrollColor.RO,
-                        scrollColor.GO
-                        , scrollColor.BO)
+                  scrollColor.GO
+                  , scrollColor.BO)
               end
 
               local sliderString = "Slider1"
@@ -2838,8 +2838,8 @@ function ModConfigMenu.PostRender()
         end
       end
       Font10:DrawString(goBackString, (bottomLeft.X - Font10:GetStringWidthUTF8(goBackString) / 2) + 36,
-          bottomLeft.Y - 24,
-          mainFontColor, 0, true)
+        bottomLeft.Y - 24,
+        mainFontColor, 0, true)
 
       --select
       local bottomRight = ScreenHelper.GetScreenBottomRight(0)
@@ -2870,7 +2870,7 @@ function ModConfigMenu.PostRender()
           end
         end
         Font10:DrawString(selectString, (bottomRight.X - Font10:GetStringWidthUTF8(selectString) / 2) - 36,
-            bottomRight.Y - 24, mainFontColor, 0, true)
+          bottomRight.Y - 24, mainFontColor, 0, true)
       end
     end
   else
@@ -2971,10 +2971,10 @@ ModConfigMenu.Mod:AddCallback(ModCallbacks.MC_INPUT_ACTION, ModConfigMenu.InputA
 
 --console commands that toggle the menu
 local toggleCommands = {
-    ["modconfigmenu"] = true,
-    ["modconfig"] = true,
-    ["mcm"] = true,
-    ["mc"] = true
+  ["modconfigmenu"] = true,
+  ["modconfig"] = true,
+  ["mcm"] = true,
+  ["mc"] = true
 }
 function ModConfigMenu.ExecuteCmd(_, command, args)
   command = command:lower()
