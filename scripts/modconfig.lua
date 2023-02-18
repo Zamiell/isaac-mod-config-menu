@@ -1208,7 +1208,7 @@ end
 local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
   "Mod Config Menu", --category
   "ResetToDefault", --attribute in table
-  Keyboard.KEY_R, --default value
+  Keyboard.KEY_F11, --default value
   "Reset To Default Keybind", --display text
   "Press this button on your keyboard to reset a setting to its default value."
 )
