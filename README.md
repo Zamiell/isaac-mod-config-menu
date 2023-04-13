@@ -84,7 +84,7 @@ Yes.
 
 ### Does it work with the latest version of Repentance?
 
-Yes. In [url=https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b]version 1.7.9b[/url], the `loadfile` function was removed from the game. But unlike other versions of Mod Config Menu, Mod Config Menu Pure does not use `loadfile` (or any other hacks), so this version continues to work as it did before.
+Yes. In [version 1.7.9b](https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b), the `loadfile` function was removed from the game. But unlike other versions of Mod Config Menu, Mod Config Menu Pure does not use `loadfile` (or any other hacks), so this version continues to work as it did before.
 
 ### Does it work with Afterbirth+?
 
