@@ -90,9 +90,13 @@ Yes. In [version 1.7.9b](https://bindingofisaacrebirth.fandom.com/wiki/V1.7.9b),
 
 No, because it uses the Repentance-only API for getting the HUD offset.
 
-### What do I do if Mod Config Menu Pure does not work properly with a particular mod?
+### What do I do if Mod Config Menu Pure causes errors or otherwise does not seem to get loaded properly by a particular mod?
 
 This is probably because the mod is using the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+
+### What do I do if Mod Config Menu Pure works properly to configure settings, but does not save the settings for future runs?
+
+Mod Config Menu Pure is not responsible for saving the configuration data of other mods. Doing that is up to the other mods. Thus, if another mod's settings are not being properly saved, then you need to take that issue to the specific mod's developer.
 
 ### What is Mod Config Menu Continued?
 
