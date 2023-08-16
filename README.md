@@ -171,3 +171,7 @@ It works for everyone else, so it has to be something wrong with you. Start by u
 ### What was changed in the last update?
 
 Look at the [commit history](https://github.com/Zamiell/isaac-mod-config-menu/commits/main).
+
+### Why doesn't Mod Config Menu pause the gane when it is open? Why does Mod Config Menu not stop the in-game timer? Why can't I open Mod Config Menu in a room with enemies?
+
+The Isaac modding API does not allow mods to pause the game or control the in-game timer. Thus, for this reason, mod config menu is only allowed to be open when there are no enemies in the room. Subsequently, you should be mindful that the in-game timer will continue to increase when Mod Config Menu is open, so you might e.g. miss the Boss Rush.
