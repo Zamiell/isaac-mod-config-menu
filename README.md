@@ -92,7 +92,7 @@ No, because it uses the Repentance-only API for getting the HUD offset.
 
 ### What do I do if Mod Config Menu Pure causes errors or otherwise does not seem to get loaded properly by a particular mod?
 
-This is probably because the mod is using the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this and do not post a comment here.
+This is probably because the mod is using the `require` or `dofile` or `pcall` or `loadfile` functions to initialize or invoke Mod Config Menu. Contact the individual mod author to fix this.
 
 ### What do I do if Mod Config Menu Pure works properly to configure settings, but does not save the settings for future runs?
 
