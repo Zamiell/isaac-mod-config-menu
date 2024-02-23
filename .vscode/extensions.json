@@ -5,6 +5,6 @@
   "recommendations": [
     "sumneko.lua", // Lua language server
     "filloax.isaac-lua-api-vscode", // Isaac API definitions
-    "streetsidesoftware.code-spell-checker", // A spell-checker extension based on cspell
+    "streetsidesoftware.code-spell-checker", // A spell-checker extension based on CSpell
   ]
 }
