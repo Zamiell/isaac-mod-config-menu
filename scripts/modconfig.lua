@@ -185,7 +185,6 @@ local isFirstRun = true
 
 --returns true if the room is clear and there are no active enemies and there are no projectiles
 ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
-ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
 function ModConfigMenu.RoomIsSafe()
   local roomHasDanger = false
 
