@@ -8,7 +8,8 @@
   "editor.tabSize": 2,
 
   "files.associations": {
-    "*.anm2": "xml"
+    "*.anm2": "xml",
+    ".anm2": "xml"
   },
 
   // Linux line endings are used in this project

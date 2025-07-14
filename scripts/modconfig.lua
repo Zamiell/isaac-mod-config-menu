@@ -185,26 +185,36 @@ local isFirstRun = true
 
 --returns true if the room is clear and there are no active enemies and there are no projectiles
 ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
+ModConfigMenu.IgnoreActiveEnemies = ModConfigMenu.IgnoreActiveEnemies or {}
 function ModConfigMenu.RoomIsSafe()
   local roomHasDanger = false
 
-  for _, entity in pairs(Isaac.GetRoomEntities()) do
+  -- Add error handling for entity enumeration
+  local success, entities = pcall(Isaac.GetRoomEntities)
+  if not success or not entities then
+    if IS_DEV then
+      Isaac.DebugString("MCM: Warning - Failed to get room entities, assuming room is unsafe")
+    end
+    return false
+  end
+
+  for _, entity in pairs(entities) do
     if (
-        entity:IsActiveEnemy()
-        and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
-        and (
-        not ModConfigMenu.IgnoreActiveEnemies[entity.Type]
-        or (
-        ModConfigMenu.IgnoreActiveEnemies[entity.Type]
-        and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][ -1]
-        and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][entity.Variant]
-        )
-        )
+          entity:IsActiveEnemy()
+          and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY)
+          and (
+            not ModConfigMenu.IgnoreActiveEnemies[entity.Type]
+            or (
+              ModConfigMenu.IgnoreActiveEnemies[entity.Type]
+              and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][-1]
+              and not ModConfigMenu.IgnoreActiveEnemies[entity.Type][entity.Variant]
+            )
+          )
         ) then
       roomHasDanger = true
     elseif (
-        entity.Type == EntityType.ENTITY_PROJECTILE
-        and entity:ToProjectile().ProjectileFlags & ProjectileFlags.CANT_HIT_PLAYER ~= 1
+          entity.Type == EntityType.ENTITY_PROJECTILE
+          and entity:ToProjectile().ProjectileFlags & ProjectileFlags.CANT_HIT_PLAYER ~= 1
         ) then
       roomHasDanger = true
     elseif entity.Type == EntityType.ENTITY_BOMBDROP then
@@ -231,6 +241,24 @@ function ModConfigMenu.PostGameStarted()
   rerunWarnMessage = nil
 
   load()
+
+  -- Ensure all player controls are restored at game start (backup safety measure)
+  local game = Game()
+  for i = 0, game:GetNumPlayers() - 1 do
+    local player = Isaac.GetPlayer(i)
+    local data = player:GetData()
+
+    if data.ConfigMenuPlayerPosition then
+      data.ConfigMenuPlayerPosition = nil
+    end
+    if data.ConfigMenuPlayerControlsDisabled then
+      player.ControlsEnabled = true
+      data.ConfigMenuPlayerControlsDisabled = false
+      if IS_DEV then
+        Isaac.DebugString("MCM: Restored controls for player " .. tostring(i) .. " (game start)")
+      end
+    end
+  end
 
   if not isFirstRun then
     return
@@ -609,7 +637,7 @@ end
 local altSlider = false
 function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryName, configTableAttribute, minValue,
                                         maxValue, modifyBy, defaultValue, displayText, displayValueProxies, displayDevice
-  ,                                     info, color, functionName)
+    , info, color, functionName)
   --set default values
   if defaultValue == nil then
     if settingType == ModConfigMenu.OptionType.BOOLEAN then
@@ -752,7 +780,7 @@ function ModConfigMenu.SimpleAddSetting(settingType, categoryName, subcategoryNa
         if (settingType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD and InputHelper.KeyboardToString[currentValue]) then
           currentSettingString = InputHelper.KeyboardToString[currentValue]
         elseif (
-            settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER and InputHelper.ControllerToString[currentValue]) then
+              settingType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER and InputHelper.ControllerToString[currentValue]) then
           currentSettingString = InputHelper.ControllerToString[currentValue]
         end
 
@@ -810,7 +838,7 @@ function ModConfigMenu.AddBooleanSetting(categoryName, subcategoryName, configTa
 end
 
 function ModConfigMenu.AddNumberSetting(categoryName, subcategoryName, configTableAttribute, minValue, maxValue, modifyBy
-  ,                                     defaultValue, displayText, displayValueProxies, info, color)
+    , defaultValue, displayText, displayValueProxies, info, color)
   --move args around
   if type(configTableAttribute) ~= "string" then
     color = info
@@ -880,7 +908,7 @@ function ModConfigMenu.AddScrollSetting(categoryName, subcategoryName, configTab
 end
 
 function ModConfigMenu.AddKeyboardSetting(categoryName, subcategoryName, configTableAttribute, defaultValue, displayText
-  ,                                       displayDevice, info, color)
+    , displayDevice, info, color)
   --move args around
   if type(configTableAttribute) ~= "string" then
     color = info
@@ -1000,15 +1028,15 @@ ModConfigMenu.SetCategoryInfo("General", "Settings that affect the majority of m
 --HUD OFFSET SETTING--
 ----------------------
 local hudOffsetSetting = ModConfigMenu.AddScrollSetting(
-  "General", --category
-  "HudOffset", --attribute in table
+  "General",                               --category
+  "HudOffset",                             --attribute in table
   Options and Options.HUDOffset * 10 or 0, --default value
-  "Hud Offset", --display text
+  "Hud Offset",                            --display text
   "How far from the corners of the screen custom hud elements will be.$newlineTry to make this match your base-game setting."
 )
 
 hudOffsetSetting.HideControls = true -- hide controls so the screen corner graphics are easier to see
-hudOffsetSetting.ShowOffset = true -- shows screen offset
+hudOffsetSetting.ShowOffset = true   -- shows screen offset
 vanillaMCMOptionRegisterSave(hudOffsetSetting)
 
 --set up callback
@@ -1026,9 +1054,9 @@ end
 --OVERLAYS SETTING--
 --------------------
 local overlays = ModConfigMenu.AddBooleanSetting(
-  "General", --category
+  "General",  --category
   "Overlays", --attribute in table
-  true, --default value
+  true,       --default value
   "Overlays", --display text
   {
     --value display text
@@ -1043,9 +1071,9 @@ vanillaMCMOptionRegisterSave(overlays)
 --CHARGE BARS SETTING--
 -----------------------
 local chargeBars = ModConfigMenu.AddBooleanSetting(
-  "General", --category
-  "ChargeBars", --attribute in table
-  false, --default value
+  "General",     --category
+  "ChargeBars",  --attribute in table
+  false,         --default value
   "Charge Bars", --display text
   {
     --value display text
@@ -1060,9 +1088,9 @@ vanillaMCMOptionRegisterSave(chargeBars)
 --BIG BOOKS SETTING--
 ---------------------
 local bigBooks = ModConfigMenu.AddBooleanSetting(
-  "General", --category
+  "General",  --category
   "BigBooks", --attribute in table
-  true, --default value
+  true,       --default value
   "Bigbooks", --display text
   {
     --value display text
@@ -1078,11 +1106,11 @@ vanillaMCMOptionRegisterSave(bigBooks)
 ---------------------
 
 local announcer = ModConfigMenu.AddNumberSetting(
-  "General", --category
+  "General",   --category
   "Announcer", --attribute in table
-  0, --minimum value
-  2, --max value
-  0, --default value,
+  0,           --minimum value
+  2,           --max value
+  0,           --default value,
   "Announcer", --display text
   {
     --value display text
@@ -1112,18 +1140,18 @@ ModConfigMenu.SetCategoryInfo("Mod Config Menu",
 
 ModConfigMenu.AddTitle("Mod Config Menu", "Version " .. tostring(ModConfigMenu.Version) .. " !") --VERSION INDICATOR
 
-ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
+ModConfigMenu.AddSpace("Mod Config Menu")                                                        --SPACE
 
 ----------------------
 --OPEN MENU KEYBOARD--
 ----------------------
 
 local openMenuKeyboardSetting = ModConfigMenu.AddKeyboardSetting(
-  "Mod Config Menu", --category
+  "Mod Config Menu",  --category
   "OpenMenuKeyboard", --attribute in table
-  Keyboard.KEY_L, --default value
-  "Open Menu", --display text
-  true, --if (keyboard) is displayed after the key text
+  Keyboard.KEY_L,     --default value
+  "Open Menu",        --display text
+  true,               --if (keyboard) is displayed after the key text
   "Choose what button on your keyboard will open Mod Config Menu."
 )
 
@@ -1135,11 +1163,11 @@ vanillaMCMOptionRegisterSave(openMenuKeyboardSetting)
 ------------------------
 
 local openMenuControllerSetting = ModConfigMenu.AddControllerSetting(
-  "Mod Config Menu", --category
-  "OpenMenuController", --attribute in table
+  "Mod Config Menu",      --category
+  "OpenMenuController",   --attribute in table
   Controller.STICK_RIGHT, --default value
-  "Open Menu", --display text
-  true, --if (controller) is displayed after the key text
+  "Open Menu",            --display text
+  true,                   --if (controller) is displayed after the key text
   "Choose what button on your controller will open Mod Config Menu."
 )
 openMenuControllerSetting.IsOpenMenuKeybind = true
@@ -1156,9 +1184,9 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 
 local hideHudSetting = ModConfigMenu.AddBooleanSetting(
   "Mod Config Menu", --category
-  "HideHudInMenu", --attribute in table
-  true, --default value
-  "Hide HUD", --display text
+  "HideHudInMenu",   --attribute in table
+  true,              --default value
+  "Hide HUD",        --display text
   {
     --value display text
     [true] = "Yes",
@@ -1206,9 +1234,9 @@ end
 ----------------------------
 
 local resetKeybindSetting = ModConfigMenu.AddKeyboardSetting(
-  "Mod Config Menu", --category
-  "ResetToDefault", --attribute in table
-  Keyboard.KEY_F11, --default value
+  "Mod Config Menu",          --category
+  "ResetToDefault",           --attribute in table
+  Keyboard.KEY_F11,           --default value
   "Reset To Default Keybind", --display text
   "Press this button on your keyboard to reset a setting to its default value."
 )
@@ -1221,9 +1249,9 @@ vanillaMCMOptionRegisterSave(resetKeybindSetting)
 
 local showControls = ModConfigMenu.AddBooleanSetting(
   "Mod Config Menu", --category
-  "ShowControls", --attribute in table
-  true, --default value
-  "Show Controls", --display text
+  "ShowControls",    --attribute in table
+  true,              --default value
+  "Show Controls",   --display text
   {
     --value display text
     [true] = "Yes",
@@ -1240,9 +1268,9 @@ ModConfigMenu.AddSpace("Mod Config Menu") --SPACE
 -----------------
 
 local compatibilitySetting = ModConfigMenu.AddBooleanSetting(
-  "Mod Config Menu", --category
-  "CompatibilityLayer", --attribute in table
-  false, --default value
+  "Mod Config Menu",         --category
+  "CompatibilityLayer",      --attribute in table
+  false,                     --default value
   "Disable Legacy Warnings", --display text
   {
     --value display text
@@ -1331,8 +1359,8 @@ function ModConfigMenu.EnterOptions()
             and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
             and
             (
-            not thisOption.NoCursorHere or
-            (type(thisOption.NoCursorHere) == "function" and not thisOption.NoCursorHere()))
+              not thisOption.NoCursorHere or
+              (type(thisOption.NoCursorHere) == "function" and not thisOption.NoCursorHere()))
             and thisOption.Display then
           configMenuPositionCursorOption = optionIndex
           configMenuInOptions = true
@@ -1503,7 +1531,12 @@ local optionsCurrentOffset = 0
 ModConfigMenu.ControlsEnabled = true
 function ModConfigMenu.PostRender()
   local game = Game()
-  local isPaused = game:IsPaused() or AwaitingTextInput
+  local isPaused = game:IsPaused()
+
+  -- Only check AwaitingTextInput if it's actually defined
+  if AwaitingTextInput ~= nil then
+    isPaused = isPaused or AwaitingTextInput
+  end
 
   local sfx = SFXManager()
 
@@ -1549,6 +1582,36 @@ function ModConfigMenu.PostRender()
 
   --handle toggling the menu
   if ModConfigMenu.ControlsEnabled and not isPaused then
+    -- Safety check: if menu is not visible but players have disabled controls, restore them
+    if not ModConfigMenu.IsVisible then
+      -- Additional safety: reset menu states if they're stuck while menu is closed
+      if configMenuInPopup or configMenuInOptions or configMenuInSubcategory then
+        configMenuInPopup = false
+        configMenuInOptions = false
+        configMenuInSubcategory = false
+        if IS_DEV then
+          Isaac.DebugString("MCM: Reset stuck menu states while menu was closed")
+        end
+      end
+
+      local game = Game()
+      for i = 0, game:GetNumPlayers() - 1 do
+        local player = Isaac.GetPlayer(i)
+        local data = player:GetData()
+
+        if data.ConfigMenuPlayerControlsDisabled then
+          player.ControlsEnabled = true
+          data.ConfigMenuPlayerControlsDisabled = false
+          if data.ConfigMenuPlayerPosition then
+            data.ConfigMenuPlayerPosition = nil
+          end
+          if IS_DEV then
+            Isaac.DebugString("MCM: Restored controls for player " .. tostring(i) .. " (safety check)")
+          end
+        end
+      end
+    end
+
     for i = 0, 4 do
       if InputHelper.KeyboardTriggered(openMenuGlobal, i)
           or (openMenuKeyboard > -1 and InputHelper.KeyboardTriggered(openMenuKeyboard, i))
@@ -1556,13 +1619,24 @@ function ModConfigMenu.PostRender()
         pressingNonRebindableKey = true
         pressedToggleMenu = true
         if not configMenuInPopup then
+          if IS_DEV then
+            Isaac.DebugString("MCM: Menu toggle triggered from controller " .. tostring(i))
+          end
           ModConfigMenu.ToggleConfigMenu()
+        elseif IS_DEV then
+          Isaac.DebugString("MCM: Menu toggle blocked - in popup")
         end
       end
 
       if InputHelper.KeyboardTriggered(takeScreenshot, i) then
         pressingNonRebindableKey = true
       end
+    end
+  elseif IS_DEV then
+    if not ModConfigMenu.ControlsEnabled then
+      Isaac.DebugString("MCM: Input blocked - controls disabled")
+    elseif isPaused then
+      Isaac.DebugString("MCM: Input blocked - game paused")
     end
   end
 
@@ -1736,10 +1810,10 @@ function ModConfigMenu.PostRender()
           if not isPaused then
             if pressingNonRebindableKey
                 and not (pressingButton == "BACK"
-                or pressingButton == "LEFT"
-                or (currentMenuOption.OnSelect and (pressingButton == "SELECT" or pressingButton == "RIGHT"))
-                or (currentMenuOption.IsResetKeybind and pressingButton == "RESET")
-                or (currentMenuOption.IsOpenMenuKeybind and pressedToggleMenu)) then
+                  or pressingButton == "LEFT"
+                  or (currentMenuOption.OnSelect and (pressingButton == "SELECT" or pressingButton == "RIGHT"))
+                  or (currentMenuOption.IsResetKeybind and pressingButton == "RESET")
+                  or (currentMenuOption.IsOpenMenuKeybind and pressedToggleMenu)) then
               sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
             else
               local numberToChange = nil
@@ -1993,8 +2067,8 @@ function ModConfigMenu.PostRender()
               sfx:Play(sound, 1, 0, false, 1)
             end
           elseif (
-              optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or
-              optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER) and pressingButton == "RESET" and
+                optionType == ModConfigMenu.OptionType.KEYBIND_KEYBOARD or
+                optionType == ModConfigMenu.OptionType.KEYBIND_CONTROLLER) and pressingButton == "RESET" and
               currentMenuOption.Default ~= nil then
             local numberToChange = optionCurrent
 
@@ -2231,8 +2305,8 @@ function ModConfigMenu.PostRender()
               and thisOption.Type ~= ModConfigMenu.OptionType.SPACE
               and
               (
-              not thisOption.NoCursorHere or
-              (type(thisOption.NoCursorHere) == "function" and not thisOption.NoCursorHere()))
+                not thisOption.NoCursorHere or
+                (type(thisOption.NoCursorHere) == "function" and not thisOption.NoCursorHere()))
               and thisOption.Display then
             nextValidOptionSelection = optionIndex
 
@@ -2282,7 +2356,7 @@ function ModConfigMenu.PostRender()
 
     local numLeft = #ModConfigMenu.MenuData
 
-    local leftPos = centerPos + Vector( -142, -102)
+    local leftPos = centerPos + Vector(-142, -102)
     local leftPosTopmost = centerPos.Y - 116
     local leftPosBottommost = centerPos.Y + 90
 
@@ -2391,7 +2465,7 @@ function ModConfigMenu.PostRender()
     end
 
     --info pos handling
-    local infoPos = centerPos + Vector( -4, 106)
+    local infoPos = centerPos + Vector(-4, 106)
 
     MenuSprite:Render(centerPos, vecZero, vecZero)
 
@@ -2436,10 +2510,10 @@ function ModConfigMenu.PostRender()
 
     --render scroll arrows
     if leftCanScrollUp then
-      CursorSpriteUp:Render(centerPos + Vector( -78, -104), vecZero, vecZero) --up arrow
+      CursorSpriteUp:Render(centerPos + Vector(-78, -104), vecZero, vecZero) --up arrow
     end
     if leftCanScrollDown then
-      CursorSpriteDown:Render(centerPos + Vector( -78, 70), vecZero, vecZero) --down arrow
+      CursorSpriteDown:Render(centerPos + Vector(-78, 70), vecZero, vecZero) --down arrow
     end
 
     ------------------------
@@ -2470,9 +2544,9 @@ function ModConfigMenu.PostRender()
         if lastOptionPos.Y > optionPosTopmost and lastOptionPos.Y < optionPosBottommost then
           local lastSubcategoryPos = optionPos
           if numCategories == 2 then
-            lastSubcategoryPos = lastOptionPos + Vector( -38, 0)
+            lastSubcategoryPos = lastOptionPos + Vector(-38, 0)
           elseif numCategories >= 3 then
-            lastSubcategoryPos = lastOptionPos + Vector( -76, 0)
+            lastSubcategoryPos = lastOptionPos + Vector(-76, 0)
           end
 
           local renderedSubcategories = 0
@@ -2511,8 +2585,8 @@ function ModConfigMenu.PostRender()
 
               if renderedSubcategories >= configMenuSubcategoriesCanShow then --if this is the last one we should render
                 --render scroll arrows
-                if configMenuPositionFirstSubcategory > 1 then --if the first one we rendered wasn't the first in the list
-                  SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector( -125, 0), vecZero, vecZero)
+                if configMenuPositionFirstSubcategory > 1 then                --if the first one we rendered wasn't the first in the list
+                  SubcategoryCursorSpriteLeft:Render(lastOptionPos + Vector(-125, 0), vecZero, vecZero)
                 end
 
                 if subcategoryIndex < #currentMenuCategory.Subcategories then --if this is not the last thing
@@ -2927,6 +3001,11 @@ function ModConfigMenu.OpenConfigMenu()
   else
     local sfx = SFXManager()
     sfx:Play(SoundEffect.SOUND_BOSS2INTRO_ERRORBUZZ, 0.75, 0, false, 1)
+
+    -- Provide feedback about why menu won't open
+    if IS_DEV then
+      Isaac.DebugString("MCM: Cannot open menu - room is not safe (enemies, projectiles, or bombs present)")
+    end
   end
 end
 
@@ -2944,6 +3023,22 @@ function ModConfigMenu.CloseConfigMenu()
     seeds:RemoveSeedEffect(SeedEffect.SEED_NO_HUD)
   end
 
+  -- Ensure player controls are restored when menu closes
+  for i = 0, game:GetNumPlayers() - 1 do
+    local player = Isaac.GetPlayer(i)
+    local data = player:GetData()
+
+    if data.ConfigMenuPlayerPosition then
+      data.ConfigMenuPlayerPosition = nil
+    end
+    if data.ConfigMenuPlayerControlsDisabled then
+      player.ControlsEnabled = true
+      data.ConfigMenuPlayerControlsDisabled = false
+      if IS_DEV then
+        Isaac.DebugString("MCM: Restored controls for player " .. tostring(i) .. " (menu close)")
+      end
+    end
+  end
 
   ModConfigMenu.IsVisible = false
 end
@@ -2952,6 +3047,14 @@ function ModConfigMenu.ToggleConfigMenu()
   if ModConfigMenu.IsVisible then
     ModConfigMenu.CloseConfigMenu()
   else
+    -- Reset menu states before opening to prevent stuck states
+    configMenuInPopup = false
+    configMenuInOptions = false
+    configMenuInSubcategory = false
+
+    -- Ensure controls are enabled before attempting to open
+    ModConfigMenu.ControlsEnabled = true
+
     ModConfigMenu.OpenConfigMenu()
   end
 end
