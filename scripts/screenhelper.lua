@@ -77,7 +77,7 @@ function ScreenHelper.GetScreenBottomRight(offset)
   offset = offset or ScreenHelper.GetOffset()
 
   local pos = ScreenHelper.GetScreenSize()
-  local hudOffset = Vector( -offset * 2.2, -offset * 1.6)
+  local hudOffset = Vector(-offset * 2.2, -offset * 1.6)
   pos = pos + hudOffset
 
   return pos
@@ -97,7 +97,7 @@ function ScreenHelper.GetScreenTopRight(offset)
   offset = offset or ScreenHelper.GetOffset()
 
   local pos = Vector(ScreenHelper.GetScreenBottomRight(0).X, 0)
-  local hudOffset = Vector( -offset * 2.2, offset * 1.2)
+  local hudOffset = Vector(-offset * 2.2, offset * 1.2)
   pos = pos + hudOffset
 
   return pos
