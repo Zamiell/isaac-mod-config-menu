@@ -1,35 +1,9 @@
-// These are Visual Studio Code settings that should apply to this particular repository
 {
-  // ----------------
-  // Vanilla settings
-  // ----------------
-
-  "editor.rulers": [100],
-  "editor.tabSize": 2,
-
-  "files.associations": {
-    "*.anm2": "xml"
-  },
-
-  // Linux line endings are used in this project
-  "files.eol": "\n",
-
-  // Automatically removing all trailing whitespace when saving a file
-  "files.trimTrailingWhitespace": true,
-
-  // -----------------
-  // Language settings
-  // -----------------
-
-  // Automatically run the formatter when certain files are saved.
-  "[lua]": {
-    "editor.defaultFormatter": "sumneko.lua",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2
-  },
-
-  // Isaac globals, auto-defined from Filloax's extension.
-  "Lua.diagnostics.globals": [
+  "runtime.version": "Lua 5.3",
+  "workspace.library": [
+    "c:\\Users\\james\\.vscode\\extensions\\filloax.isaac-lua-api-vscode-1.12.1\\out\\emmylua\\repentogon"
+  ],
+  "diagnostics.globals": [
     "ActionTriggers",
     "ActiveSlot",
     "BabySubType",
@@ -168,7 +142,107 @@
     "CustomGameOver",
     "Encyclopedia",
     "DetailedRespawn",
-    "AwaitingTextInput",
-    "DeadSeaScrollsMenu"
+    "MinimapAPI",
+    "Achievement",
+    "Ambush",
+    "AnimRenderFlags",
+    "AnnouncerVoiceMode",
+    "AutocompleteType",
+    "BagOfCraftingPickup",
+    "BestiaryMenu",
+    "BitwiseDebugFlag",
+    "BombCostumeLayer",
+    "BossType",
+    "CameraStype",
+    "ChallengeMenu",
+    "ChallengeParam",
+    "CharacterMenu",
+    "ChromaticFireVariant",
+    "ClearIcons",
+    "CompletionType",
+    "Console",
+    "ConsoleFont",
+    "ControllerSelectMenu",
+    "CutscenesMenu",
+    "Debug",
+    "DebugFlag",
+    "DebugRenderer",
+    "DialogButtons",
+    "DialogIcons",
+    "DialogReturn",
+    "Dimension",
+    "DipSubType",
+    "Ending",
+    "EntityConfig",
+    "EntityPoopVariant",
+    "EntityTag",
+    "EventCounter",
+    "ExtraHudStyle",
+    "FadeoutTarget",
+    "FollowerPriority",
+    "Giantbook",
+    "GibFlag",
+    "GLSLType",
+    "GridPoopVariant",
+    "GUI",
+    "HealthType",
+    "ImGuiCallback",
+    "ImGuiColor",
+    "ImGuiData",
+    "ImGuiElement",
+    "ImGuiNotificationType",
+    "ItemAnim",
+    "KeyConfigMenu",
+    "KnifeSubType",
+    "KnifeVariant",
+    "Language",
+    "LineCheckMode",
+    "MainMenu",
+    "MainMenuType",
+    "MenuManager",
+    "ModsMenu",
+    "MouseButton",
+    "NightmareScene",
+    "PCTypes",
+    "PauseMenu",
+    "PauseMenuStates",
+    "PedestalType",
+    "PillCardSlot",
+    "PocketItemType",
+    "PressurePlateVariant",
+    "ProceduralEffectActionType",
+    "ProceduralEffectConditionType",
+    "ProceduralItemManager",
+    "ProjectileMode",
+    "PurityState",
+    "RetractingSpikesVariant",
+    "RoomConfigHolder",
+    "RoomSubType",
+    "SaveMenu",
+    "ShaderType",
+    "SlotVariant",
+    "SpecialSeedsMenu",
+    "Stagetransition",
+    "StbGridType",
+    "StbPoopSubType",
+    "StbRailVariant",
+    "StbRockSubType",
+    "StbTeleporterSubType",
+    "StbType",
+    "StatsMenu",
+    "StatsScreen",
+    "StatsType",
+    "StatsWatcher",
+    "StatsWatcherFlags",
+    "StatsWatcherType",
+    "StatsWatcherVariant",
+    "TaintedMarksGroup",
+    "TeleporterVariant",
+    "TitleMenu",
+    "VanityPCTypes",
+    "WispSubType",
+    "XMLData",
+    "XMLNode",
+    "REPENTOGON"
   ]
 }
