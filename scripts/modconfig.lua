@@ -3013,6 +3013,14 @@ if ModConfigMenu.StandaloneMod then
   end
 end
 
+function ModConfigMenu.GetCurrentFocus()
+  return {
+    category = currentMenuCategory,
+    subcategory = currentMenuSubcategory,
+    option = currentMenuOption
+  }
+end
+
 ------------
 --FINISHED--
 ------------
