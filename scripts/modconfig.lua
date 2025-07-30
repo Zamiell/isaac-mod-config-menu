@@ -1,6 +1,8 @@
 -- Imports
 local json = require("json")
 
+local IS_DEV = false
+
 -------------
 -- version --
 -------------
@@ -8,10 +10,21 @@ local json = require("json")
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
 local VERSION = 112
-local IS_DEV = false
 
 ModConfigMenu = {}
 ModConfigMenu.Version = VERSION
+
+---------------------
+-- local functinos --
+---------------------
+
+local function isRepentancePlusInstalled()
+  local game = Game()
+  local room = game:GetRoom()
+  local metatable = getmetatable(room)
+  return type(metatable) == "table" and type(metatable.DamageGridWithSource) == "function"
+end
+local IS_REPENTANCE_PLUS = isRepentancePlusInstalled()
 
 -------------------------
 --SAVE HELPER FUNCTIONS--
@@ -321,10 +334,18 @@ local CornerExit = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 3)
 
 --fonts
 local Font10 = Font()
-Font10:Load("font/teammeatfont10.fnt")
+if IS_REPENTANCE_PLUS then
+  Font10:Load("font/teammeatex/teammeatex10.fnt")
+else
+  Font10:Load("font/teammeatfont10.fnt")
+end
 
 local Font12 = Font()
-Font12:Load("font/teammeatfont12.fnt")
+if IS_REPENTANCE_PLUS then
+  Font12:Load("font/teammeatex/teammeatex12.fnt")
+else
+  Font12:Load("font/teammeatfont12.fnt")
+end
 
 local Font16Bold = Font()
 Font16Bold:Load("font/teammeatfont16bold.fnt")
@@ -1535,7 +1556,7 @@ function ModConfigMenu.PostRender()
 
     local text = "Press " .. openMenuButtonString .. " to open Mod Config Menu"
     local versionPrintColor = KColor(1, 1, 0, (math.min(versionPrintTimer, 60) / 60) * 0.5)
-    versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, versionPrintColor, math.floor(bottomRight.X), true)
+    versionPrintFont:DrawStringUTF8(text, 0, bottomRight.Y - 28, versionPrintColor, math.floor(bottomRight.X), true)
   end
 
   --on-screen warnings
@@ -1544,7 +1565,7 @@ function ModConfigMenu.PostRender()
 
     local text = restartWarnMessage or rerunWarnMessage
     local warningPrintColor = KColor(1, 0, 0, 1)
-    versionPrintFont:DrawString(text, 0, bottomRight.Y - 28, warningPrintColor, math.floor(bottomRight.X), true)
+    versionPrintFont:DrawStringUTF8(text, 0, bottomRight.Y - 28, warningPrintColor, math.floor(bottomRight.X), true)
   end
 
   --handle toggling the menu
@@ -2419,7 +2440,7 @@ function ModConfigMenu.PostRender()
         end
         ]]
         local posOffset = Font12:GetStringWidthUTF8(textToDraw) / 2
-        Font12:DrawString(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
+        Font12:DrawStringUTF8(textToDraw, lastLeftPos.X - posOffset, lastLeftPos.Y - 8, color, 0, true)
 
         --cursor
         if configMenuPositionCursorCategory == categoryIndex then
@@ -2498,7 +2519,7 @@ function ModConfigMenu.PostRender()
                 end
 
                 posOffset = Font12:GetStringWidthUTF8(textToDraw) / 2
-                Font12:DrawString(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
+                Font12:DrawStringUTF8(textToDraw, lastSubcategoryPos.X - posOffset, lastSubcategoryPos.Y - 8, color, 0, true)
               end
 
               --cursor
@@ -2609,7 +2630,7 @@ function ModConfigMenu.PostRender()
               end
 
               posOffset = font:GetStringWidthUTF8(textToDraw) / 2
-              font:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
+              font:DrawStringUTF8(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - heightOffset, color, 0, true)
             elseif optionType == ModConfigMenu.OptionType.SCROLL then
               local numberToShow = optionDisplay
 
@@ -2650,7 +2671,7 @@ function ModConfigMenu.PostRender()
 
                     scrollOffset = posOffset
                     posOffset = Font10:GetStringWidthUTF8(textToDraw) / 2
-                    Font10:DrawString(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
+                    Font10:DrawStringUTF8(textToDraw, lastOptionPos.X - posOffset, lastOptionPos.Y - 6, color, 0, true)
 
                     scrollOffset = posOffset - (Font10:GetStringWidthUTF8(textToDrawPreScroll) + scrollOffset)
                     numberToShow = numberString
@@ -2726,7 +2747,7 @@ function ModConfigMenu.PostRender()
       titleText = tostring(currentMenuCategory.Name)
     end
     local titleTextOffset = Font16Bold:GetStringWidthUTF8(titleText) / 2
-    Font16Bold:DrawString(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
+    Font16Bold:DrawStringUTF8(titleText, titlePos.X - titleTextOffset, titlePos.Y - 9, mainFontColor, 0, true)
 
     --info
     local infoTable = nil
@@ -2764,7 +2785,7 @@ function ModConfigMenu.PostRender()
         if isOldInfo then
           color = optionsFontColorTitle
         end
-        Font10:DrawString(textToDraw, lastInfoPos.X - posOffset, lastInfoPos.Y - 6, color, 0, true)
+        Font10:DrawStringUTF8(textToDraw, lastInfoPos.X - posOffset, lastInfoPos.Y - 6, color, 0, true)
 
         --pos mod
         lastInfoPos = lastInfoPos + Vector(0, 10)
@@ -2811,7 +2832,7 @@ function ModConfigMenu.PostRender()
           --text
           local textToDraw = tostring(popupTableDisplay[line])
           local posOffset = Font10:GetStringWidthUTF8(textToDraw) / 2
-          Font10:DrawString(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
+          Font10:DrawStringUTF8(textToDraw, lastPopupPos.X - posOffset, lastPopupPos.Y - 6, mainFontColor, 0, true)
 
           --pos mod
           lastPopupPos = lastPopupPos + Vector(0, 10)
@@ -2837,7 +2858,7 @@ function ModConfigMenu.PostRender()
           goBackString = InputHelper.ControllerToString[ModConfigMenu.Config.LastBackPressed]
         end
       end
-      Font10:DrawString(goBackString, (bottomLeft.X - Font10:GetStringWidthUTF8(goBackString) / 2) + 36,
+      Font10:DrawStringUTF8(goBackString, (bottomLeft.X - Font10:GetStringWidthUTF8(goBackString) / 2) + 36,
         bottomLeft.Y - 24,
         mainFontColor, 0, true)
 
@@ -2869,7 +2890,7 @@ function ModConfigMenu.PostRender()
             selectString = InputHelper.ControllerToString[ModConfigMenu.Config.LastSelectPressed]
           end
         end
-        Font10:DrawString(selectString, (bottomRight.X - Font10:GetStringWidthUTF8(selectString) / 2) - 36,
+        Font10:DrawStringUTF8(selectString, (bottomRight.X - Font10:GetStringWidthUTF8(selectString) / 2) - 36,
           bottomRight.Y - 24, mainFontColor, 0, true)
       end
     end
