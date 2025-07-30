@@ -320,19 +320,18 @@ local CornerOpen = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 2)
 local CornerExit = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 3)
 
 --fonts
-local Font10 = Font()
-if REPENTANCE_PLUS or FontRenderSettings ~= nil then
-  Font10:Load("font/teammeatex/teammeatex10.fnt")
-else
-  Font10:Load("font/teammeatfont10.fnt")
+function IsRepentancePlusInstalled()
+    local room = Game():GetRoom()
+    local meta = getmetatable(room)
+    return type(meta) == "table" and type(meta.DamageGridWithSource) == "function"
 end
+local IsRepPlus = IsRepentancePlusInstalled()
+
+local Font10 = Font()
+Font10:Load(IsRepPlus and "font/teammeatex/teammeatex10.fnt" or "font/teammeatfont10.fnt")
 
 local Font12 = Font()
-if REPENTANCE_PLUS or FontRenderSettings ~= nil then
-  Font12:Load("font/teammeatex/teammeatex12.fnt")
-else
-  Font10:Load("font/teammeatfont12.fnt")
-end
+Font12:Load(IsRepPlus and "font/teammeatex/teammeatex12.fnt" or "font/teammeatfont12.fnt")
 
 local Font16Bold = Font()
 Font16Bold:Load("font/teammeatfont16bold.fnt")
