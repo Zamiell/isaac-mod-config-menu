@@ -1,6 +1,8 @@
 -- Imports
 local json = require("json")
 
+local IS_DEV = false
+
 -------------
 -- version --
 -------------
@@ -8,10 +10,21 @@ local json = require("json")
 -- The final version of Chifilly's Mod Config Menu fork was 33.
 -- For the pure version, we arbitrarily selected a starting point of 100 and incremented from there.
 local VERSION = 112
-local IS_DEV = false
 
 ModConfigMenu = {}
 ModConfigMenu.Version = VERSION
+
+---------------------
+-- local functinos --
+---------------------
+
+local function isRepentancePlusInstalled()
+  local game = Game()
+  local room = game:GetRoom()
+  local metatable = getmetatable(room)
+  return type(metatable) == "table" and type(metatable.DamageGridWithSource) == "function"
+end
+local IS_REPENTANCE_PLUS = isRepentancePlusInstalled()
 
 -------------------------
 --SAVE HELPER FUNCTIONS--
@@ -320,13 +333,6 @@ local CornerOpen = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 2)
 local CornerExit = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 3)
 
 --fonts
-function IsRepentancePlusInstalled()
-    local room = Game():GetRoom()
-    local meta = getmetatable(room)
-    return type(meta) == "table" and type(meta.DamageGridWithSource) == "function"
-end
-local IsRepPlus = IsRepentancePlusInstalled()
-
 local Font10 = Font()
 Font10:Load(IsRepPlus and "font/teammeatex/teammeatex10.fnt" or "font/teammeatfont10.fnt")
 
