@@ -334,10 +334,18 @@ local CornerExit = ModConfigMenu.GetMenuAnm2Sprite("BackSelect", 3)
 
 --fonts
 local Font10 = Font()
-Font10:Load(IsRepPlus and "font/teammeatex/teammeatex10.fnt" or "font/teammeatfont10.fnt")
+if IS_REPENTANCE_PLUS then
+  Font10:Load("font/teammeatex/teammeatex10.fnt")
+else
+  Font10:Load("font/teammeatfont10.fnt")
+end
 
 local Font12 = Font()
-Font12:Load(IsRepPlus and "font/teammeatex/teammeatex12.fnt" or "font/teammeatfont12.fnt")
+if IS_REPENTANCE_PLUS then
+  Font12:Load("font/teammeatex/teammeatex12.fnt")
+else
+  Font12:Load("font/teammeatfont12.fnt")
+end
 
 local Font16Bold = Font()
 Font16Bold:Load("font/teammeatfont16bold.fnt")
